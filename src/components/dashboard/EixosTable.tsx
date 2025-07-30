@@ -205,14 +205,7 @@ export function EixosTable({ data, medians }: EixosTableProps) {
     <div data-section="tabela">
       <Card className="shadow-lg border-0 bg-gradient-to-r from-dashboard-header to-primary-light">
         <CardHeader className="pb-6">
-          {/* Resumo visual no topo */}
-          <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div className="flex items-center gap-3 text-base font-medium">
-              <span className="flex items-center gap-1 text-green-700 bg-green-100 rounded-full px-3 py-1"><span aria-label="Acima" role="img">🌳</span> {resumo.acima} acima da mediana</span>
-              <span className="flex items-center gap-1 text-blue-700 bg-blue-100 rounded-full px-3 py-1"><span aria-label="Na mediana" role="img">🌿</span> {resumo.mediana} na mediana</span>
-              <span className="flex items-center gap-1 text-orange-700 bg-orange-100 rounded-full px-3 py-1"><span aria-label="Abaixo" role="img">🌱</span> {resumo.abaixo} abaixo da mediana</span>
-            </div>
-          </div>
+
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
@@ -365,6 +358,22 @@ export function EixosTable({ data, medians }: EixosTableProps) {
                     Eixo <span className="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-bold inline-flex items-center justify-center">{currentEixoIndex + 1}</span> de {EIXOS_NAMES.length}
                   </span>
                 </div>
+              </div>
+              
+              {/* Badges de Performance */}
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Badge className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1">
+                  <span>🌿</span>
+                  <span>6 acima da mediana</span>
+                </Badge>
+                <Badge className="bg-blue-100 text-blue-800 border-blue-200 flex items-center gap-1">
+                  <span>🌱</span>
+                  <span>1 na mediana</span>
+                </Badge>
+                <Badge className="bg-orange-100 text-orange-800 border-orange-200 flex items-center gap-1">
+                  <span>🥀</span>
+                  <span>0 abaixo da mediana</span>
+                </Badge>
               </div>
                 
                 {/* Navegação */}

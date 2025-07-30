@@ -56,7 +56,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
     const minEixo = eixosValues.indexOf(Math.min(...eixosValues));
 
     // Comparação com mediana
-    const eixosAcimaMedia = eixosValues.filter((valor, index) => {
+    const eixosAcimaMediana = eixosValues.filter((valor, index) => {
       const eixoKey = `eixo_${index + 1}` as keyof MicroRegionData;
       return valor > (medians[eixoKey] || 0);
     }).length;
@@ -69,7 +69,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
       avancado,
       maxEixo,
       minEixo,
-      eixosAcimaMedia,
+      eixosAcimaMediana,
       totalEixos: EIXOS_NAMES.length
     };
   }, [selectedData, medians]);
@@ -172,9 +172,9 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
               <TrendingUp className="h-5 w-5 text-black" />
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-black">{stats.eixosAcimaMedia}/7</span>
+                              <span className="text-3xl font-bold text-black">{stats.eixosAcimaMediana}/7</span>
             </div>
-            <span className="text-xs text-black">{((stats.eixosAcimaMedia / stats.totalEixos) * 100).toFixed(0)}% dos eixos</span>
+                          <span className="text-xs text-black">{((stats.eixosAcimaMediana / stats.totalEixos) * 100).toFixed(0)}% dos eixos</span>
           </CardContent>
         </Card>
         {/* Em Evolução */}
@@ -248,14 +248,14 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
                   </div>
                   <span className="text-sm font-semibold text-slate-700">Eixos Acima da Mediana</span>
                 </div>
-                <div className="text-3xl font-bold text-slate-900">{stats.eixosAcimaMedia}</div>
+                <div className="text-3xl font-bold text-slate-900">{stats.eixosAcimaMediana}</div>
                 <div className="text-sm text-slate-500 mt-1">de {stats.totalEixos} eixos</div>
               </Card>
               
               <Card className="bg-slate-50 border-slate-200 p-4">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-1.5 bg-yellow-100 rounded-lg">
-                    <Target className="h-5 w-5 text-yellow-700" />
+                  <div className="p-1.5 bg-yellow-300 rounded-lg">
+                                          <Target className="h-5 w-5 text-yellow-800" />
                   </div>
                   <span className="text-sm font-semibold text-slate-700">Prioridade</span>
                 </div>
@@ -287,12 +287,12 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
                     <div className="text-sm text-slate-500 italic px-4">Nenhum eixo em nível avançado identificado</div>
                   )}
                   
-                  {stats.eixosAcimaMedia > stats.totalEixos / 2 && (
+                  {stats.eixosAcimaMediana > stats.totalEixos / 2 && (
                     <div className="flex items-start gap-3">
                       <div className="p-1 text-green-700">&#10003;</div>
                       <div>
                         <div className="text-sm font-medium text-slate-700">Maioria dos eixos acima da mediana</div>
-                        <div className="text-xs text-slate-500">Desempenho superior à média regional</div>
+                        <div className="text-xs text-slate-500">Desempenho superior à mediana regional</div>
                       </div>
                   </div>
                 )}
@@ -330,7 +330,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
                     <div className="text-sm text-green-600 font-medium px-4">Todos os eixos em níveis adequados!</div>
                   )}
                   
-                  {stats.eixosAcimaMedia < stats.totalEixos / 2 && (
+                  {stats.eixosAcimaMediana < stats.totalEixos / 2 && (
                     <div className="flex items-start gap-3">
                       <div className="p-1 text-orange-700">&#8226;</div>
                       <div>

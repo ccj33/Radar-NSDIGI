@@ -2,6 +2,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, LabelL
 import { MicroRegionData } from "@/types/dashboard";
 import { MapPin, Users } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatPopulation } from "@/lib/utils";
 
 interface PopulationChartComponentProps {
   data: MicroRegionData[];
@@ -38,7 +39,7 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
   };
 
   const chartData = data.reduce((acc, item) => {
-    const population = parseInt(String(item.populacao).replace(/\./g, ''));
+            const population = parseFloat(String(item.populacao).replace(/\./g, '').replace(',', '.'));
     const category = categorizePopulation(population);
     
     const existing = acc.find(item => item.category === category);
@@ -59,14 +60,11 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
 
   // Encontrar a microrregião selecionada
   const selectedData = selectedMicroregiao ? data.find(item => item.microrregiao === selectedMicroregiao) : null;
-  const selectedCategory = selectedData ? categorizePopulation(parseInt(String(selectedData.populacao).replace(/\./g, ''))) : null;
+        const selectedCategory = selectedData ? categorizePopulation(parseFloat(String(selectedData.populacao).replace(/\./g, '').replace(',', '.'))) : null;
 
-  const CATEGORY_COLORS: Record<string, string> = {
-    'Pequena (< 50 mil)': '#a8a29e', // stone-400
-    'Média (50 mil a 200 mil)': '#38bdf8', // sky-400
-    'Grande (200 mil a 1 milhão)': '#a78bfa', // violet-400
-    'Muito Grande (> 1 milhão)': '#3b82f6', // blue-500
-  };
+  // Apenas duas cores: amarelo para selecionada, azul para as demais
+  const HIGHLIGHT_COLOR = '#facc15'; // amarelo
+  const DEFAULT_COLOR = '#3b82f6'; // azul
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -81,7 +79,7 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
           <div className="text-lg font-extrabold text-blue-700 mb-1">{data.count} microrregiões</div>
           <div className="text-sm text-gray-500 mb-1">{data.percent}% do total</div>
           <div className="text-xs text-gray-400">
-            Pop. Total: {typeof data.totalPop === 'number' ? data.totalPop.toLocaleString('pt-BR') : '-'}
+            Pop. Total: {typeof data.totalPop === 'number' ? formatPopulation(data.totalPop) : '-'}
           </div>
           {isSelected && selectedMicroregiao && (
             <div className="mt-2 flex items-center gap-1 text-blue-600 text-xs font-semibold">
@@ -145,12 +143,13 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
 
       {/* 2. CHART SECTION - with legend on the right */}
       <div className="flex-grow flex flex-col md:flex-row items-center gap-6 mt-4">
+        
         {/* The chart itself */}
         <div className="w-full md:w-2/3 h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={pyramidData}
-          layout="vertical"
+            <BarChart
+              data={pyramidData}
+              layout="vertical"
               margin={{ top: 5, right: 60, left: 10, bottom: 5 }}
               barCategoryGap="35%"
             >
@@ -187,15 +186,15 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
             {pyramidData.map((entry, idx) => (
               <Cell
                 key={`cell-${idx}`}
-                    fill={CATEGORY_COLORS[entry.category]}
+                fill={entry.isSelected ? HIGHLIGHT_COLOR : DEFAULT_COLOR}
                 style={{
-                      transition: 'opacity 0.2s',
-                      opacity: hoveredBar === null ? (entry.isSelected ? 1 : 0.8) : hoveredBar === idx ? 1 : 0.4,
-                      stroke: entry.isSelected ? '#0284c7' : 'none', // sky-600
-                      strokeWidth: 3,
-                    }}
-                    onMouseEnter={() => setHoveredBar(idx)}
-                    onMouseLeave={() => setHoveredBar(null)}
+                  transition: 'opacity 0.2s',
+                  opacity: hoveredBar === null ? (entry.isSelected ? 1 : 0.8) : hoveredBar === idx ? 1 : 0.4,
+                  stroke: entry.isSelected ? HIGHLIGHT_COLOR : 'none',
+                  strokeWidth: 3,
+                }}
+                onMouseEnter={() => setHoveredBar(idx)}
+                onMouseLeave={() => setHoveredBar(null)}
               />
             ))}
           </Bar>
@@ -211,18 +210,18 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
                 key={entry.category}
                 className={`flex items-center gap-3 p-2 rounded-lg transition-all border-l-4 ${
                   entry.isSelected
-                    ? 'bg-sky-100/70 border-sky-500'
+                    ? 'bg-yellow-300/70 border-yellow-500'
                     : 'border-transparent hover:bg-slate-200/60'
                 }`}
               >
                 <span
                   className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: CATEGORY_COLORS[entry.category] }}
+                  style={{ backgroundColor: entry.isSelected ? HIGHLIGHT_COLOR : DEFAULT_COLOR }}
                 />
                 <div className="flex-1">
                   <span
                     className={`text-sm font-medium ${
-                      entry.isSelected ? 'text-sky-800 font-bold' : 'text-slate-700'
+                      entry.isSelected ? 'text-yellow-900 font-bold' : 'text-blue-800'
                     }`}
                   >
                     {entry.category.split('(')[0].trim()}
@@ -230,7 +229,7 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
                 </div>
                 <div className="text-right">
                   <div
-                    className={`font-bold ${entry.isSelected ? 'text-sky-800' : 'text-slate-800'}`}
+                    className={`font-bold ${entry.isSelected ? 'text-yellow-900' : 'text-blue-800'}`}
                   >
                     {entry.count}
                   </div>
@@ -239,6 +238,18 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      {/* Legenda Estática */}
+      <div className="w-full flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs sm:text-sm mt-4 p-2 bg-muted rounded-md">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm bg-yellow-400 border border-yellow-500"></div>
+          <span>Microrregião Selecionada</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm bg-blue-500 border border-blue-600"></div>
+          <span>Outras Microrregiões</span>
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Eye, EyeOff, MapPin, Users, BarChart3, TrendingUp, TrendingDown, Badge, Target } from "lucide-react";
+import { formatPopulation } from "@/lib/utils";
 
 export function EstatisticasGerais({
   showStats,
@@ -8,9 +9,9 @@ export function EstatisticasGerais({
   filteredData,
   totalPopulation,
   selectedMaturity,
-  isAboveAverage,
+  isAboveMedian,
   macroFiltro,
-  averageMaturity,
+  medianMaturity,
   selectedData,
   selectedRanking
 }: any) {
@@ -52,7 +53,7 @@ export function EstatisticasGerais({
             <div className="text-xs text-muted-foreground mb-2 ml-4"><em>Macrorregião selecionada:</em> <strong>{macroAtiva}</strong></div>
             <CardContent>
               <div className="text-2xl font-bold text-foreground mb-3">
-                {totalPopulation.toLocaleString('pt-BR')}
+                {formatPopulation(totalPopulation)}
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 Habitantes das microrregiões analisadas
@@ -60,11 +61,11 @@ export function EstatisticasGerais({
             </CardContent>
           </Card>
 
-          {/* Maturidade Média */}
+          {/* Maturidade Mediana */}
           <Card className="shadow-lg border border-gray-200 bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Maturidade Média Geral
+                Maturidade Mediana Geral
               </CardTitle>
               <BarChart3 className="h-4 w-4 text-primary" />
             </CardHeader>
@@ -74,27 +75,27 @@ export function EstatisticasGerais({
                 <div className="text-2xl font-bold text-foreground">
                   {selectedMaturity.toFixed(2)}
                 </div>
-                {isAboveAverage ? (
+                {isAboveMedian ? (
                   <span className="inline-flex items-center gap-2 bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-md">
                     <TrendingUp className="h-4 w-4" />
-                    Acima da Média
+                    Acima da Mediana
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-md">
+                  <span className="inline-flex items-center gap-2 bg-yellow-300 text-yellow-900 text-sm font-medium px-3 py-1 rounded-md">
                     <TrendingDown className="h-4 w-4" />
-                    Abaixo da Média
+                    Abaixo da Mediana
                   </span>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 Valor da sua microrregião destacado acima
               </p>
-              <p className="text-xs text-muted-foreground">
-                {macroFiltro === 'Todas as macrorregiões'
-                  ? <>Média de <strong>todas as macrorregiões</strong>: {averageMaturity.toFixed(2)}</>
-                  : <>Média da macrorregião <strong>{macroFiltro}</strong>: {averageMaturity.toFixed(2)}</>
-                }
-              </p>
+                              <p className="text-xs text-muted-foreground">
+                  {macroFiltro === 'Todas as macrorregiões'
+                    ? <>Mediana de <strong>todas as macrorregiões</strong>: {medianMaturity.toFixed(2)}</>
+                    : <>Mediana da macrorregião <strong>{macroFiltro}</strong>: {medianMaturity.toFixed(2)}</>
+                  }
+                </p>
             </CardContent>
           </Card>
 

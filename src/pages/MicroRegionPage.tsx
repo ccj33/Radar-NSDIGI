@@ -61,7 +61,7 @@ const MicroRegionPage = () => {
           <StatsOverview data={filteredData} selectedData={selectedData} macroFiltro={selectedData.macrorregiao} />
         </div>
         <div className="my-12">
-          <DashboardRadarChart data={selectedData} medians={{}} />
+          <DashboardRadarChart data={selectedData} allData={data} medians={{}} />
         </div>
         <div className="my-12">
           <DashboardBarChart data={filteredData} selectedMicroregiao={microName} macroFiltro={selectedData.macrorregiao} />

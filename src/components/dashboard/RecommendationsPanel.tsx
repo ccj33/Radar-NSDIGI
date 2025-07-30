@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { MicroRegionData, EIXOS_NAMES } from "@/types/dashboard";
 import { 
   Settings, 
@@ -18,7 +19,9 @@ import {
   GalleryHorizontal,
   ChevronLeft,
   ChevronRight,
-  Info
+  Info,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { useMacrosRecommendations } from '@/hooks/useMacrosRecommendations';
 import { useState, useEffect } from 'react';
@@ -45,6 +48,17 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
   // Estados para controle da visualização
   const [viewMode, setViewMode] = useState<'list' | 'carousel'>('carousel');
   const [currentEixoIndex, setCurrentEixoIndex] = useState(initialEixoIndex);
+  
+  // Estados para controle das seções colapsáveis
+  const [expandedSections, setExpandedSections] = useState<{
+    situacao: boolean;
+    recomendacao: boolean;
+    ferramenta: boolean;
+  }>({
+    situacao: true,
+    recomendacao: true,
+    ferramenta: true
+  });
 
   // Atualizar o eixo atual quando initialEixoIndex mudar
   useEffect(() => {
@@ -70,7 +84,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
   const getStatusBadge = (valor: number) => {
     if (valor > 0.66) return { variant: 'default', text: 'Avançado', color: 'bg-success text-success-foreground' };
     if (valor > 0.33) return { variant: 'secondary', text: 'Em Evolução', color: 'bg-warning text-warning-foreground' };
-    return { variant: 'secondary', text: 'Emergente', color: 'bg-yellow-100 text-yellow-800' };
+    return { variant: 'secondary', text: 'Emergente', color: 'bg-yellow-300 text-yellow-900' };
   };
 
   const getStatusIcon = (valor: number) => {
@@ -266,41 +280,95 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
         
         <CardContent className="space-y-4">
           {/* Situação Atual */}
-          <div className="p-3 sm:p-4 bg-muted/30 rounded-lg">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-warning mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Situação Atual</h4>
+          <Collapsible 
+            open={expandedSections.situacao} 
+            onOpenChange={(open) => setExpandedSections(prev => ({ ...prev, situacao: open }))}
+          >
+            <CollapsibleTrigger asChild>
+              <div className="p-3 sm:p-4 bg-muted/30 rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-warning mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Situação Atual</h4>
+                    </div>
+                  </div>
+                  {expandedSections.situacao ? (
+                    <ChevronUp className="h-4 w-4 text-warning" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-warning" />
+                  )}
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="p-3 sm:p-4 bg-muted/30 rounded-lg mt-2">
                 <div className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   {macrosLoading ? 'Carregando...' : formatKeywords(macrosInfo.situacao)}
                 </div>
               </div>
-            </div>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
           {/* Recomendação */}
-          <div className="p-3 sm:p-4 bg-primary/5 rounded-lg border border-primary/20">
-            <div className="flex items-start gap-2">
-              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-primary mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Recomendação</h4>
+          <Collapsible 
+            open={expandedSections.recomendacao} 
+            onOpenChange={(open) => setExpandedSections(prev => ({ ...prev, recomendacao: open }))}
+          >
+            <CollapsibleTrigger asChild>
+              <div className="p-3 sm:p-4 bg-primary/5 rounded-lg border border-primary/20 cursor-pointer hover:bg-primary/10 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start gap-2">
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Recomendação</h4>
+                    </div>
+                  </div>
+                  {expandedSections.recomendacao ? (
+                    <ChevronUp className="h-4 w-4 text-primary" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-primary" />
+                  )}
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="p-3 sm:p-4 bg-primary/5 rounded-lg border border-primary/20 mt-2">
                 <div className="text-xs sm:text-sm text-foreground leading-relaxed">
                   {macrosLoading ? 'Carregando...' : formatText(macrosInfo.recomendacao)}
                 </div>
               </div>
-            </div>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
           {/* Ferramenta Sugerida */}
-          <div className="p-3 sm:p-4 bg-success/5 rounded-lg border border-success/20">
-            <div className="flex items-start gap-2">
-              <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-success mt-0.5 flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Ferramenta Sugerida</h4>
+          <Collapsible 
+            open={expandedSections.ferramenta} 
+            onOpenChange={(open) => setExpandedSections(prev => ({ ...prev, ferramenta: open }))}
+          >
+            <CollapsibleTrigger asChild>
+              <div className="p-3 sm:p-4 bg-success/5 rounded-lg border border-success/20 cursor-pointer hover:bg-success/10 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-success mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Ferramenta Sugerida</h4>
+                    </div>
+                  </div>
+                  {expandedSections.ferramenta ? (
+                    <ChevronUp className="h-4 w-4 text-success" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-success" />
+                  )}
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="p-3 sm:p-4 bg-success/5 rounded-lg border border-success/20 mt-2">
                 {macrosLoading ? 'Carregando...' : formatFerramentas(macrosInfo.ferramenta)}
               </div>
-            </div>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
         </CardContent>
       </Card>
     );
@@ -318,6 +386,32 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
               <p className="text-sm text-muted-foreground mt-1">
                 Análise detalhada e recomendações específicas para cada eixo
               </p>
+              <div className="flex items-center gap-2 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setExpandedSections({
+                    situacao: true,
+                    recomendacao: true,
+                    ferramenta: true
+                  })}
+                  className="text-xs"
+                >
+                  Expandir Tudo
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setExpandedSections({
+                    situacao: false,
+                    recomendacao: false,
+                    ferramenta: false
+                  })}
+                  className="text-xs"
+                >
+                  Recolher Tudo
+                </Button>
+              </div>
             </div>
             
             {/* Seletor de Visualização */}

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { MicroRegionData } from "@/types/dashboard";
 import { MapPin, Target, User, Mail, Users, BarChart3 } from "lucide-react";
 import { getStatusAppearance, StatusLevel } from "@/lib/statusUtils";
+import { formatPopulation } from "@/lib/utils";
 
 interface DashboardHeaderProps {
   data: MicroRegionData;
@@ -64,7 +65,7 @@ export function DashboardHeader({ data, allData, onMicroregiaoChange }: Dashboar
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-primary" />
                   <span className="text-muted-foreground">População:</span>
-                  <span className="text-foreground font-medium">{parseInt(String(data.populacao).replace(/\./g, '')).toLocaleString('pt-BR')}</span>
+                  <span className="text-foreground font-medium">{formatPopulation(data.populacao)}</span>
                 </div>
                 
                 <div className="flex items-center gap-2">
@@ -167,7 +168,9 @@ export function DashboardHeader({ data, allData, onMicroregiaoChange }: Dashboar
               {microrregioesDaMacro.map((microrregiao, index) => (
                 <Card 
                   key={index} 
-                  className="hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border group"
+                  className={`hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border group ${
+                    microrregiao.microrregiao === data.microrregiao ? 'bg-gray-50 border-gray-300' : ''
+                  }`}
                   onClick={() => onMicroregiaoChange?.(microrregiao.microrregiao)}
                 >
                   <CardContent className="p-4">
@@ -186,7 +189,7 @@ export function DashboardHeader({ data, allData, onMicroregiaoChange }: Dashboar
                       </div>
                       <div className="flex justify-between">
                         <span>População:</span>
-                        <span>{parseInt(String(microrregiao.populacao).replace(/\./g, '')).toLocaleString('pt-BR')}</span>
+                        <span>{formatPopulation(microrregiao.populacao)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Regional:</span>

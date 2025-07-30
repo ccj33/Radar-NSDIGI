@@ -3,7 +3,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import { getStatusAppearance, StatusLevel } from "@/lib/statusUtils";
 import { Trophy, Info, Map } from "lucide-react";
 
-const classificationOrder: StatusLevel[] = ['Avançado', 'Em Evolução', 'Emergente'];
+const classificationOrder: StatusLevel[] = ['Emergente', 'Em Evolução', 'Avançado'];
 
 export function DistribuicaoINMSD({
   showDistribuicao,
@@ -106,9 +106,9 @@ export function DistribuicaoINMSD({
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
               Cada nível representa o estágio da jornada de transformação digital da microrregião:
-              <br/>• <strong className="text-green-700">Avançado:</strong> Liderança e maturidade digital consolidada.
+              <br/>• <strong className="text-yellow-800">Emergente:</strong> Potencial de crescimento em estágio inicial.
               <br/>• <strong className="text-blue-700">Em Evolução:</strong> Progresso notável com áreas para aprimorar.
-              <br/>• <strong className="text-yellow-700">Emergente:</strong> Potencial de crescimento em estágio inicial.
+              <br/>• <strong className="text-green-700">Avançado:</strong> Liderança e maturidade digital consolidada.
             </p>
           </div>
         </div>

@@ -22,9 +22,9 @@ export const getStatusAppearance = (level: StatusLevel) => {
     case 'Emergente':
       return {
         icon: AlertTriangle,
-        textColor: 'text-yellow-800',
-        bgColor: 'bg-yellow-100',
-        borderColor: 'border-yellow-200',
+        textColor: 'text-yellow-900',
+        bgColor: 'bg-yellow-300',
+        borderColor: 'border-yellow-400',
       };
 
     // Indicadores de Análise
@@ -45,9 +45,9 @@ export const getStatusAppearance = (level: StatusLevel) => {
     case 'Alerta':
         return {
             icon: AlertTriangle,
-            textColor: 'text-yellow-800',
-            bgColor: 'bg-yellow-50',
-            borderColor: 'border-yellow-100',
+            textColor: 'text-yellow-900',
+            bgColor: 'bg-yellow-200',
+            borderColor: 'border-yellow-300',
         };
     
     // Outros

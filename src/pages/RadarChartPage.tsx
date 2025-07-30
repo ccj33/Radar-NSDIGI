@@ -116,7 +116,7 @@ const RadarChartPage = () => {
             </p>
           </div>
           <div className="w-full h-[600px]">
-            <DashboardRadarChart data={selectedData} medians={medians} />
+            <DashboardRadarChart data={selectedData} allData={data} medians={medians} />
           </div>
         </div>
       </main>

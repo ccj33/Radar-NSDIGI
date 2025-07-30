@@ -10,6 +10,7 @@ interface RadarChartComponentProps {
   onLoad?: () => void;
   hoveredEixo?: number | null;
   setHoveredEixo?: (index: number | null) => void;
+  compareWithMacroregion?: boolean;
 }
 
 // Tooltip personalizado inteligente
@@ -72,7 +73,7 @@ const CustomTooltip = (props: any) => {
                 break;
               case 'Mediana Geral':
                 description = 'Valor médio de todas as microrregiões';
-                colorClass = 'text-green-700 font-bold';
+                colorClass = 'text-purple-700 font-bold';
                 icon = '📊';
                 break;
               case 'Emergente':
@@ -82,7 +83,7 @@ const CustomTooltip = (props: any) => {
                 break;
               case 'Em Evolução':
                 description = 'Nível intermediário (0,33 - 0,66)';
-                colorClass = 'text-yellow-600';
+                colorClass = 'text-yellow-800';
                 icon = '📈';
                 break;
               case 'Avançado':
@@ -125,7 +126,7 @@ const CustomTooltip = (props: any) => {
   return null;
 };
 
-export function RadarChartComponent({ data, medians, onNavigateToRecommendations, onLoad, hoveredEixo, setHoveredEixo }: RadarChartComponentProps) {
+export function RadarChartComponent({ data, medians, onNavigateToRecommendations, onLoad, hoveredEixo, setHoveredEixo, compareWithMacroregion }: RadarChartComponentProps) {
   const [currentHoveredEixo, setCurrentHoveredEixo] = useState<number | null>(null);
   // Usar o hoveredEixo externo se fornecido, senão usar o interno
   const currentSetHoveredEixo = setHoveredEixo || setCurrentHoveredEixo;
@@ -248,30 +249,32 @@ export function RadarChartComponent({ data, medians, onNavigateToRecommendations
   return (
     <div className="relative w-full h-full">
       {/* Legenda customizada dentro do gráfico */}
-      <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-4 z-10 text-xs border border-gray-200 min-w-[180px]">
-        <div className="font-semibold text-gray-800 mb-3 text-center border-b border-gray-200 pb-2">
+      <div className="absolute bottom-2 right-2 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-3 z-10 text-xs border border-gray-200 min-w-[160px] max-w-[180px]">
+        <div className="font-semibold text-gray-800 mb-2 text-center border-b border-gray-200 pb-1">
           Legenda do Gráfico
         </div>
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-500 inline-block shadow-sm" />
-            <span className="font-medium">Microrregião</span>
+            <span className="w-3 h-3 rounded-full bg-blue-500 inline-block shadow-sm flex-shrink-0" />
+            <span className="font-medium text-xs">Microrregião</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-green-600 inline-block shadow-sm" />
-            <span className="font-medium">Mediana Geral</span>
+            <span className="w-3 h-3 rounded-full bg-purple-600 inline-block shadow-sm flex-shrink-0" />
+            <span className="font-medium text-xs">
+              {compareWithMacroregion ? `Mediana ${data.macrorregiao}` : 'Mediana Geral'}
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full border-2 border-red-400 border-dashed inline-block" />
-            <span>Emergente (≤ 0,33)</span>
+            <span className="w-3 h-3 rounded-full border-2 border-red-400 border-dashed inline-block flex-shrink-0" />
+            <span className="text-xs">Emergente (≤ 0,33)</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full border-2 border-yellow-500 border-dashed inline-block" />
-            <span>Em Evolução (0,33 - 0,66)</span>
+            <span className="w-3 h-3 rounded-full border-2 border-yellow-500 border-dashed inline-block flex-shrink-0" />
+            <span className="text-xs">Em Evolução (0,33 - 0,66)</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full border-2 border-green-500 border-dashed inline-block" />
-            <span>Avançado ({'>'} 0,66)</span>
+            <span className="w-3 h-3 rounded-full border-2 border-green-500 border-dashed inline-block flex-shrink-0" />
+            <span className="text-xs">Avançado ({'>'} 0,66)</span>
           </div>
         </div>
       </div>
@@ -341,10 +344,10 @@ export function RadarChartComponent({ data, medians, onNavigateToRecommendations
             <Radar
               name="Mediana Geral"
               dataKey="Mediana Geral"
-              stroke="hsl(160, 70%, 40%)"
+              stroke="hsl(270, 70%, 50%)"
               fill="transparent"
               strokeWidth={3}
-              dot={{ r: 4, fill: "hsl(160, 70%, 40%)" }}
+              dot={{ r: 4, fill: "hsl(270, 70%, 50%)" }}
             />
           </RadarChart>
         </ResponsiveContainer>

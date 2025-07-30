@@ -123,16 +123,16 @@ export function EixosBarChart({ eixosValues, microrregiao }: EixosBarChartProps)
           {/* Legenda */}
           <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-xs text-gray-600">
             <div className="flex items-center">
-              <span className="h-3 w-3 rounded-full bg-green-500 mr-2"></span>
-              <span>Avançado (66%+)</span>
+              <span className="h-3 w-3 rounded-full bg-orange-500 mr-2"></span>
+              <span>Emergente (0-33%)</span>
             </div>
             <div className="flex items-center">
               <span className="h-3 w-3 rounded-full bg-blue-500 mr-2"></span>
               <span>Em Evolução (33-66%)</span>
             </div>
             <div className="flex items-center">
-              <span className="h-3 w-3 rounded-full bg-orange-500 mr-2"></span>
-              <span>Emergente (0-33%)</span>
+              <span className="h-3 w-3 rounded-full bg-green-500 mr-2"></span>
+              <span>Avançado (66%+)</span>
             </div>
           </div>
           {/* Fonte */}

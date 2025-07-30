@@ -170,3 +170,33 @@ export function calculateMedians(data: MicroRegionData[]): Record<string, number
   
   return medians;
 }
+
+export function calculateMediansByMacroregion(data: MicroRegionData[], targetMacroregion: string): Record<string, number> {
+  const eixos = ['eixo_1', 'eixo_2', 'eixo_3', 'eixo_4', 'eixo_5', 'eixo_6', 'eixo_7'];
+  const medians: Record<string, number> = {};
+  
+  // Filtrar dados apenas da macrorregião específica
+  const macroData = data.filter(item => item.macrorregiao === targetMacroregion);
+  
+  eixos.forEach(eixo => {
+    const values = macroData.map(item => {
+      const value = item[eixo as keyof MicroRegionData];
+      // Verificar se o valor existe e é válido
+      if (value === undefined || value === null || value === '') {
+        return NaN;
+      }
+      // Se for string, fazer replace, senão usar diretamente
+      const cleanValue = typeof value === 'string' ? value.replace(',', '.') : String(value);
+      return parseFloat(cleanValue);
+    })
+      .filter(val => !isNaN(val))
+      .sort((a, b) => a - b);
+    
+    const mid = Math.floor(values.length / 2);
+    medians[eixo] = values.length % 2 !== 0 ? 
+      values[mid] : 
+      (values[mid - 1] + values[mid]) / 2;
+  });
+  
+  return medians;
+}

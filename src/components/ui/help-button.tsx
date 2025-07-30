@@ -49,7 +49,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Como funciona o Gráfico de Radar?",
-    answer: "Imagine uma teia de aranha! Cada ponta representa uma área (eixo). Se a linha está mais próxima do centro = precisa melhorar. Se está mais longe = está bem. A linha azul é sua região, a cinza é a média geral.",
+    answer: "Imagine uma teia de aranha! Cada ponta representa uma área (eixo). Se a linha está mais próxima do centro = precisa melhorar. Se está mais longe = está bem. A linha azul é sua região, a cinza é a mediana geral.",
     category: "Gráficos",
     tags: ["radar", "teia", "aranha", "visual", "fácil"]
   },
@@ -140,7 +140,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "O que é Mediana?",
-    answer: "É o valor do meio: metade das regiões está acima, metade está abaixo. Serve para comparar sua região com a média.",
+    answer: "É o valor do meio: metade das regiões está acima, metade está abaixo. Serve para comparar sua região com outras regiões.",
     category: "Conceitos Gerais",
     tags: ["mediana", "comparação", "média"]
   },
@@ -206,7 +206,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Como interpretar a tabela de eixos?",
-    answer: "Cada linha mostra um eixo (área avaliada), o valor da sua região, a mediana e se está acima ou abaixo da média.",
+    answer: "Cada linha mostra um eixo (área avaliada), o valor da sua região, a mediana e se está acima ou abaixo da mediana.",
     category: "Interpretação",
     tags: ["tabela de eixos", "mediana", "comparação"]
   },
@@ -218,7 +218,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "O que significa ‘Performance’ na tabela de eixos?",
-    answer: "Mostra se sua região está acima, na média ou abaixo das outras microrregiões naquele eixo.",
+    answer: "Mostra se sua região está acima, na mediana ou abaixo das outras microrregiões naquele eixo.",
     category: "Interpretação",
     tags: ["performance", "tabela de eixos", "comparação"]
   },

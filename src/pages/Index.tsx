@@ -618,6 +618,7 @@ const Index = () => {
                   <div data-tour="radar">
                     <DashboardRadarChart
                       data={selectedData}
+                      allData={data}
                       medians={medians}
                       onNavigateToRecommendations={handleNavigateToRecommendations}
                     />
@@ -663,6 +664,7 @@ const Index = () => {
               <div data-tour="radar">
                 <DashboardRadarChart
                   data={selectedData}
+                  allData={data}
                   medians={medians}
                   onNavigateToRecommendations={handleNavigateToRecommendations}
                 />

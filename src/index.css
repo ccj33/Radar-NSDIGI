@@ -237,6 +237,15 @@ All colors MUST be HSL.
 
   /* Melhorias de foco */
   *:focus {
+    outline: none;
+  }
+  
+  /* Apenas para elementos interativos */
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  a:focus {
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
   }

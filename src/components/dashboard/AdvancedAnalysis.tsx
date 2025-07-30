@@ -253,7 +253,7 @@ export function AdvancedAnalysis({ data, selectedMicroregiao, medians }: Advance
                 Compare o índice de maturidade digital (INMSD) entre as microrregiões selecionadas. A diferença mostra quanto a região selecionada está acima ou abaixo da comparação.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6" data-tour="comparacao-eixos">
-                <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                <div className="text-center p-4 bg-gray-50 rounded-lg border border-gray-300">
                   <div className="text-2xl font-bold text-gray-900">
                     {(comparisonStats?.selectedIndice).toFixed(2)}
                   </div>
@@ -272,17 +272,17 @@ export function AdvancedAnalysis({ data, selectedMicroregiao, medians }: Advance
                   </div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
-                  <div className={`text-2xl font-bold flex items-center justify-center gap-1 ${comparisonStats?.isBetter ? 'text-green-600' : comparisonStats?.difference < 0 ? 'text-yellow-600' : 'text-purple-900'}`}>
+                  <div className={`text-2xl font-bold flex items-center justify-center gap-1 ${comparisonStats?.isBetter ? 'text-green-600' : comparisonStats?.difference < 0 ? 'text-yellow-800' : 'text-purple-900'}`}>
                     {comparisonStats?.isBetter ? (
                       <TrendingUp className="h-5 w-5 text-green-600 mr-3" />
                     ) : comparisonStats?.difference < 0 ? (
-                      <TrendingDown className="h-5 w-5 text-yellow-600 mr-3" />
+                      <TrendingDown className="h-5 w-5 text-yellow-800 mr-3" />
                     ) : (
                       <Minus className="h-5 w-5 text-gray-600 mr-3" />
                     )}
                     {Math.abs(comparisonStats?.percentageDiff || 0).toFixed(2)}%
                   </div>
-                  <div className={`text-sm mt-1 ${comparisonStats?.isBetter ? 'text-green-600' : comparisonStats?.difference < 0 ? 'text-yellow-600' : 'text-purple-900'}`}>Diferença</div>
+                  <div className={`text-sm mt-1 ${comparisonStats?.isBetter ? 'text-green-600' : comparisonStats?.difference < 0 ? 'text-yellow-800' : 'text-purple-900'}`}>Diferença</div>
                   <div className="text-xs text-gray-700 mt-1 text-center">
                     {comparisonStats?.isBetter ? 'Maior' : comparisonStats?.difference < 0 ? 'Menor' : 'Igual'}
                   </div>

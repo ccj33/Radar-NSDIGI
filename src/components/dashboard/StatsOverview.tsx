@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { EstatisticasGerais } from "./EstatisticasGerais";
 import { DistribuicaoINMSD } from "./DistribuicaoINMSD";
+import { formatPopulation } from "@/lib/utils";
 
 interface StatsOverviewProps {
   data: MicroRegionData[];
@@ -57,18 +58,32 @@ export function StatsOverview({ data, selectedData, macroFiltro }: StatsOverview
     ? data.filter(item => item.macrorregiao === macroFiltro)
     : data;
 
+
+
   const totalPopulation = filteredData.reduce((sum, item) => {
-    const pop = item?.populacao ? parseInt(String(item.populacao).replace(/\./g, '')) : 0;
+    const pop = item?.populacao ? parseFloat(String(item.populacao).replace(/\./g, '').replace(',', '.')) : 0;
     return sum + pop;
   }, 0);
 
-  const averageMaturity = filteredData.reduce((sum, item) => {
+  // Calcular mediana da maturidade (mais representativa que a média)
+  const calculateMedian = (values: number[]) => {
+    if (values.length === 0) return 0;
+    const sorted = values.sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 
+      ? (sorted[mid - 1] + sorted[mid]) / 2 
+      : sorted[mid];
+  };
+
+  const maturityValues = filteredData.map(item => {
     const ind = item?.indice_geral ? parseFloat(String(item.indice_geral).replace(',', '.')) : 0;
-    return sum + ind;
-  }, 0) / (filteredData.length || 1);
+    return ind;
+  }).filter(val => val > 0);
+
+  const medianMaturity = calculateMedian(maturityValues);
 
   const selectedMaturity = selectedData?.indice_geral ? parseFloat(String(selectedData.indice_geral).replace(',', '.')) : 0;
-  const isAboveAverage = selectedMaturity > averageMaturity;
+  const isAboveMedian = selectedMaturity > medianMaturity;
 
   const classificationCounts = filteredData.reduce((acc, item) => {
     const key = item?.classificacao_inmsd ?? 'Desconhecido';
@@ -121,9 +136,9 @@ export function StatsOverview({ data, selectedData, macroFiltro }: StatsOverview
         filteredData={filteredData}
         totalPopulation={totalPopulation}
         selectedMaturity={selectedMaturity}
-        isAboveAverage={isAboveAverage}
+        isAboveMedian={isAboveMedian}
         macroFiltro={macroFiltro}
-        averageMaturity={averageMaturity}
+        medianMaturity={medianMaturity}
         selectedData={selectedData}
         selectedRanking={selectedRanking}
       />
