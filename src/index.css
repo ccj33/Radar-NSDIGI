@@ -1,0 +1,432 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Dashboard color scheme - 2024 Modern Professional Analytics Theme */
+    --background: 220 20% 99%; /* Slightly softer background */
+    --foreground: 222 84% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 84% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 84% 4%;
+
+    /* Primary - 2024 Modern Blue (mais vibrante e moderno) */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 217 91% 55%;
+    --primary-light: 217 91% 98%;
+
+    /* Secondary - Professional Gray 2024 */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 84% 4%;
+    --secondary-hover: 220 14% 92%;
+
+    /* Dashboard specific colors */
+    --dashboard-bg: 220 14% 98%;
+    --dashboard-sidebar: 0 0% 100%;
+    --dashboard-header: 0 0% 100%;
+    
+    /* Data visualization colors - Paleta 2024 moderna e acessível */
+    --chart-primary: 217 91% 60%; /* Alinhado com a nova cor primária */
+    --chart-secondary: 142 71% 45%;
+    --chart-tertiary: 38 92% 50%;
+    --chart-quaternary: 262 83% 58%;
+    --chart-fifth: 0 84% 60%;
+    --chart-sixth: 199 89% 48%;
+    --chart-seventh: 330 81% 60%;
+    
+    /* Status colors - 2024 mais sofisticados */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 84% 4%;
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 100%;
+    --info: 221 83% 53%;
+    --info-foreground: 0 0% 100%;
+
+    /* Nova cor de acento vibrante */
+    --accent-vibrant: 160 60% 45%;
+    --accent-vibrant-foreground: 0 0% 100%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 40%; /* Melhor contraste */
+
+    --accent: 221 83% 98%;
+    --accent-foreground: 221 83% 53%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%; /* Alinhado com a nova cor primária */
+
+    --radius: 0.75rem;
+
+    /* Gradients - 2024 mais sutis e profissionais */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--chart-secondary)));
+    --gradient-chart: linear-gradient(180deg, hsl(var(--chart-primary) / 0.06), transparent);
+    --gradient-dashboard: linear-gradient(135deg, hsl(var(--dashboard-bg)), hsl(var(--primary-light)));
+
+    /* Shadows - 2024 com cores mais naturais */
+    --shadow-color: 220 10% 10%;
+    --shadow-card: 0 1px 2px 0 hsl(var(--shadow-color) / 0.08), 0 1px 1px 0 hsl(var(--shadow-color) / 0.04);
+    --shadow-elevated: 0 4px 6px -1px hsl(var(--shadow-color) / 0.08), 0 2px 4px -1px hsl(var(--shadow-color) / 0.04);
+    --shadow-header: 0 1px 2px 0 hsl(var(--shadow-color) / 0.04);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Typography - 2024 Modern Professional Font Stack */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    
+    /* Font weights - 2024 Complete scale */
+    --font-weight-thin: 100;
+    --font-weight-extralight: 200;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
+    
+    /* Line heights - 2024 Professional ratios */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* Letter spacing - 2024 Improved readability */
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+  }
+
+  /* Animações globais */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+      transform: translate3d(0, -8px, 0);
+    }
+    70% {
+      transform: translate3d(0, -4px, 0);
+    }
+    90% {
+      transform: translate3d(0, -2px, 0);
+    }
+  }
+
+  /* Classes de animação utilitárias */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.4s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.4s ease-out forwards;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+
+  /* Transições suaves globais */
+  * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+  /* Melhorias de scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Melhorias de foco */
+  *:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Melhorias de hover */
+  .hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+  }
+}
+
+@layer components {
+  /* Garantir que não há amarelo nos selects */
+  .select-trigger {
+    background-color: white !important;
+    border-color: #d1d5db !important;
+  }
+  
+  .select-trigger:focus {
+    border-color: hsl(var(--primary)) !important;
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2) !important;
+  }
+}
+
+/* Melhorias para daltônicos */
+@layer utilities {
+  .colorblind-friendly {
+    /* Cores com alto contraste para daltônicos */
+    --red-daltonic: #d73027;
+    --blue-daltonic: #4575b4;
+    --green-daltonic: #1a9850;
+    --yellow-daltonic: #fee08b;
+    --orange-daltonic: #fd8d3c;
+  }
+}
+
+/* Animações suaves */
+@layer components {
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .hover-lift {
+    @apply hover:shadow-lg hover:-translate-y-1 transition-all duration-200;
+  }
+
+  /* Typography utilities - 2024 Modern professional styles */
+  .text-display {
+    @apply font-display font-black tracking-tight;
+  }
+  
+  .text-heading {
+    @apply font-sans font-bold tracking-wide;
+  }
+  
+  .text-body {
+    @apply font-sans font-normal leading-relaxed;
+  }
+  
+  .text-caption {
+    @apply font-sans font-medium text-sm tracking-wide;
+  }
+  
+  .text-mono {
+    @apply font-mono font-medium;
+  }
+  
+  /* 2024 Professional text sizes */
+  .text-hero {
+    @apply text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight;
+  }
+  
+  .text-title {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+  }
+  
+  .text-subtitle {
+    @apply text-xl md:text-2xl font-semibold tracking-wide;
+  }
+  
+  .text-headline {
+    @apply text-lg md:text-xl font-semibold tracking-wide;
+  }
+  
+  .text-body-large {
+    @apply text-base md:text-lg font-normal leading-relaxed;
+  }
+  
+  .text-body-small {
+    @apply text-sm font-normal leading-normal;
+  }
+  
+  .text-caption-small {
+    @apply text-xs font-medium tracking-wide;
+  }
+  
+  /* 2024 Modern text utilities */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-chart-secondary bg-clip-text text-transparent;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* Enhanced accessibility and readability */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  
+  .prose-headings {
+    @apply font-sans font-semibold tracking-wide text-foreground;
+  }
+  
+  .prose-body {
+    @apply font-sans font-normal leading-relaxed text-foreground;
+  }
+  
+  .prose-caption {
+    @apply font-sans font-medium text-sm tracking-wide text-muted-foreground;
+  }
+}
