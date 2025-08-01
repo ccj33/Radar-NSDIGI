@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MicroRegionData, FilterOptions, EIXOS_NAMES } from '@/types/dashboard';
-import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
-import { Filters } from '@/components/dashboard/Filters';
+import MicrosoftHeader from '@/components/dashboard/MicrosoftHeader';
+import MicrosoftSidebar from '@/components/dashboard/MicrosoftSidebar';
 import { StatsOverview } from '@/components/dashboard/StatsOverview';
 import { DashboardRadarChart } from '@/components/dashboard/RadarChart';
 import { BarChartComponent } from '@/components/dashboard/BarChartComponent';
@@ -17,13 +18,16 @@ import { HelpButton } from '@/components/ui/help-button';
 import { calculateMedians } from '@/data/mockData';
 import { toast } from 'sonner';
 import { useExcelData } from '@/hooks/useExcelData';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
-import { HelpCircle, X, Home, ArrowUp, Download, Settings, Target } from 'lucide-react';
+import { PlanoAcaoModalContent } from "@/components/dashboard/plano-acao/PlanoAcaoModal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { HelpCircle, X, Home, ArrowUp, Download, Settings, Target, Lightbulb } from 'lucide-react';
 import { useEffect } from 'react';
 import React from 'react'; // Added missing import for React
 import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DistribuicaoINMSD } from '@/components/dashboard/DistribuicaoINMSD';
+import { InteractiveBanner } from '@/components/dashboard/InteractiveBanner';
+import PlanoDeAcao from '@/components/dashboard/plano-acao/PlanoDeAcao';
 import { Menu, Filter } from 'lucide-react'; // Importar ícones
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'; // Importar Drawer com mais componentes
 
@@ -336,17 +340,24 @@ function UserGuideModal({ open, setOpen }: { open: boolean, setOpen: (v: boolean
   );
 }
 
+
+
 const Index = () => {
   const { data, loading, error, dataSource, refreshData } = useExcelData();
+  const location = useLocation();
   const [selectedMicroregiao, setSelectedMicroregiao] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({});
-  const [activeSection, setActiveSection] = useState('overview');
+  const [activeSection, setActiveSection] = useState(
+    location.state?.activeSection || 'overview'
+  );
   const [runTour, setRunTour] = useState(() => !localStorage.getItem(GUIDE_STORAGE_KEY));
   const [showAdvanced, setShowAdvanced] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
   const [selectedEixoIndex, setSelectedEixoIndex] = useState(0);
+
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -520,8 +531,8 @@ const Index = () => {
         }}
         callback={handleJoyrideCallback}
       />
-      {/* Menu de Navegação Superior */}
-      <NavigationMenu activeSection={activeSection} onNavigate={handleNavigate} />
+      {/* Microsoft Style Header */}
+      <MicrosoftHeader activeSection={activeSection} onNavigate={handleNavigate} />
 
       {/* Botão de Filtros para Mobile */}
       <div className="lg:hidden fixed top-4 right-4 z-50">
@@ -539,7 +550,7 @@ const Index = () => {
               </DrawerDescription>
             </DrawerHeader>
             <div className="p-4 overflow-y-auto">
-              <Filters
+              <MicrosoftSidebar
                 data={data}
                 selectedMicroregiao={selectedMicroregiao}
                 filters={filters}
@@ -559,12 +570,17 @@ const Index = () => {
         </Drawer>
       </div>
 
+      {/* Banner Interativo - Cobrindo toda a área */}
+      <div className="absolute top-0 left-0 right-0 z-20">
+        <InteractiveBanner />
+      </div>
+
       {/* Conteúdo Principal */}
-      <main className="container mx-auto px-4 py-8 flex gap-8">
-        {/* Filtros - Visível apenas em telas grandes */}
+      <main className="container mx-auto px-4 py-8 flex gap-8 relative pt-40">
+        {/* Microsoft Style Sidebar - Visível apenas em telas grandes */}
         <aside className="hidden lg:block w-1/4 xl:w-1/5 sticky top-20 self-start">
           <div data-tour="filtros">
-            <Filters
+            <MicrosoftSidebar
               data={data}
               selectedMicroregiao={selectedMicroregiao}
               filters={filters}
@@ -575,8 +591,16 @@ const Index = () => {
           </div>
         </aside>
 
-        {/* Conteúdo do Dashboard */}
+                          {/* Conteúdo do Dashboard */}
         <div className="flex-1 min-w-0">
+
+          {/* Plano de Ação - Posicionado antes das Outras Microrregiões */}
+          {activeSection === 'overview' && selectedData && (
+            <div className="mb-8">
+              <PlanoDeAcao />
+            </div>
+          )}
+
           {/* Cabeçalho detalhado da microrregião - só na aba Geral */}
           {activeSection === 'overview' && selectedData && (
             <div className="mb-8">
@@ -587,9 +611,11 @@ const Index = () => {
           {/* Seções do Dashboard */}
           {activeSection === 'overview' && (
             <div className="space-y-8">
+
               <div data-tour="cards-overview">
                 <StatsOverview data={data} selectedData={selectedData} macroFiltro={filters.macrorregiao} />
               </div>
+
               <div data-tour="populacao">
                 <PopulationChartComponent
                   data={filteredData}
@@ -660,8 +686,9 @@ const Index = () => {
           )}
 
           {activeSection === 'radar' && (
-            selectedData ? (
-              <div data-tour="radar">
+            <>
+              {selectedData ? (
+                <div data-tour="radar">
                 <DashboardRadarChart
                   data={selectedData}
                   allData={data}
@@ -669,38 +696,44 @@ const Index = () => {
                   onNavigateToRecommendations={handleNavigateToRecommendations}
                 />
               </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                  <div className="text-blue-600 text-6xl mb-4">📊</div>
-                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
-                  <p className="text-blue-700">Para visualizar o gráfico radar, selecione uma microrregião nos filtros.</p>
+                          ) : (
+                <div className="text-center py-12">
+                  <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
+                    <div className="text-blue-600 text-6xl mb-4">📊</div>
+                    <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
+                    <p className="text-blue-700">Para visualizar o gráfico radar, selecione uma microrregião nos filtros.</p>
+                  </div>
                 </div>
-              </div>
-            )
+              )}
+            </>
           )}
 
           {activeSection === 'barras' && (
-            <div data-tour="barras">
+            <>
+              <div data-tour="barras">
               <BarChartComponent
                 data={filteredData}
                 selectedMicroregiao={selectedMicroregiao}
                 macroFiltro={filters.macrorregiao}
               />
             </div>
+            </>
           )}
 
           {activeSection === 'populacao' && (
-            <div data-tour="populacao">
+            <>
+              <div data-tour="populacao">
               <PopulationChartComponent
                 data={filteredData}
                 selectedMicroregiao={selectedMicroregiao}
               />
             </div>
+            </>
           )}
 
           {activeSection === 'tabela' && (
-            selectedData ? (
+            <>
+              {selectedData ? (
               <div data-tour="tabela-eixos">
                 <EixosTable data={selectedData} medians={medians} />
               </div>
@@ -712,11 +745,13 @@ const Index = () => {
                   <p className="text-blue-700">Para visualizar a tabela de eixos, selecione uma microrregião nos filtros.</p>
                 </div>
               </div>
-            )
+            )}
+            </>
           )}
 
           {activeSection === 'recomendacoes' && (
-            selectedData ? (
+            <>
+              {selectedData ? (
               <div data-tour="recomendacoes">
                 <RecommendationsPanel data={selectedData} initialEixoIndex={selectedEixoIndex} />
               </div>
@@ -728,11 +763,13 @@ const Index = () => {
                   <p className="text-blue-700">Para visualizar as recomendações, selecione uma microrregião nos filtros.</p>
                 </div>
               </div>
-            )
+            )}
+            </>
           )}
 
           {activeSection === 'executivo' && (
-            selectedData ? (
+            <>
+              {selectedData ? (
               <ExecutiveDashboard
                 data={data}
                 selectedMicroregiao={selectedMicroregiao}
@@ -746,11 +783,13 @@ const Index = () => {
                   <p className="text-blue-700">Para visualizar o dashboard executivo, selecione uma microrregião nos filtros.</p>
                 </div>
               </div>
-            )
+            )}
+            </>
           )}
 
           {activeSection === 'analise-avancada' && (
-            selectedData ? (
+            <>
+              {selectedData ? (
               <AdvancedAnalysis
                 data={data}
                 selectedMicroregiao={selectedMicroregiao}
@@ -764,7 +803,8 @@ const Index = () => {
                   <p className="text-blue-700">Para visualizar a análise avançada, selecione uma microrregião nos filtros.</p>
                 </div>
               </div>
-            )
+            )}
+            </>
           )}
         </div>
       </main>

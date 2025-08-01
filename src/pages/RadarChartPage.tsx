@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { DashboardRadarChart } from '@/components/dashboard/RadarChart';
 import { Filters } from '@/components/dashboard/Filters';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { InteractiveBanner } from '@/components/dashboard/InteractiveBanner';
 import { mockData, calculateMedians } from '@/data/mockData';
 import { FilterOptions } from '@/types/dashboard';
 import { toast } from 'sonner';
@@ -101,6 +102,11 @@ const RadarChartPage = () => {
           onFiltersChange={handleFiltersChange}
           selectedData={selectedData}
         />
+
+        {/* Banner Interativo */}
+        <div className="mb-6">
+          <InteractiveBanner />
+        </div>
 
         {/* Cabeçalho da Microrregião */}
         <DashboardHeader data={selectedData} />

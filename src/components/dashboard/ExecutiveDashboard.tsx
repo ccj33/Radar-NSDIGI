@@ -22,6 +22,7 @@ import {
 import { useState } from 'react';
 import { EixosBarChart } from './EixosBarChart';
 
+
 interface ExecutiveDashboardProps {
   data: MicroRegionData[];
   selectedMicroregiao: string;
@@ -134,6 +135,8 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
           </div>
         </CardHeader>
       </Card>
+
+
 
       {showKPIs && (
         // KPIs Principais */}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Home, BarChart3, PieChart, Users, Table, FileText, Menu, X, Target, TrendingUp, Activity, MapPin, BookOpen } from 'lucide-react';
+import { ChevronRight, Home, BarChart3, PieChart, Users, Table, FileText, Menu, X, Target, TrendingUp, Activity, MapPin, BookOpen, ArrowLeft } from 'lucide-react';
 
 interface NavigationMenuProps {
   activeSection: string;
@@ -38,7 +38,7 @@ export function NavigationMenu({ activeSection, onNavigate }: NavigationMenuProp
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-600 opacity-20"></div>
                 <svg className="h-6 w-6 text-blue-600 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                  <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                  <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4 4-1.79 4-4 4z"/>
                   <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
                 </svg>
                 <div className="absolute top-0.5 right-0.5 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -54,6 +54,19 @@ export function NavigationMenu({ activeSection, onNavigate }: NavigationMenuProp
                   </span>
                 </div>
               </div>
+            </div>
+            
+            {/* Botão Voltar à Landing Page */}
+            <div className="flex-shrink-0 ml-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => window.location.href = '/'}
+                className="text-white hover:bg-white/10 px-3 py-1.5"
+              >
+                <ArrowLeft className="w-4 h-4 mr-1" />
+                Início
+              </Button>
             </div>
 
             {/* Menu Centralizado - Desktop */}

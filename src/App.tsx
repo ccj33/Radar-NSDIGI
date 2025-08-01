@@ -3,12 +3,14 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import DashboardPage from "./pages/DashboardPage";
+import NewLandingPage from "./pages/NewLandingPage";
 import RadarChartPage from "./pages/RadarChartPage";
 import BarChartPage from "./pages/BarChartPage";
 import PopulationChartPage from "./pages/PopulationChartPage";
 import NotFound from "./pages/NotFound";
 import MicroRegionPage from "./pages/MicroRegionPage";
+import BannerTest from "./pages/BannerTest";
 
 const queryClient = new QueryClient();
 
@@ -19,11 +21,13 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<NewLandingPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/radar" element={<RadarChartPage />} />
           <Route path="/barras" element={<BarChartPage />} />
           <Route path="/populacao" element={<PopulationChartPage />} />
           <Route path="/dashboard/microrregiao/:token" element={<MicroRegionPage />} />
+          <Route path="/banner-test" element={<BannerTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
