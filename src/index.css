@@ -344,6 +344,13 @@ All colors MUST be HSL.
 }
 
 @layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
   * {
     @apply border-border;
   }
@@ -353,6 +360,13 @@ All colors MUST be HSL.
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-size: clamp(14px, 2.5vw, 16px);
+    line-height: 1.5;
+  }
+  
+  /* Prevenção de zoom em inputs no mobile */
+  input, select, textarea {
+    font-size: 16px !important;
   }
 
   #root {
@@ -481,6 +495,56 @@ All colors MUST be HSL.
   
   .prose-caption {
     @apply font-sans font-medium text-sm tracking-wide text-muted-foreground;
+  }
+  
+  /* Sistema de design fluido - Responsividade 2024 */
+  .space-fluid-sm { gap: clamp(0.5rem, 2vw, 1rem); }
+  .space-fluid-md { gap: clamp(1rem, 3vw, 2rem); }
+  .space-fluid-lg { gap: clamp(1.5rem, 4vw, 3rem); }
+
+  /* Texto responsivo */
+  .text-fluid-sm { font-size: clamp(0.875rem, 2vw, 1rem); }
+  .text-fluid-base { font-size: clamp(1rem, 2.5vw, 1.125rem); }
+  .text-fluid-xl { font-size: clamp(1.25rem, 4vw, 1.5rem); }
+
+  /* Grid responsivo inteligente */
+  .grid-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+  
+  /* Containers com overflow inteligente */
+  .overflow-x-auto-touch {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  
+  .overflow-x-auto-touch::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .overflow-x-auto-touch::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground));
+    border-radius: 2px;
+  }
+  
+  /* Área de toque adequada */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevenção de layout shift */
+  .chart-min-height {
+    min-height: clamp(300px, 50vh, 500px);
+  }
+  
+  /* Imagens responsivas */
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
   }
 }
 
