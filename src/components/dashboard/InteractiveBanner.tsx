@@ -79,7 +79,7 @@ const InteractiveBanner: React.FC = () => {
   const currentSlideData = bannerSlides[currentSlide];
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <div 
         className={`relative h-32 bg-gradient-to-r ${currentSlideData.color} transition-all duration-700 ease-in-out rounded-lg shadow-lg`}
         onMouseEnter={() => setIsAutoPlaying(false)}

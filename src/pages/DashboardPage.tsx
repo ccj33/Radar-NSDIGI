@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MicroRegionData, FilterOptions, EIXOS_NAMES } from '@/types/dashboard';
-import MicrosoftHeader from '@/components/dashboard/MicrosoftHeader';
+import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
 import MicrosoftSidebar from '@/components/dashboard/MicrosoftSidebar';
 import { StatsOverview } from '@/components/dashboard/StatsOverview';
 import { DashboardRadarChart } from '@/components/dashboard/RadarChart';
@@ -24,10 +24,11 @@ import { HelpCircle, X, Home, ArrowUp, Download, Settings, Target, Lightbulb } f
 import { useEffect } from 'react';
 import React from 'react'; // Added missing import for React
 import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { MicroRegionHeader } from '@/components/dashboard/MicroRegionHeader';
 import { DistribuicaoINMSD } from '@/components/dashboard/DistribuicaoINMSD';
-import { InteractiveBanner } from '@/components/dashboard/InteractiveBanner';
+
 import PlanoDeAcao from '@/components/dashboard/plano-acao/PlanoDeAcao';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Menu, Filter } from 'lucide-react'; // Importar ícones
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'; // Importar Drawer com mais componentes
 
@@ -531,8 +532,8 @@ const Index = () => {
         }}
         callback={handleJoyrideCallback}
       />
-      {/* Microsoft Style Header */}
-      <MicrosoftHeader activeSection={activeSection} onNavigate={handleNavigate} />
+      {/* Navigation Menu */}
+      <NavigationMenu activeSection={activeSection} onNavigate={handleNavigate} />
 
       {/* Botão de Filtros para Mobile */}
       <div className="lg:hidden fixed top-4 right-4 z-50">
@@ -570,10 +571,7 @@ const Index = () => {
         </Drawer>
       </div>
 
-      {/* Banner Interativo - Cobrindo toda a área */}
-      <div className="absolute top-0 left-0 right-0 z-20">
-        <InteractiveBanner />
-      </div>
+
 
       {/* Conteúdo Principal */}
       <main className="container mx-auto px-4 py-8 flex gap-8 relative pt-40">
@@ -604,7 +602,7 @@ const Index = () => {
           {/* Cabeçalho detalhado da microrregião - só na aba Geral */}
           {activeSection === 'overview' && selectedData && (
             <div className="mb-8">
-              <DashboardHeader data={selectedData} allData={data} />
+              <MicroRegionHeader data={selectedData} allData={data} />
             </div>
           )}
 
@@ -666,22 +664,7 @@ const Index = () => {
                     medians={medians}
                   />
                 </>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                    <div className="text-blue-600 text-6xl mb-4">📊</div>
-                    <h3 className="text-xl font-semibold text-blue-900 mb-2">
-                      Selecione uma Microrregião
-                    </h3>
-                    <p className="text-blue-700 mb-4">
-                      Use os filtros acima para escolher uma microrregião e visualizar todos os dados do dashboard.
-                    </p>
-                    <div className="text-sm text-blue-600">
-                      💡 <strong>Dica:</strong> Você pode filtrar por macrorregião ou classificação para encontrar a região desejada.
-                    </div>
-                  </div>
-                </div>
-              )}
+              ) : null}
             </div>
           )}
 
@@ -697,13 +680,15 @@ const Index = () => {
                 />
               </div>
                           ) : (
-                <div className="text-center py-12">
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                    <div className="text-blue-600 text-6xl mb-4">📊</div>
-                    <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
-                    <p className="text-blue-700">Para visualizar o gráfico radar, selecione uma microrregião nos filtros.</p>
-                  </div>
-                </div>
+                <EmptyState
+                  icon={PieChart}
+                  title="Selecione uma Microrregião"
+                  description="Para visualizar o gráfico radar, selecione uma microrregião nos filtros."
+                  tip={{
+                    title: "Como usar",
+                    content: "Use os filtros na barra lateral para escolher uma região e ver sua análise por eixos."
+                  }}
+                />
               )}
             </>
           )}
@@ -738,13 +723,15 @@ const Index = () => {
                 <EixosTable data={selectedData} medians={medians} />
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                  <div className="text-blue-600 text-6xl mb-4">📊</div>
-                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
-                  <p className="text-blue-700">Para visualizar a tabela de eixos, selecione uma microrregião nos filtros.</p>
-                </div>
-              </div>
+              <EmptyState
+                icon={Table}
+                title="Selecione uma Microrregião"
+                description="Para visualizar a tabela de eixos, selecione uma microrregião nos filtros."
+                tip={{
+                  title: "Como usar",
+                  content: "Use os filtros na barra lateral para escolher uma região e ver os detalhamentos por eixo."
+                }}
+              />
             )}
             </>
           )}
@@ -756,13 +743,15 @@ const Index = () => {
                 <RecommendationsPanel data={selectedData} initialEixoIndex={selectedEixoIndex} />
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                  <div className="text-blue-600 text-6xl mb-4">📊</div>
-                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
-                  <p className="text-blue-700">Para visualizar as recomendações, selecione uma microrregião nos filtros.</p>
-                </div>
-              </div>
+              <EmptyState
+                icon={BookOpen}
+                title="Selecione uma Microrregião"
+                description="Para visualizar as recomendações, selecione uma microrregião nos filtros."
+                tip={{
+                  title: "Como usar",
+                  content: "Use os filtros na barra lateral para escolher uma região e ver as recomendações personalizadas."
+                }}
+              />
             )}
             </>
           )}
@@ -776,13 +765,15 @@ const Index = () => {
                 medians={medians}
               />
             ) : (
-              <div className="text-center py-12">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                  <div className="text-blue-600 text-6xl mb-4">📊</div>
-                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
-                  <p className="text-blue-700">Para visualizar o dashboard executivo, selecione uma microrregião nos filtros.</p>
-                </div>
-              </div>
+              <EmptyState
+                icon={Target}
+                title="Selecione uma Microrregião"
+                description="Para visualizar o dashboard executivo, selecione uma microrregião nos filtros."
+                tip={{
+                  title: "Como usar",
+                  content: "Use os filtros na barra lateral para escolher uma região e ver os indicadores estratégicos."
+                }}
+              />
             )}
             </>
           )}
@@ -796,13 +787,15 @@ const Index = () => {
                 medians={medians}
               />
             ) : (
-              <div className="text-center py-12">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-                  <div className="text-blue-600 text-6xl mb-4">📊</div>
-                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Selecione uma Microrregião</h3>
-                  <p className="text-blue-700">Para visualizar a análise avançada, selecione uma microrregião nos filtros.</p>
-                </div>
-              </div>
+              <EmptyState
+                icon={TrendingUp}
+                title="Selecione uma Microrregião"
+                description="Para visualizar a análise avançada, selecione uma microrregião nos filtros."
+                tip={{
+                  title: "Como usar",
+                  content: "Use os filtros na barra lateral para escolher uma região e explorar análises avançadas."
+                }}
+              />
             )}
             </>
           )}

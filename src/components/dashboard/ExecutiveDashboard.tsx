@@ -93,13 +93,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
   const [showKPIs, setShowKPIs] = useState(true);
 
   if (!selectedData || !stats) {
-    return (
-      <Card className="col-span-full">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground text-center">Selecione uma microrregião para visualizar o dashboard executivo</p>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
 
   const classification = getClassification(stats.indiceGeral);

@@ -1,139 +1,213 @@
-import { useState, useMemo } from 'react';
-import { DashboardBarChart } from '@/components/dashboard/BarChart';
-import { Filters } from '@/components/dashboard/Filters';
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
-import { InteractiveBanner } from '@/components/dashboard/InteractiveBanner';
-import { mockData } from '@/data/mockData';
+import { useState } from 'react';
+import { BarChartComponent } from '@/components/dashboard/BarChartComponent';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { useExcelData } from '@/hooks/useExcelData';
+import MicrosoftSidebar from '@/components/dashboard/MicrosoftSidebar';
 import { FilterOptions } from '@/types/dashboard';
-import { toast } from 'sonner';
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Filter } from 'lucide-react';
 
-const BarChartPage = () => {
-  const [data, setData] = useState(mockData);
-  const [selectedMicroregiao, setSelectedMicroregiao] = useState<string>(mockData[0].microrregiao);
+// Tipo simplificado para dados mock
+interface MockData {
+  microrregiao: string;
+  macrorregiao: string;
+  populacao: string;
+  indice_geral: string;
+  classificacao_inmsd: string;
+  eixo_1: string;
+  eixo_2: string;
+  eixo_3: string;
+  eixo_4: string;
+  eixo_5: string;
+  eixo_6: string;
+  eixo_7: string;
+}
+
+export default function BarChartPage() {
+  const { data, loading, error } = useExcelData();
+  const [selectedMicroregiao, setSelectedMicroregiao] = useState<string>('Belo Horizonte');
   const [filters, setFilters] = useState<FilterOptions>({});
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  // Encontrar dados da microrregião selecionada
-  const selectedData = useMemo(() => {
-    return data.find(item => item.microrregiao === selectedMicroregiao);
-  }, [selectedMicroregiao, data]);
+  // Mock data para demonstração - em produção viria dos dados reais
+  const mockData: MockData[] = [
+    {
+      microrregiao: "Belo Horizonte",
+      macrorregiao: "Central",
+      populacao: "2.521.564",
+      indice_geral: "0.75",
+      classificacao_inmsd: "Avançado",
+      eixo_1: "0.80",
+      eixo_2: "0.70",
+      eixo_3: "0.85",
+      eixo_4: "0.75",
+      eixo_5: "0.80",
+      eixo_6: "0.70",
+      eixo_7: "0.75"
+    },
+    {
+      microrregiao: "Contagem",
+      macrorregiao: "Central",
+      populacao: "668.949",
+      indice_geral: "0.65",
+      classificacao_inmsd: "Em Evolução",
+      eixo_1: "0.70",
+      eixo_2: "0.60",
+      eixo_3: "0.75",
+      eixo_4: "0.65",
+      eixo_5: "0.70",
+      eixo_6: "0.60",
+      eixo_7: "0.65"
+    },
+    {
+      microrregiao: "Betim",
+      macrorregiao: "Central",
+      populacao: "444.784",
+      indice_geral: "0.55",
+      classificacao_inmsd: "Em Evolução",
+      eixo_1: "0.60",
+      eixo_2: "0.50",
+      eixo_3: "0.65",
+      eixo_4: "0.55",
+      eixo_5: "0.60",
+      eixo_6: "0.50",
+      eixo_7: "0.55"
+    },
+    {
+      microrregiao: "Ribeirão das Neves",
+      macrorregiao: "Central",
+      populacao: "338.197",
+      indice_geral: "0.45",
+      classificacao_inmsd: "Emergente",
+      eixo_1: "0.50",
+      eixo_2: "0.40",
+      eixo_3: "0.55",
+      eixo_4: "0.45",
+      eixo_5: "0.50",
+      eixo_6: "0.40",
+      eixo_7: "0.45"
+    },
+    {
+      microrregiao: "Uberlândia",
+      macrorregiao: "Triângulo",
+      populacao: "713.232",
+      indice_geral: "0.70",
+      classificacao_inmsd: "Em Evolução",
+      eixo_1: "0.75",
+      eixo_2: "0.65",
+      eixo_3: "0.80",
+      eixo_4: "0.70",
+      eixo_5: "0.75",
+      eixo_6: "0.65",
+      eixo_7: "0.70"
+    }
+  ];
 
-  // Filtrar dados baseado nos filtros ativos
-  const filteredData = useMemo(() => {
-    return data.filter(item => {
-      return (!filters.macrorregiao || item.macrorregiao === filters.macrorregiao) &&
-             (!filters.regional_saude || item.regional_saude === filters.regional_saude) &&
-             (!filters.classificacao_inmsd || item.classificacao_inmsd === filters.classificacao_inmsd);
-    });
-  }, [filters, data]);
+  // Usar dados reais se disponíveis, senão usar mock
+  const allData = data && data.length > 0 ? data : (mockData as any);
+  const chartData = allData;
 
   const handleMicroregiaoChange = (microrregiao: string) => {
     setSelectedMicroregiao(microrregiao);
-    toast.success(`Microrregião selecionada: ${microrregiao}`);
   };
 
   const handleFiltersChange = (newFilters: FilterOptions) => {
     setFilters(newFilters);
-    
-    const filtered = data.filter(item => {
-      return (!newFilters.macrorregiao || item.macrorregiao === newFilters.macrorregiao) &&
-             (!newFilters.regional_saude || item.regional_saude === newFilters.regional_saude) &&
-             (!newFilters.classificacao_inmsd || item.classificacao_inmsd === newFilters.classificacao_inmsd);
-    });
-    
-    if (filtered.length > 0 && !filtered.find(item => item.microrregiao === selectedMicroregiao)) {
-      setSelectedMicroregiao(filtered[0].microrregiao);
-    }
   };
 
-  if (!selectedData) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Carregando dados...</h1>
-          <p className="text-muted-foreground">Por favor, aguarde enquanto carregamos as informações.</p>
+      <DashboardLayout activeSection="charts">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="text-blue-600 text-6xl mb-4">📊</div>
+            <h3 className="text-xl font-semibold text-blue-900 mb-2">Carregando dados...</h3>
+            <p className="text-blue-700">Aguarde enquanto carregamos as informações de maturidade digital.</p>
+          </div>
         </div>
-      </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DashboardLayout activeSection="charts">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="text-red-600 text-6xl mb-4">⚠️</div>
+            <h3 className="text-xl font-semibold text-red-900 mb-2">Erro ao carregar dados</h3>
+            <p className="text-red-700">{error}</p>
+          </div>
+        </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dashboard-bg">
-      {/* Header */}
-      <header className="bg-dashboard-header shadow-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/">
-                <Button variant="outline" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Voltar ao Dashboard
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  Gráfico de Barras - Maturidade Digital
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Comparação entre Microrregiões
-                </p>
+    <DashboardLayout activeSection="charts">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Ranking de Maturidade Digital</h1>
+          <p className="text-gray-600">Comparação do Índice de Maturidade Digital entre microrregiões</p>
+        </div>
+
+        {/* Botão de Filtros para Mobile */}
+        <div className="lg:hidden mb-6">
+          <Drawer open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+            <DrawerTrigger asChild>
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                <Filter className="h-4 w-4 mr-2" />
+                Filtrar Microrregiões
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Filtros de Análise</DrawerTitle>
+                <DrawerDescription>
+                  Selecione os filtros para refinar os dados exibidos.
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="p-4 overflow-y-auto">
+                <MicrosoftSidebar
+                  data={allData}
+                  selectedMicroregiao={selectedMicroregiao}
+                  filters={filters}
+                  onMicroregiaoChange={handleMicroregiaoChange}
+                  onFiltersChange={handleFiltersChange}
+                />
               </div>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {data.length} microrregiões • {filteredData.length} exibidas
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Filtros */}
-        <Filters
-          data={filteredData}
-          selectedMicroregiao={selectedMicroregiao}
-          filters={filters}
-          onMicroregiaoChange={handleMicroregiaoChange}
-          onFiltersChange={handleFiltersChange}
-          selectedData={selectedData}
-        />
-
-        {/* Banner Interativo */}
-        <div className="mb-6">
-          <InteractiveBanner />
+              <DrawerFooter>
+                <Button onClick={() => setIsFiltersOpen(false)}>Ver Resultados</Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
 
-        {/* Cabeçalho da Microrregião */}
-        <DashboardHeader data={selectedData} />
+        {/* Layout Desktop com Sidebar */}
+        <div className="flex gap-8">
+          {/* Sidebar de Filtros - Visível apenas em telas grandes */}
+          <aside className="hidden lg:block w-1/4 xl:w-1/5 sticky top-20 self-start">
+            <MicrosoftSidebar
+              data={allData}
+              selectedMicroregiao={selectedMicroregiao}
+              filters={filters}
+              onMicroregiaoChange={handleMicroregiaoChange}
+              onFiltersChange={handleFiltersChange}
+            />
+          </aside>
 
-        {/* Gráfico de Barras em Tela Cheia */}
-        <div className="bg-card rounded-lg border border-border p-6">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-foreground">
-              Comparação de Maturidade Digital por Microrregião
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Ranking das microrregiões por pontuação total de maturidade
-            </p>
-          </div>
-          <div className="w-full h-[600px]">
-            <DashboardBarChart data={filteredData} selectedMicroregiao={selectedMicroregiao} />
+          {/* Conteúdo Principal */}
+          <div className="flex-1 min-w-0">
+            {/* Componente original de gráfico de barras */}
+            <BarChartComponent 
+              data={chartData}
+              selectedMicroregiao={selectedMicroregiao}
+            />
           </div>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-dashboard-header border-t border-border mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="text-center text-sm text-muted-foreground">
-            <p>Gráfico de Barras - Maturidade Digital • Ranking comparativo entre regiões</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </DashboardLayout>
   );
-};
-
-export default BarChartPage; 
+} 

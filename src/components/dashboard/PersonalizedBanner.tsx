@@ -42,16 +42,7 @@ const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
   // Gerar insights baseados nos dados
   const generateInsights = (): BannerInsight[] => {
     if (!selectedData) {
-      return [
-        {
-          id: 1,
-          title: "Selecione uma Microrregião",
-          description: "Escolha uma microrregião para visualizar insights personalizados e análises detalhadas.",
-          icon: <MapPin className="w-8 h-8" />,
-          color: "blue",
-          gradient: "from-blue-600 to-purple-600"
-        }
-      ];
+      return [];
     }
 
     const indiceGeral = parseFloat(String(selectedData.indice_geral).replace(',', '.'));

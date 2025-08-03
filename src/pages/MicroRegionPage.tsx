@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { microTokens } from "@/data/microTokens";
 import { useExcelData } from "@/hooks/useExcelData";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { InteractiveBanner } from "@/components/dashboard/InteractiveBanner";
+import { MicroRegionHeader } from "@/components/dashboard/MicroRegionHeader";
+
 import { StatsOverview } from "@/components/dashboard/StatsOverview";
 import { RecommendationsPanel } from "@/components/dashboard/RecommendationsPanel";
 import { DashboardRadarChart } from "@/components/dashboard/RadarChart";
@@ -57,12 +57,9 @@ const MicroRegionPage = () => {
   return (
     <div className="min-h-screen bg-dashboard-bg">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Banner Interativo */}
-        <div className="mb-6">
-          <InteractiveBanner />
-        </div>
+
         
-        <DashboardHeader data={selectedData} allData={data} />
+        <MicroRegionHeader data={selectedData} allData={data} />
         <div className="my-12">
           <StatsOverview data={filteredData} selectedData={selectedData} macroFiltro={selectedData.macrorregiao} />
         </div>

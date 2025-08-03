@@ -156,13 +156,7 @@ export function AdvancedAnalysis({ data, selectedMicroregiao, medians }: Advance
   }, [selectedData, comparisonData]);
 
   if (!selectedData) {
-    return (
-      <Card className="col-span-full">
-        <CardContent className="p-6">
-          <p className="text-muted-foreground text-center">Selecione uma microrregião para análise avançada</p>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
 
   return (

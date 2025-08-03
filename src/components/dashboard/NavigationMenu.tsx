@@ -1,35 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Home, BarChart3, PieChart, Users, Table, FileText, Menu, X, Target, TrendingUp, Activity, MapPin, BookOpen, ArrowLeft } from 'lucide-react';
+import { AppAreaSwitcher } from '@/components/nav/AppAreaSwitcher';
+import { useNavigate } from 'react-router-dom';
 
 interface NavigationMenuProps {
   activeSection: string;
   onNavigate: (section: string) => void;
 }
 
-const sections = [
-  { id: 'overview', label: 'Visão Geral', icon: Home, description: 'Resumo completo' },
-  { id: 'populacao', label: 'População', icon: Users, description: 'Distribuição demográfica' },
-  { id: 'barras', label: 'Gráfico Barras', icon: BarChart3, description: 'Ranking de maturidade' },
-  { id: 'radar', label: 'Gráfico Radar', icon: PieChart, description: 'Comparação por eixos' },
-  { id: 'executivo', label: 'Dashboard Executivo', icon: Target, description: 'Visão estratégica' },
-  { id: 'tabela', label: 'Tabela Eixos', icon: Table, description: 'Detalhamento por eixos' },
-  { id: 'recomendacoes', label: 'Recomendações', icon: BookOpen, description: 'Sugestões por eixo' },
-  { id: 'analise-avancada', label: 'Análise Avançada', icon: TrendingUp, description: 'Comparação entre regiões' },
-];
-
 export function NavigationMenu({ activeSection, onNavigate }: NavigationMenuProps) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const navigate = useNavigate();
 
   const handleNavigate = (sectionId: string) => {
     onNavigate(sectionId);
     setShowMobileMenu(false); // Fecha o menu mobile após navegação
   };
 
+  // Handler para o botão Visão Geral
+  const goToDashboard = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (!e || e.type === 'click' || (e.type === 'keydown' && ((e as React.KeyboardEvent).key === 'Enter' || (e as React.KeyboardEvent).key === ' '))) {
+      navigate('/dashboard');
+      handleNavigate('overview');
+    }
+  };
+
   return (
     <>
-      {/* Menu de Navegação Fixo */}
-      <div className="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 shadow-lg">
+      {/* Menu de Navegação */}
+      <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 shadow-lg">
         <div className="container mx-auto px-4">
           <div className="flex items-center h-16 w-full">
             {/* Logo/Título */}
@@ -72,30 +72,31 @@ export function NavigationMenu({ activeSection, onNavigate }: NavigationMenuProp
             {/* Menu Centralizado - Desktop */}
             <div className="flex-1 flex justify-center hidden lg:block">
               <div className="flex items-center gap-4">
-                {sections.map((section) => {
-                  const Icon = section.icon;
-                  return (
-                    <button
-                      key={section.id}
-                      onClick={() => handleNavigate(section.id)}
-                      className={`flex flex-col items-center justify-center py-1.5 px-2.5 rounded-md transition-all duration-200 cursor-pointer group ${
-                        activeSection === section.id 
-                          ? 'bg-white/25 text-white font-semibold shadow-md' 
-                          : 'hover:bg-white/15 text-white hover:text-white'
-                      }`}
-                      style={{ minWidth: 70 }}
-                      data-tour={`menu-${section.id}`}
-                    >
-                      <Icon className="w-5 h-5 mb-0.5 group-hover:scale-105 transition-transform duration-200 text-white" />
-                      <span className="text-xs leading-tight font-medium tracking-wide drop-shadow-sm">
-                        {section.label.split(' ')[1] || section.label}
-                      </span>
-                      <span className="text-xs opacity-70 hidden group-hover:block transition-opacity">
-                        {section.description}
-                      </span>
-                    </button>
-                  );
-                })}
+                {/* Botão "Visão Geral" fixo */}
+                <button
+                  onClick={goToDashboard}
+                  onKeyDown={goToDashboard}
+                  tabIndex={0}
+                  className={`flex flex-col items-center justify-center py-1.5 px-2.5 rounded-md transition-all duration-200 cursor-pointer group ${
+                    activeSection === 'overview' 
+                      ? 'bg-white/25 text-white font-semibold shadow-md' 
+                      : 'hover:bg-white/15 text-white hover:text-white'
+                  }`}
+                  style={{ minWidth: 70 }}
+                  data-tour="menu-overview"
+                  aria-label="Ir para Visão Geral"
+                >
+                  <Home className="w-5 h-5 mb-0.5 group-hover:scale-105 transition-transform duration-200 text-white" />
+                  <span className="text-xs leading-tight font-medium tracking-wide drop-shadow-sm">
+                    Visão Geral
+                  </span>
+                  <span className="text-xs opacity-70 hidden group-hover:block transition-opacity">
+                    Resumo completo
+                  </span>
+                </button>
+                
+                {/* AppAreaSwitcher */}
+                <AppAreaSwitcher />
               </div>
             </div>
 
@@ -121,26 +122,29 @@ export function NavigationMenu({ activeSection, onNavigate }: NavigationMenuProp
           <div className="lg:hidden bg-white border-t border-blue-200 shadow-lg">
             <div className="container mx-auto px-4 py-4">
               <div className="grid grid-cols-2 gap-3">
-                {sections.map((section) => {
-                  const Icon = section.icon;
-                  return (
-                    <Button
-                      key={section.id}
-                      variant={activeSection === section.id ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleNavigate(section.id)}
-                      className={`h-16 flex flex-col items-center justify-center space-y-1 ${
-                        activeSection === section.id 
-                          ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                          : "text-blue-700 border-blue-200 hover:bg-blue-50"
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="text-xs font-medium">{section.label}</span>
-                      <span className="text-xs opacity-70">{section.description}</span>
-                    </Button>
-                  );
-                })}
+                {/* Botão "Visão Geral" */}
+                <Button
+                  variant={activeSection === 'overview' ? "default" : "outline"}
+                  size="sm"
+                  onClick={goToDashboard}
+                  onKeyDown={goToDashboard}
+                  tabIndex={0}
+                  className={`h-16 flex flex-col items-center justify-center space-y-1 ${
+                    activeSection === 'overview' 
+                      ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                      : "text-blue-700 border-blue-200 hover:bg-blue-50"
+                  }`}
+                  aria-label="Ir para Visão Geral"
+                >
+                  <Home className="w-5 h-5" />
+                  <span className="text-xs font-medium">Visão Geral</span>
+                  <span className="text-xs opacity-70">Resumo completo</span>
+                </Button>
+                
+                {/* AppAreaSwitcher para mobile */}
+                <div className="h-16 flex items-center justify-center">
+                  <AppAreaSwitcher />
+                </div>
               </div>
             </div>
           </div>

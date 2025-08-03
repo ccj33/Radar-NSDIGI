@@ -17,6 +17,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { EstatisticasGerais } from "./EstatisticasGerais";
 import { DistribuicaoINMSD } from "./DistribuicaoINMSD";
 import { formatPopulation } from "@/lib/utils";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface StatsOverviewProps {
   data: MicroRegionData[];
@@ -48,9 +49,15 @@ export function StatsOverview({ data, selectedData, macroFiltro }: StatsOverview
   // Calcular estatísticas gerais
   if (!data || data.length === 0 || !selectedData) {
     return (
-      <div className="p-4 text-center text-muted-foreground">
-        Dados insuficientes para exibir as estatísticas.
-      </div>
+      <EmptyState
+        icon={BarChart3}
+        title="Selecione uma Microrregião"
+        description="Use os filtros acima para escolher uma microrregião e visualizar todos os dados do dashboard."
+        tip={{
+          title: "Dica",
+          content: "Você pode filtrar por macrorregião ou classificação para encontrar a região desejada mais rapidamente."
+        }}
+      />
     );
   }
 
