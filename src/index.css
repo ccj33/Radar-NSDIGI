@@ -364,9 +364,47 @@ All colors MUST be HSL.
     line-height: 1.5;
   }
   
-  /* Prevenção de zoom em inputs no mobile */
+  /* Prevenção de zoom em inputs no mobile - Melhorado */
   input, select, textarea {
     font-size: 16px !important;
+    transform: scale(1);
+    transform-origin: left top;
+  }
+  
+  /* Prevenção adicional de zoom em dropdowns */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 32px;
+  }
+  
+  /* Melhorias para touch targets */
+  button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevenção de seleção de texto em botões */
+  button, [role="button"] {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Melhorias para scroll suave */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Prevenção de layout shift em imagens */
+  img {
+    aspect-ratio: attr(width) / attr(height);
   }
 
   #root {
@@ -545,6 +583,197 @@ All colors MUST be HSL.
   img, video, canvas, svg {
     max-width: 100%;
     height: auto;
+  }
+  
+  /* Melhorias anti-zoom para mobile - PREVENÇÃO TOTAL */
+.mobile-anti-zoom {
+  font-size: 16px !important;
+  transform: scale(1) !important;
+  transform-origin: left top !important;
+  -webkit-text-size-adjust: 100% !important;
+  -ms-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+/* Prevenção específica para elementos de seleção */
+[role="combobox"], [role="listbox"], [role="option"], 
+.select-trigger, .dropdown-trigger, button[type="button"] {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100% !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  min-height: 44px !important;
+  min-width: 44px !important;
+}
+
+/* Melhor controle de popover e dropdown em mobile */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
+/* Dropdowns responsivos */
+.dropdown-mobile {
+  font-size: 16px !important;
+  min-height: 44px !important;
+  padding: 12px 16px !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+
+/* Botões responsivos com touch target */
+.btn-mobile {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  padding: 12px 16px !important;
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+
+/* Classe utilitária para elementos críticos */
+.no-zoom {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100% !important;
+  -ms-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+  
+  /* Prevenção de layout shift */
+  .layout-stable {
+    min-height: 200px;
+    contain: layout style paint;
+  }
+  
+  /* Containers responsivos */
+  .container-fluid {
+    width: 100%;
+    max-width: 100%;
+    padding-left: clamp(1rem, 4vw, 2rem);
+    padding-right: clamp(1rem, 4vw, 2rem);
+  }
+  
+  /* Grid responsivo melhorado */
+  .grid-mobile {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+  
+  /* Espaçamento responsivo */
+  .space-mobile {
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+  
+  .space-mobile-md {
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+  
+  .space-mobile-lg {
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  
+  /* Texto responsivo melhorado */
+  .text-mobile-sm {
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  }
+  
+  .text-mobile-base {
+    font-size: clamp(0.875rem, 3vw, 1rem);
+  }
+  
+  .text-mobile-lg {
+    font-size: clamp(1rem, 4vw, 1.125rem);
+  }
+  
+  .text-mobile-xl {
+    font-size: clamp(1.125rem, 5vw, 1.25rem);
+  }
+  
+  /* Cards responsivos */
+  .card-mobile {
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border-radius: clamp(0.5rem, 2vw, 0.75rem);
+  }
+  
+  /* Navegação responsiva */
+  .nav-mobile {
+    padding: clamp(0.75rem, 2vw, 1rem);
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+  
+  /* Scroll suave para mobile */
+  .scroll-mobile {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Prevenção de zoom em formulários */
+  .form-mobile input,
+  .form-mobile select,
+  .form-mobile textarea {
+    font-size: 16px !important;
+    transform: scale(1) !important;
+    -webkit-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
+  
+  /* Melhorias específicas para mobile - PREVENÇÃO TOTAL DE ZOOM */
+  /* Todos os elementos interativos */
+  button, input, select, textarea, [role="button"], [role="combobox"] {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
+  
+  /* Área de toque mínima para todos os botões */
+  button, [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Espaçamento adequado entre elementos */
+  .mobile-gap {
+    gap: 8px !important;
+  }
+  
+  /* Prevenção de scroll horizontal */
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  /* Melhor contraste para elementos pequenos */
+  .text-xs {
+    font-size: 14px !important;
+  }
+  
+  .text-sm {
+    font-size: 16px !important;
+  }
+  
+  /* Melhorias de acessibilidade */
+  .focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+  
+  /* Estados de loading responsivos */
+  .loading-mobile {
+    min-height: clamp(200px, 40vh, 300px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estados vazios responsivos */
+  .empty-mobile {
+    padding: clamp(2rem, 8vw, 4rem);
+    text-align: center;
+  }
+  
+  /* Estados de erro responsivos */
+  .error-mobile {
+    padding: clamp(1rem, 4vw, 2rem);
+    border-radius: clamp(0.5rem, 2vw, 0.75rem);
   }
 }
 

@@ -12,7 +12,9 @@ import {
   AlertTriangle,
   CheckCircle,
   BarChart3,
-  MapPin
+  MapPin,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { MicroRegionData, EIXOS_NAMES } from "@/types/dashboard";
 import { getStatusAppearance } from '@/lib/statusUtils';
@@ -37,10 +39,9 @@ const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
   medians 
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Gerar insights baseados nos dados
-  const generateInsights = (): BannerInsight[] => {
+  const insights: BannerInsight[] = React.useMemo(() => {
     if (!selectedData) {
       return [];
     }
@@ -59,7 +60,6 @@ const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
     }).length;
 
     const classification = indiceGeral > 0.66 ? 'Avançado' : indiceGeral > 0.33 ? 'Em Evolução' : 'Emergente';
-    const statusAppearance = getStatusAppearance(classification);
 
     return [
       {
@@ -100,31 +100,29 @@ const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
       },
       {
         id: 4,
-        title: "Comparação Nacional",
-        description: `${eixosAcimaMediana} de ${EIXOS_NAMES.length} eixos estão acima da mediana nacional, demonstrando ${eixosAcimaMediana > EIXOS_NAMES.length / 2 ? 'bom' : 'potencial de'} desempenho.`,
+        title: "Comparação com Mediana",
+        description: `${selectedData.microrregiao} está acima da mediana em ${eixosAcimaMediana} de ${EIXOS_NAMES.length} eixos, demonstrando ${eixosAcimaMediana > EIXOS_NAMES.length / 2 ? 'bom' : 'potencial de'} desempenho.`,
         icon: <BarChart3 className="w-8 h-8" />,
         color: "purple",
         gradient: "from-purple-600 via-violet-600 to-fuchsia-600",
         stats: [
-          { label: "Acima da Mediana", value: `${eixosAcimaMediana}/${EIXOS_NAMES.length}` },
-          { label: "Percentual", value: `${((eixosAcimaMediana / EIXOS_NAMES.length) * 100).toFixed(0)}%` }
+          { label: "Eixos Acima da Mediana", value: `${eixosAcimaMediana}/${EIXOS_NAMES.length}` },
+          { label: "Desempenho", value: eixosAcimaMediana > EIXOS_NAMES.length / 2 ? 'Acima da Média' : 'Abaixo da Média' }
         ]
       }
     ];
-  };
-
-  const insights = generateInsights();
+  }, [selectedData, medians]);
 
   // Auto-play functionality
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (insights.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % insights.length);
-    }, 6000); // 6 segundos por slide
+    }, 6000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, insights.length]);
+  }, [insights.length]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % insights.length);
@@ -138,41 +136,54 @@ const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
     setCurrentSlide(index);
   };
 
+  // Estado vazio - quando não há dados selecionados
+  if (!selectedData || insights.length === 0) {
+    return (
+      <Card className="w-full">
+        <CardContent className="p-6">
+          <div className="text-center py-8">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <Target className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Selecione uma Microrregião
+            </h3>
+            <p className="text-gray-600 max-w-md mx-auto">
+              Escolha uma microrregião nos filtros para visualizar insights personalizados sobre sua maturidade digital.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const currentInsight = insights[currentSlide];
 
   return (
-    <div className="w-full">
-      <Card className="overflow-hidden shadow-lg">
+    <Card className="w-full">
+      <CardContent className="p-0">
         <div 
-          className={`h-48 bg-gradient-to-r ${currentInsight.gradient} relative`}
-          onMouseEnter={() => setIsAutoPlaying(false)}
-          onMouseLeave={() => setIsAutoPlaying(true)}
+          className={`relative h-32 bg-gradient-to-r ${currentInsight.gradient} transition-all duration-700 ease-in-out rounded-lg shadow-lg`}
         >
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20"></div>
-            <div className="absolute bottom-8 left-8 w-16 h-16 rounded-full bg-white/20"></div>
-            <div className="absolute top-1/2 left-1/4 w-8 h-8 rounded-full bg-white/20"></div>
-          </div>
-
           {/* Content */}
-          <CardContent className="relative h-full flex items-center justify-between p-6">
+          <div className="relative h-full flex items-center justify-between p-6">
             <div className="flex-1 text-white">
               <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                <div className="p-2 bg-white/20 rounded-lg">
                   {currentInsight.icon}
                 </div>
                 <h2 className="text-2xl font-bold">{currentInsight.title}</h2>
               </div>
-              <p className="text-lg opacity-90 max-w-2xl leading-relaxed mb-4">
+              <p className="text-lg opacity-90 max-w-2xl">
                 {currentInsight.description}
               </p>
+              
+              {/* Stats */}
               {currentInsight.stats && (
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-3 mt-4">
                   {currentInsight.stats.map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-2xl font-bold">{stat.value}</div>
-                      <div className="text-sm opacity-80">{stat.label}</div>
+                    <div key={index} className="bg-white/10 px-3 py-1.5 rounded-full text-sm font-medium">
+                      <span className="opacity-75">{stat.label}:</span> {stat.value}
                     </div>
                   ))}
                 </div>
@@ -180,53 +191,47 @@ const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
             </div>
 
             {/* Navigation Arrows */}
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={prevSlide}
-                className="text-white hover:bg-white/20 rounded-full w-10 h-10 p-0"
-              >
-                ←
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={nextSlide}
-                className="text-white hover:bg-white/20 rounded-full w-10 h-10 p-0"
-              >
-                →
-              </Button>
-            </div>
-          </CardContent>
+            {insights.length > 1 && (
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={prevSlide}
+                  className="text-white hover:bg-white/20 rounded-full w-10 h-10 p-0"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={nextSlide}
+                  className="text-white hover:bg-white/20 rounded-full w-10 h-10 p-0"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              </div>
+            )}
+          </div>
 
           {/* Slide Indicators */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-            {insights.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentSlide 
-                    ? 'bg-white scale-125' 
-                    : 'bg-white/50 hover:bg-white/75'
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* Progress Bar */}
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20">
-            <div 
-              className="h-full bg-white transition-all duration-500 ease-linear"
-              style={{ 
-                width: `${((currentSlide + 1) / insights.length) * 100}%` 
-              }}
-            />
-          </div>
+          {insights.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+              {insights.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentSlide 
+                      ? 'bg-white' 
+                      : 'bg-white/50 hover:bg-white/75'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

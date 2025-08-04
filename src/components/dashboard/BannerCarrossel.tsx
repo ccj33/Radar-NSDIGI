@@ -1,9 +1,8 @@
-import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import { Autoplay } from 'swiper/modules';
-import { FaCheckCircle, FaChartLine, FaUsers, FaBullseye } from 'react-icons/fa';
+import { FaCheckCircle, FaChartLine, FaUsers, FaTarget } from 'react-icons/fa';
 
 const banners = [
   {
@@ -24,12 +23,12 @@ const banners = [
     title: 'Análises Avançadas',
     subtitle: 'Explore o potencial da sua microrregião com dados estratégicos.',
     stats: ['+1000 Insights', '7 Eixos avaliados', 'Ranking regional'],
-    icon: FaBullseye,
+    icon: FaTarget,
     bg: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
   }
 ];
 
-const InteractiveBanner: React.FC = () => {
+export default function BannerCarrossel() {
   return (
     <div className="w-full rounded-2xl overflow-hidden shadow-lg">
       <Swiper
@@ -77,7 +76,4 @@ const InteractiveBanner: React.FC = () => {
       </Swiper>
     </div>
   );
-};
-
-export { InteractiveBanner };
-export default InteractiveBanner; 
+} 

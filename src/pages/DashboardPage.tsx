@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MicroRegionData, FilterOptions, EIXOS_NAMES } from '@/types/dashboard';
-import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
+import { MicrosoftHeader } from '@/components/dashboard/MicrosoftHeader';
+// import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
 import MicrosoftSidebar from '@/components/dashboard/MicrosoftSidebar';
 import { StatsOverview } from '@/components/dashboard/StatsOverview';
 import { DashboardRadarChart } from '@/components/dashboard/RadarChart';
@@ -20,7 +21,7 @@ import { toast } from 'sonner';
 import { useExcelData } from '@/hooks/useExcelData';
 import { PlanoAcaoModalContent } from "@/components/dashboard/plano-acao/PlanoAcaoModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { HelpCircle, X, Home, ArrowUp, Download, Settings, Target, Lightbulb } from 'lucide-react';
+import { HelpCircle, X, Home, ArrowUp, Download, Settings, Target, Lightbulb, PieChart, Table, BookOpen, TrendingUp } from 'lucide-react';
 import { useEffect } from 'react';
 import React from 'react'; // Added missing import for React
 import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
@@ -31,6 +32,7 @@ import PlanoDeAcao from '@/components/dashboard/plano-acao/PlanoDeAcao';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Menu, Filter } from 'lucide-react'; // Importar ícones
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'; // Importar Drawer com mais componentes
+import { VisaoGeralBanner } from '@/components/dashboard/VisaoGeralBanner';
 
 const GUIDE_STORAGE_KEY = 'mrh-guide-dismissed';
 
@@ -348,8 +350,13 @@ const Index = () => {
   const location = useLocation();
   const [selectedMicroregiao, setSelectedMicroregiao] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({});
+  
+  // Ler parâmetro section da URL
+  const urlParams = new URLSearchParams(location.search);
+  const sectionFromUrl = urlParams.get('section');
+  
   const [activeSection, setActiveSection] = useState(
-    location.state?.activeSection || 'overview'
+    sectionFromUrl || location.state?.activeSection || 'overview'
   );
   const [runTour, setRunTour] = useState(() => !localStorage.getItem(GUIDE_STORAGE_KEY));
   const [showAdvanced, setShowAdvanced] = useState(true);
@@ -368,6 +375,22 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Atualizar seção ativa quando a URL mudar
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const sectionFromUrl = urlParams.get('section');
+    if (sectionFromUrl && sectionFromUrl !== activeSection) {
+      setActiveSection(sectionFromUrl);
+      // Scroll para a seção após um pequeno delay para garantir que foi renderizada
+      setTimeout(() => {
+        const element = document.querySelector(`[data-section="${sectionFromUrl}"]`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location.search, activeSection]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -533,7 +556,14 @@ const Index = () => {
         callback={handleJoyrideCallback}
       />
       {/* Navigation Menu */}
-      <NavigationMenu activeSection={activeSection} onNavigate={handleNavigate} />
+      <MicrosoftHeader activeSection={activeSection} onNavigate={handleNavigate} />
+
+      {/* Banner - Aparece em todas as áreas */}
+      <div className="bg-white border-b border-gray-100">
+        <div className="container mx-auto px-4 py-4">
+          <VisaoGeralBanner selectedMicroregiao={selectedMicroregiao} activeSection={activeSection} />
+        </div>
+      </div>
 
       {/* Botão de Filtros para Mobile */}
       <div className="lg:hidden fixed top-4 right-4 z-50">
@@ -574,7 +604,7 @@ const Index = () => {
 
 
       {/* Conteúdo Principal */}
-      <main className="container mx-auto px-4 py-8 flex gap-8 relative pt-40">
+      <main className="container mx-auto px-4 py-8 flex gap-8 relative">
         {/* Microsoft Style Sidebar - Visível apenas em telas grandes */}
         <aside className="hidden lg:block w-1/4 xl:w-1/5 sticky top-20 self-start">
           <div data-tour="filtros">

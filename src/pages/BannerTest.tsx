@@ -7,13 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { MicroRegionData } from '@/types/dashboard';
 
 const BannerTest: React.FC = () => {
   const navigate = useNavigate();
 
   // Dados mock para teste do PersonalizedBanner
-  const mockData = {
+  const mockData: MicroRegionData = {
+    macrorregiao: "Central",
     microrregiao: "Belo Horizonte",
+    regional_saude: "Metropolitana",
+    analista: "João Silva",
     indice_geral: "0.75",
     eixo_1: "0.80",
     eixo_2: "0.65",
@@ -21,7 +25,40 @@ const BannerTest: React.FC = () => {
     eixo_4: "0.70",
     eixo_5: "0.85",
     eixo_6: "0.60",
-    eixo_7: "0.75"
+    eixo_7: "0.75",
+    idh_completo: "Alto",
+    idh_valor: "0.810",
+    idh_classificacao: "Alto",
+    populacao: "2500000",
+    classificacao_inmsd: "Avançado",
+    email_analista: "joao.silva@saude.gov.br",
+    ponto_focal: "Maria Santos",
+    email_ponto_focal: "maria.santos@saude.gov.br",
+    municipios: "Belo Horizonte, Contagem, Betim",
+    macro_micro: "Central - Belo Horizonte",
+    status_inmsd: "Ativo",
+    pontuacao_geral: "75.0",
+    situacao_eixo_1: "Avançado",
+    recomendacao_eixo_1: "Manter excelência",
+    ferramenta_eixo_1: "Dashboard avançado",
+    situacao_eixo_2: "Em Evolução",
+    recomendacao_eixo_2: "Expandir conectividade",
+    ferramenta_eixo_2: "Mapa de conectividade",
+    situacao_eixo_3: "Avançado",
+    recomendacao_eixo_3: "Manter sistemas",
+    ferramenta_eixo_3: "Monitor de sistemas",
+    situacao_eixo_4: "Em Evolução",
+    recomendacao_eixo_4: "Ampliar capacitação",
+    ferramenta_eixo_4: "Plataforma de treinamento",
+    situacao_eixo_5: "Avançado",
+    recomendacao_eixo_5: "Expandir serviços",
+    ferramenta_eixo_5: "Portal de serviços",
+    situacao_eixo_6: "Emergente",
+    recomendacao_eixo_6: "Implementar interoperabilidade",
+    ferramenta_eixo_6: "Gateway de dados",
+    situacao_eixo_7: "Em Evolução",
+    recomendacao_eixo_7: "Fortalecer segurança",
+    ferramenta_eixo_7: "Sistema de segurança"
   };
 
   const mockMedians = {
@@ -89,7 +126,7 @@ const BannerTest: React.FC = () => {
             </CardHeader>
             <CardContent>
               <PersonalizedBanner 
-                selectedData={mockData as any} 
+                selectedData={mockData} 
                 medians={mockMedians} 
               />
             </CardContent>

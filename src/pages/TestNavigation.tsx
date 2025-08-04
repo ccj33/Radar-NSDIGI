@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
+import { MicrosoftHeader } from '@/components/dashboard/MicrosoftHeader';
+// import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
 
 const TestNavigation = () => {
   const [activeSection, setActiveSection] = useState('overview');
@@ -11,7 +12,7 @@ const TestNavigation = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <NavigationMenu activeSection={activeSection} onNavigate={handleNavigate} />
+      <MicrosoftHeader activeSection={activeSection} onNavigate={handleNavigate} />
       
       <div className="container mx-auto px-4 py-8 mt-20">
         <h1 className="text-3xl font-bold mb-8">Teste da Nova Navegação</h1>

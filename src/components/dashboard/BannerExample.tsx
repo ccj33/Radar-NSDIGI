@@ -77,13 +77,6 @@ const BannerExample: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <Button 
-                variant="ghost" 
-                size="lg"
-                className="text-white hover:bg-white/20 rounded-full w-16 h-16 p-0 animate-float"
-              >
-                <ChevronRight className="w-8 h-8" />
-              </Button>
             </CardContent>
           </div>
         </Card>
@@ -116,11 +109,6 @@ const BannerExample: React.FC = () => {
                     <div className="text-2xl font-bold">2.4M</div>
                     <div className="text-sm opacity-80">Usuários</div>
                   </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-3">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
-                  <Activity className="w-8 h-8" />
                 </div>
               </div>
             </CardContent>
@@ -169,11 +157,6 @@ const BannerExample: React.FC = () => {
                     <div className="text-2xl font-bold">5.570</div>
                     <div className="text-sm opacity-80">Regiões</div>
                   </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-3">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center animate-pulse-glow">
-                  <Globe className="w-8 h-8" />
                 </div>
               </div>
             </CardContent>

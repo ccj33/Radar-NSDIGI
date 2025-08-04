@@ -43,7 +43,6 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
   // Extrair opções únicas
   const macrorregioes = [...new Set(data.map(item => item.macrorregiao))].sort();
   const microrregioes = data
-    .filter(item => !filters.macrorregiao || item.macrorregiao === filters.macrorregiao)
     .map(item => item.microrregiao)
     .sort();
   
@@ -74,19 +73,19 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
   const hasActiveFilters = filters.macrorregiao || filters.classificacao_inmsd || selectedMicroregiao;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <section className="bg-white rounded-xl shadow-md p-4 md:p-6 w-full space-y-4">
+      {/* Header moderno */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Filter className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg font-semibold text-gray-900">Filtros</h2>
-        </div>
+        <h3 className="text-xs uppercase font-semibold tracking-wider text-gray-500 flex items-center gap-2">
+          <Filter className="w-4 h-4" />
+          Filtros
+        </h3>
         {hasActiveFilters && (
           <Button
             variant="ghost"
             size="sm"
             onClick={clearAllFilters}
-            className="text-gray-500 hover:text-red-600 text-xs"
+            className="text-gray-400 hover:text-red-500 text-xs transition-colors"
           >
             <X className="w-3 h-3 mr-1" />
             Limpar
@@ -95,132 +94,114 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
       </div>
 
       {/* Macrorregião Filter */}
-      <Card className="border-0 shadow-sm bg-gray-50/50">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <Globe className="w-4 h-4" />
-            Macrorregião
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <Select
-            value={filters.macrorregiao || 'Todas'}
-            onValueChange={handleMacrorregiaoChange}
-          >
-            <SelectTrigger className="w-full bg-white border-gray-200">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Todas">Todas as macrorregiões</SelectItem>
-              {macrorregioes.map((macrorregiao) => (
-                <SelectItem key={macrorregiao} value={macrorregiao}>
-                  {macrorregiao}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-gray-600 flex items-center gap-1">
+          <Globe className="w-4 h-4" />
+          Macrorregião
+        </label>
+        <Select
+          value={filters.macrorregiao || 'Todas'}
+          onValueChange={handleMacrorregiaoChange}
+        >
+          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white">
+            <SelectValue placeholder="Todas as macrorregiões" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Todas">Todas as macrorregiões</SelectItem>
+            {macrorregioes.map((macrorregiao) => (
+              <SelectItem key={macrorregiao} value={macrorregiao}>
+                {macrorregiao}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Microrregião Filter */}
-      <Card className="border-0 shadow-sm bg-gray-50/50">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <Building className="w-4 h-4" />
-            Microrregião
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <Select
-            value={selectedMicroregiao || 'Nenhuma'}
-            onValueChange={(value) => onMicroregiaoChange(value === 'Nenhuma' ? '' : value)}
-            disabled={!filters.macrorregiao && macrorregioes.length > 0}
-          >
-            <SelectTrigger className="w-full bg-white border-gray-200">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Nenhuma">Selecione uma microrregião</SelectItem>
-              {microrregioes.map((microrregiao) => (
-                <SelectItem key={microrregiao} value={microrregiao}>
-                  {microrregiao}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-gray-600 flex items-center gap-1">
+          <Building className="w-4 h-4" />
+          Microrregião
+        </label>
+        <Select
+          value={selectedMicroregiao || 'Nenhuma'}
+          onValueChange={(value) => onMicroregiaoChange(value === 'Nenhuma' ? '' : value)}
+        >
+          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white">
+            <SelectValue placeholder="Selecione uma microrregião" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Nenhuma">Selecione uma microrregião</SelectItem>
+            {microrregioes.map((microrregiao) => (
+              <SelectItem key={microrregiao} value={microrregiao}>
+                {microrregiao}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      {/* Classificação Filter */}
-      <Card className="border-0 shadow-sm bg-gray-50/50">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <Target className="w-4 h-4" />
-            Classificação INMSD
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-2">
+      {/* Classificação INMSD Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-600 flex items-center gap-1">
+          <Target className="w-4 h-4" />
+          Classificação INMSD
+        </label>
+        <div className="flex flex-wrap gap-2">
           {['Todas', ...classificacoes].map((classificacao) => (
-            <Button
+            <button
               key={classificacao}
-              variant={filters.classificacao_inmsd === classificacao || (!filters.classificacao_inmsd && classificacao === 'Todas') ? "default" : "outline"}
-              size="sm"
               onClick={() => handleClassificacaoChange(classificacao)}
-              className="w-full justify-start text-sm"
+              className={`px-4 py-1.5 rounded-full text-sm transition-all ${
+                filters.classificacao_inmsd === classificacao || (!filters.classificacao_inmsd && classificacao === 'Todas')
+                  ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
             >
-              {filters.classificacao_inmsd === classificacao || (!filters.classificacao_inmsd && classificacao === 'Todas') ? (
-                <Check className="w-4 h-4 mr-2" />
-              ) : (
-                <div className="w-4 h-4 mr-2" />
-              )}
               {classificacao}
-            </Button>
+            </button>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Results Summary */}
-      <Card className="border-0 shadow-sm bg-blue-50/50">
-        <CardContent className="p-4">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Resultados</span>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                {data.filter(item => {
-                  return (!filters.macrorregiao || item.macrorregiao === filters.macrorregiao) &&
-                         (!filters.classificacao_inmsd || item.classificacao_inmsd === filters.classificacao_inmsd);
-                }).length}
-              </Badge>
+      {/* Results Summary - Card integrado */}
+      <div className="pt-4 border-t border-gray-100">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">Resultados</span>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-700 text-xs">
+              {data.filter(item => {
+                return (!filters.macrorregiao || item.macrorregiao === filters.macrorregiao) &&
+                       (!filters.classificacao_inmsd || item.classificacao_inmsd === filters.classificacao_inmsd);
+              }).length}
+            </Badge>
+          </div>
+          
+          <div className="space-y-2 text-xs text-gray-600">
+            <div className="flex justify-between">
+              <span>Macrorregião:</span>
+              <span className="font-medium">{filters.macrorregiao || 'Todas'}</span>
             </div>
-            
-            <div className="space-y-2 text-xs text-gray-600">
-              <div className="flex justify-between">
-                <span>Macrorregião:</span>
-                <span className="font-medium">{filters.macrorregiao || 'Todas'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Microrregião:</span>
-                <span className="font-medium">{selectedMicroregiao || 'Nenhuma'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Classificação:</span>
-                <span className="font-medium">{filters.classificacao_inmsd || 'Todas'}</span>
-              </div>
+            <div className="flex justify-between">
+              <span>Microrregião:</span>
+              <span className="font-medium">{selectedMicroregiao || 'Nenhuma'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Classificação:</span>
+              <span className="font-medium">{filters.classificacao_inmsd || 'Todas'}</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Selected Region Info */}
+      {/* Selected Region Info - Card integrado */}
       {selectedData && (
-        <Card className="border-0 shadow-sm bg-green-50/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Região Selecionada
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
+        <div className="pt-4 border-t border-gray-100">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-gray-700">Região Selecionada</span>
+            </div>
             <div className="space-y-2">
               <div className="text-sm">
                 <span className="font-medium text-gray-900">{selectedData.microrregiao}</span>
@@ -231,10 +212,10 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
                 <div>População: {selectedData.populacao}</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
-    </div>
+    </section>
   );
 };
 

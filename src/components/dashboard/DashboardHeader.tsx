@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { NavigationMenu } from './NavigationMenu';
+import { MicrosoftHeader } from './MicrosoftHeader';
+// import { NavigationMenu } from './NavigationMenu';
 
 interface DashboardHeaderProps {
   activeSection?: string;
@@ -19,7 +20,7 @@ export function DashboardHeader({ activeSection = 'overview', onNavigate }: Dash
   return (
     <div className="sticky top-0 left-0 right-0 z-50 bg-white shadow-sm">
       {/* Navigation Menu */}
-      <NavigationMenu 
+      <MicrosoftHeader 
         activeSection={currentSection} 
         onNavigate={handleNavigate} 
       />

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
   Home, 
@@ -15,7 +16,8 @@ import {
   Bell,
   Settings,
   User,
-  ChevronDown
+  ChevronDown,
+  Grid
 } from 'lucide-react';
 import { 
   DropdownMenu,
@@ -23,6 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import ZoomControl from '@/components/ZoomControl';
 
 interface MicrosoftHeaderProps {
   activeSection: string;
@@ -30,44 +33,41 @@ interface MicrosoftHeaderProps {
 }
 
 const sections = [
-  { id: 'overview', label: 'Visão Geral', icon: Home, description: 'Resumo completo' },
-  { id: 'populacao', label: 'População', icon: Users, description: 'Distribuição demográfica' },
-  { id: 'barras', label: 'Ranking', icon: BarChart3, description: 'Ranking de maturidade' },
-  { id: 'radar', label: 'Análise por Eixos', icon: PieChart, description: 'Comparação por eixos' },
-  { id: 'executivo', label: 'Dashboard Executivo', icon: Target, description: 'Visão estratégica' },
-  { id: 'tabela', label: 'Detalhamento', icon: Table, description: 'Detalhamento por eixos' },
-  { id: 'recomendacoes', label: 'Recomendações', icon: BookOpen, description: 'Sugestões por eixo' },
-  { id: 'analise-avancada', label: 'Análise Avançada', icon: TrendingUp, description: 'Comparação entre regiões' },
+  { id: 'overview', label: 'Visão Geral', icon: Home, description: 'Resumo completo', path: '/dashboard' },
+  { id: 'populacao', label: 'População', icon: Users, description: 'Distribuição demográfica', path: '/populacao' },
+  { id: 'barras', label: 'Ranking', icon: BarChart3, description: 'Ranking de maturidade', path: '/barras' },
+  { id: 'radar', label: 'Análise por Eixos', icon: PieChart, description: 'Comparação por eixos', path: '/radar' },
+  { id: 'executivo', label: 'Dashboard Executivo', icon: Target, description: 'Visão estratégica', path: '/dashboard/executivo' },
+  { id: 'detalhamento', label: 'Detalhamento', icon: Table, description: 'Detalhamento por eixos', path: '/dashboard/detalhamento' },
+  { id: 'recomendacoes', label: 'Recomendações', icon: BookOpen, description: 'Sugestões por eixo', path: '/dashboard/recomendacoes' },
+  { id: 'avancada', label: 'Análise Avançada', icon: TrendingUp, description: 'Comparação entre regiões', path: '/dashboard/avancada' },
 ];
 
 export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection, onNavigate }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState({ start: true, end: false });
-  const navRef = React.useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Determinar seção ativa baseada na rota atual
+  const getCurrentSection = () => {
+    const currentPath = location.pathname;
+    const section = sections.find(s => s.path === currentPath);
+    return section ? section.id : activeSection;
+  };
+
+  const currentActiveSection = getCurrentSection();
 
   const handleNavigate = (sectionId: string) => {
-    onNavigate(sectionId);
+    const section = sections.find(s => s.id === sectionId);
+    if (section) {
+      // Navegar para a rota correspondente
+      navigate(section.path);
+    } else {
+      // Fallback para navegação interna
+      onNavigate(sectionId);
+    }
     setShowMobileMenu(false);
   };
-
-  const handleScroll = () => {
-    if (navRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = navRef.current;
-      setScrollPosition({
-        start: scrollLeft === 0,
-        end: scrollLeft + clientWidth >= scrollWidth - 1
-      });
-    }
-  };
-
-  React.useEffect(() => {
-    const navElement = navRef.current;
-    if (navElement) {
-      navElement.addEventListener('scroll', handleScroll);
-      handleScroll(); // Verificar posição inicial
-      return () => navElement.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
 
   return (
     <>
@@ -94,45 +94,56 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
              {/* Linha Vertical */}
              <div className="w-px h-6 bg-gray-300 mx-4 flex-shrink-0 hidden sm:block"></div>
 
-                           {/* Navegação Principal - Sempre Acessível */}
+                           {/* Navegação Principal - Menu Dropdown "Áreas" */}
               <div className="flex-1 min-w-0 mx-4">
-                {/* Container com Scroll Horizontal */}
-                <div 
-                  ref={navRef}
-                  className={`overflow-x-auto scrollbar-hide nav-scroll-container ${
-                    scrollPosition.start ? 'scroll-start' : ''
-                  } ${
-                    scrollPosition.end ? 'scroll-end' : ''
-                  }`}
-                >
-                  <nav className="flex items-center gap-2 pb-1" style={{ minWidth: 'max-content' }}>
-                   {sections.map((section) => {
-                     const Icon = section.icon;
-                     const isActive = activeSection === section.id;
-                     
-                     return (
-                       <Button
-                         key={section.id}
-                         variant={isActive ? "default" : "ghost"}
-                         size="sm"
-                         onClick={() => handleNavigate(section.id)}
-                         className={`px-3 py-2 text-sm font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
-                           isActive 
-                             ? 'bg-blue-600 text-white shadow-sm' 
-                             : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                         }`}
-                       >
-                         <Icon className="w-4 h-4 mr-2" />
-                         {section.label}
-                       </Button>
-                     );
-                   })}
-                 </nav>
-               </div>
-             </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100 hover:border-blue-400 px-4 py-2 font-medium"
+                    >
+                      <Grid className="w-4 h-4 mr-2" />
+                      Áreas
+                      <ChevronDown className="w-4 h-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-64 p-2">
+                    <div className="grid grid-cols-1 gap-1">
+                      {sections.map((section) => {
+                        const Icon = section.icon;
+                        const isActive = currentActiveSection === section.id;
+                        
+                        return (
+                          <DropdownMenuItem
+                            key={section.id}
+                            onClick={() => handleNavigate(section.id)}
+                            className={`flex items-center px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ${
+                              isActive 
+                                ? 'bg-blue-100 text-blue-700 font-medium' 
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
+                          >
+                            <Icon className="w-4 h-4 mr-3" />
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium">{section.label}</span>
+                              <span className="text-xs text-gray-500">{section.description}</span>
+                            </div>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
 
              {/* Direita: Botões de Ação (Sempre visíveis) */}
              <div className="flex items-center gap-2 flex-shrink-0">
+               {/* Zoom Control - Visível em desktop */}
+               <div className="hidden md:block">
+                 <ZoomControl />
+               </div>
+               
                {/* Ícones de Ação */}
                <div className="flex items-center gap-1">
                  <Button variant="ghost" size="icon" className="text-gray-600 hover:text-blue-600 w-8 h-8">
@@ -161,7 +172,7 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
                <Button
                  variant="outline"
                  size="sm"
-                 onClick={() => window.location.href = '/'}
+                 onClick={() => navigate('/')}
                  className="text-gray-700 border-gray-300 hover:bg-gray-50 px-3 py-2 text-sm"
                >
                  <Home className="w-4 h-4 mr-2" />
@@ -188,7 +199,7 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
               <nav className="flex flex-col gap-2">
                 {sections.map((section) => {
                   const Icon = section.icon;
-                  const isActive = activeSection === section.id;
+                  const isActive = currentActiveSection === section.id;
                   
                   return (
                     <Button
