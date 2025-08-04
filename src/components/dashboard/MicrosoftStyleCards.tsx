@@ -31,6 +31,7 @@ import {
   Clock,
   BarChart
 } from 'lucide-react';
+import ScrollReveal from '@/components/ScrollReveal';
 
 interface MicrosoftCardProps {
   title: string;
@@ -59,62 +60,66 @@ const MicrosoftCard: React.FC<MicrosoftCardProps> = ({
   stats
 }) => {
   return (
-    <Card className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white h-full">
-      {/* Background Image */}
+    <Card className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white h-full rounded-xl border border-gray-100">
+      {/* Microsoft Fluent Design Background */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+        className="absolute inset-0 bg-cover bg-center opacity-5 group-hover:opacity-10 transition-all duration-300"
         style={{ 
           backgroundImage: `url(${backgroundImage})`,
           backgroundColor: backgroundColor
         }}
       />
       
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-white/70" />
+      {/* Microsoft Acrylic Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/98 via-white/95 to-white/90 group-hover:from-white/95 group-hover:via-white/90 group-hover:to-white/85 transition-all duration-300 backdrop-blur-sm" />
+      
+      {/* Microsoft Reveal Effect - Border */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
       <CardContent className="relative z-10 p-6 h-full flex flex-col">
-        {/* Badge */}
+        {/* Microsoft Badge Design */}
         {badge && (
-          <div className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full w-fit mb-4">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-medium rounded-md w-fit mb-4 shadow-sm">
             <Star className="w-3 h-3" />
             {badge}
           </div>
         )}
         
-        {/* Icon */}
+        {/* Microsoft Icon Design */}
         <div className="mb-4">
-          <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-105">
             {icon}
           </div>
         </div>
         
-        {/* Content */}
+        {/* Microsoft Typography */}
         <div className="flex-1">
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors duration-200">
             {title}
           </h3>
-          <p className="text-gray-600 text-sm leading-relaxed mb-4">
+          <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
             {description}
           </p>
           
-          {/* Stats */}
+          {/* Microsoft Stats Design */}
           {stats && (
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+            <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
               <div className="text-2xl font-bold text-gray-900">{stats.value}</div>
-              <div className="text-xs text-gray-600">{stats.label}</div>
+              <div className="text-xs text-gray-500 font-medium">{stats.label}</div>
             </div>
           )}
         </div>
         
-        {/* Action Button */}
-        <Button 
-          onClick={onClick}
-          variant="ghost" 
-          className="w-full justify-between p-0 h-auto text-blue-600 hover:text-blue-700 font-semibold group-hover:translate-x-1 transition-all duration-300 border-t border-gray-100 pt-4 mt-auto"
-        >
-          <span>{action}</span>
-          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-        </Button>
+        {/* Microsoft Button Design */}
+        <div className="mt-auto">
+          <Button 
+            onClick={onClick}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 group-hover:shadow-md"
+          >
+            {action}
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
@@ -331,107 +336,132 @@ export const MicrosoftStyleCards: React.FC<MicrosoftStyleCardsProps> = ({ onNavi
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-16">
-      {/* Hero Section Microsoft Style */}
-      <div className="text-center space-y-8">
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
-            Transformação Digital na Saúde
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Descubra o potencial digital da sua região através de análises avançadas, 
-            comparações regionais e recomendações personalizadas para evolução da maturidade digital.
-          </p>
-        </div>
+      {/* Enhanced Hero Section Microsoft Style */}
+      <ScrollReveal>
+        <div className="text-center space-y-12">
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 bg-clip-text text-transparent tracking-tight">
+              Transformação Digital na Saúde
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              Descubra o potencial digital da sua região através de análises avançadas, 
+              comparações regionais e recomendações personalizadas para evolução da maturidade digital.
+            </p>
+          </div>
         
-        {/* Stats Cards Microsoft Style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-0 shadow-lg">
-            <CardContent className="p-6 text-center">
-              <div className="flex items-center justify-center mb-3">
-                <Globe className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-1">853</h3>
-              <p className="text-gray-600 font-medium">Microrregiões Analisadas</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-0 shadow-lg">
-            <CardContent className="p-6 text-center">
-              <div className="flex items-center justify-center mb-3">
-                <Award className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-1">7</h3>
-              <p className="text-gray-600 font-medium">Eixos de Maturidade</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-0 shadow-lg">
-            <CardContent className="p-6 text-center">
-              <div className="flex items-center justify-center mb-3">
-                <Zap className="w-8 h-8 text-purple-600" />
-              </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-1">100%</h3>
-              <p className="text-gray-600 font-medium">Cobertura Nacional</p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Enhanced Stats Cards Microsoft Style */}
+        <ScrollReveal delay={100}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 rounded-2xl overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <CardContent className="p-8 text-center relative z-10">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <Globe className="w-7 h-7 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">853</h3>
+                <p className="text-blue-100 font-semibold text-lg">Microrregiões Analisadas</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 rounded-2xl overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-green-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <CardContent className="p-8 text-center relative z-10">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <Award className="w-7 h-7 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">7</h3>
+                <p className="text-green-100 font-semibold text-lg">Eixos de Maturidade</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-purple-500 to-purple-600 border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 rounded-2xl overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <CardContent className="p-8 text-center relative z-10">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <Zap className="w-7 h-7 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">100%</h3>
+                <p className="text-purple-100 font-semibold text-lg">Cobertura Nacional</p>
+              </CardContent>
+            </Card>
+          </div>
+        </ScrollReveal>
       </div>
 
-      {/* Main Features Section */}
-      <div className="space-y-8">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Soluções para Transformação Digital
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Ferramentas avançadas para impulsionar a maturidade digital da sua região
-          </p>
+      {/* Enhanced Main Features Section */}
+      <ScrollReveal delay={200}>
+        <div className="space-y-12">
+          <div className="text-center space-y-6">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+              Soluções para Transformação Digital
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Ferramentas avançadas para impulsionar a maturidade digital da sua região
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {microsoftFeatures.map((feature, index) => (
+              <MicrosoftCard key={index} {...feature} />
+            ))}
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {microsoftFeatures.map((feature, index) => (
-            <MicrosoftCard key={index} {...feature} />
-          ))}
-        </div>
-      </div>
+      </ScrollReveal>
 
-      {/* Eixos Section */}
-      <div className="space-y-8">
-        <div className="text-center space-y-4">
-          <h3 className="text-2xl font-bold text-gray-900">
-            Os 7 Eixos da Maturidade Digital
-          </h3>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Explore cada dimensão da transformação digital em saúde e entenda 
-            como sua região se posiciona em cada eixo estratégico.
-          </p>
+      {/* Enhanced Eixos Section */}
+      <ScrollReveal delay={300}>
+        <div className="space-y-12">
+          <div className="text-center space-y-6">
+            <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-700 bg-clip-text text-transparent">
+              Os 7 Eixos da Maturidade Digital
+            </h3>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Explore cada dimensão da transformação digital em saúde e entenda 
+              como sua região se posiciona em cada eixo estratégico.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {eixosCards.map((eixo, index) => (
+              <MicrosoftCard key={`eixo-${index}`} {...eixo} />
+            ))}
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {eixosCards.map((eixo, index) => (
-            <MicrosoftCard key={`eixo-${index}`} {...eixo} />
-          ))}
-        </div>
-      </div>
+      </ScrollReveal>
 
-      {/* Call to Action Microsoft Style */}
-      <div className="text-center py-12">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white shadow-xl">
-          <h3 className="text-2xl font-bold mb-4">
-            Pronto para começar sua análise?
-          </h3>
-          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-            Selecione uma microrregião nos filtros e explore todas as funcionalidades 
-            do Radar NSDIGI para impulsionar a transformação digital da sua região.
-          </p>
-          <Button 
-            onClick={() => onNavigate('overview')}
-            size="lg"
-            className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold shadow-lg"
-          >
-            Começar Análise
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+      {/* Enhanced Call to Action Microsoft Style */}
+      <ScrollReveal delay={400}>
+        <div className="text-center py-16">
+          <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 rounded-3xl p-12 text-white shadow-2xl overflow-hidden group">
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700" />
+            <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-12 translate-y-12 group-hover:scale-150 transition-transform duration-700" />
+            
+            <div className="relative z-10">
+              <h3 className="text-3xl font-bold mb-6 group-hover:scale-105 transition-transform duration-300">
+                Pronto para começar sua análise?
+              </h3>
+              <p className="text-blue-100 mb-8 max-w-3xl mx-auto text-lg leading-relaxed">
+                Selecione uma microrregião nos filtros e explore todas as funcionalidades 
+                do Radar NSDIGI para impulsionar a transformação digital da sua região.
+              </p>
+              <Button 
+                onClick={() => onNavigate('overview')}
+                size="lg"
+                className="bg-white text-blue-600 hover:bg-gray-100 px-10 py-4 text-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 rounded-2xl group-hover:bg-blue-50"
+              >
+                Começar Análise
+                <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
+      </ScrollReveal>
     </div>
   );
 };

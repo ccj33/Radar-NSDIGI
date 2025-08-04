@@ -41,7 +41,9 @@ export function DataUpload({ onDataUpdate }: DataUploadProps) {
     );
 
     if (!isValidType) {
-      toast.error('Por favor, selecione um arquivo Excel (.xlsx ou .xls)');
+      toast.error('Por favor, selecione um arquivo Excel (.xlsx ou .xls)', {
+        duration: 3000,
+      });
       return;
     }
 
@@ -94,7 +96,9 @@ export function DataUpload({ onDataUpdate }: DataUploadProps) {
 
       setUploadStatus('success');
       setLastUpdate(new Date());
-      toast.success(`Arquivo processado com sucesso! ${normalizedData.length} registros carregados.`);
+      toast.success(`Arquivo processado com sucesso! ${normalizedData.length} registros carregados.`, {
+        duration: 3000,
+      });
 
       // Atualizar os dados no componente pai
       if (onDataUpdate) {
@@ -107,7 +111,9 @@ export function DataUpload({ onDataUpdate }: DataUploadProps) {
       
       // Mensagem de erro mais específica
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-      toast.error(`Erro ao processar arquivo: ${errorMessage}`);
+      toast.error(`Erro ao processar arquivo: ${errorMessage}`, {
+        duration: 4000, // Erros podem ficar um pouco mais tempo para leitura
+      });
     } finally {
       setIsUploading(false);
       // Limpar input
@@ -122,7 +128,9 @@ export function DataUpload({ onDataUpdate }: DataUploadProps) {
   };
 
   const downloadTemplate = () => {
-    toast.info('Iniciando download do template...');
+    toast.info('Iniciando download do template...', {
+      duration: 2000,
+    });
     // Em uma implementação real, aqui você geraria e baixaria um template Excel
     // com a estrutura correta das colunas
   };

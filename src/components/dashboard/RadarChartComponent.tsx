@@ -150,9 +150,9 @@ export function RadarChartComponent({ data, medians, onNavigateToRecommendations
       if (typeof valorRaw === 'string') {
         // Remove vírgulas e converte para número
         const cleanValue = valorRaw.replace(/[,]/g, '.');
-        valor = parseFloat(cleanValue) || 0;
+        valor = Math.round(parseFloat(cleanValue) * 100) / 100 || 0;
       } else if (typeof valorRaw === 'number') {
-        valor = valorRaw;
+        valor = Math.round(valorRaw * 100) / 100;
       }
     }
     
@@ -248,36 +248,6 @@ export function RadarChartComponent({ data, medians, onNavigateToRecommendations
 
   return (
     <div className="relative w-full h-full">
-      {/* Legenda customizada dentro do gráfico */}
-      <div className="absolute bottom-2 right-2 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-3 z-10 text-xs border border-gray-200 min-w-[160px] max-w-[180px]">
-        <div className="font-semibold text-gray-800 mb-2 text-center border-b border-gray-200 pb-1">
-          Legenda do Gráfico
-        </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-500 inline-block shadow-sm flex-shrink-0" />
-            <span className="font-medium text-xs">Microrregião</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-purple-600 inline-block shadow-sm flex-shrink-0" />
-            <span className="font-medium text-xs">
-              {compareWithMacroregion ? `Mediana ${data.macrorregiao}` : 'Mediana Geral'}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full border-2 border-red-400 border-dashed inline-block flex-shrink-0" />
-            <span className="text-xs">Emergente (≤ 0,33)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full border-2 border-yellow-500 border-dashed inline-block flex-shrink-0" />
-            <span className="text-xs">Em Evolução (0,33 - 0,66)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full border-2 border-green-500 border-dashed inline-block flex-shrink-0" />
-            <span className="text-xs">Avançado ({'>'} 0,66)</span>
-          </div>
-        </div>
-      </div>
       <ResponsiveContainer width="100%" height={400}>
         <RadarChart 
           data={currentHoveredEixoValue !== null ? modifiedData : chartData} 

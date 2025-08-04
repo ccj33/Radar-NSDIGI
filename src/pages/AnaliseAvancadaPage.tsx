@@ -21,13 +21,17 @@ import {
   Target,
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
+  Info,
+  ArrowRight,
+  X
 } from "lucide-react";
 
 export default function AnaliseAvancadaPage() {
   const [selectedMacroregiao, setSelectedMacroregiao] = useState<string>("");
   const [selectedMicrorregiao, setSelectedMicrorregiao] = useState<string>("");
   const [selectedEixo, setSelectedEixo] = useState<string>("");
+  const [selectedTipoAnalise, setSelectedTipoAnalise] = useState<string>("radar");
 
   const macroregioes = [
     "Todas as Macrorregiões",
@@ -53,6 +57,13 @@ export default function AnaliseAvancadaPage() {
     "Infraestrutura e Tecnologia",
     "Processos e Serviços",
     "Pessoas e Capacitação"
+  ];
+
+  const tiposAnalise = [
+    { value: "radar", label: "Gráfico Radar" },
+    { value: "barras", label: "Gráfico de Barras" },
+    { value: "linha", label: "Gráfico de Linha" },
+    { value: "pizza", label: "Gráfico de Pizza" }
   ];
 
   const insights = [
@@ -130,48 +141,65 @@ export default function AnaliseAvancadaPage() {
     }
   };
 
+  const limparComparacao = () => {
+    setSelectedMacroregiao("");
+    setSelectedMicrorregiao("");
+    setSelectedEixo("");
+  };
+
   return (
-    <DashboardLayout activeSection="advanced">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Análise Avançada</h1>
-          <p className="text-gray-600">Exploração detalhada de dados e insights estratégicos</p>
+    <DashboardLayout activeSection="avancada">
+      <div className="container mx-auto px-4 py-6">
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Análise Avançada</h1>
+                <p className="text-gray-600">Comparação detalhada entre microrregiões</p>
+              </div>
+            </div>
+            <Badge className="bg-blue-100 text-blue-800 px-3 py-1">Araxá</Badge>
+          </div>
         </div>
 
-        {/* Filtros Avançados */}
-        <Card className="mb-8">
+        {/* Banner Informativo */}
+        <Card className="mb-6 bg-blue-50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold text-blue-900 mb-1">Como Usar a Análise Avançada</h3>
+                <p className="text-blue-800 text-sm">
+                  Selecione uma região para comparação e escolha o tipo de análise desejado. 
+                  Compare indicadores, identifique gaps e descubra oportunidades de melhoria.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Configuração da Comparação */}
+        <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Filter className="w-5 h-5" />
-              Filtros Avançados
+              <Target className="w-5 h-5" />
+              Configurar Comparação
             </CardTitle>
             <CardDescription>
-              Configure os parâmetros para análise personalizada
+              Defina os parâmetros para análise comparativa
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="macroregiao">Macrorregião</Label>
-                <Select value={selectedMacroregiao} onValueChange={setSelectedMacroregiao}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {macroregioes.map((regiao) => (
-                      <SelectItem key={regiao} value={regiao}>
-                        {regiao}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="microrregiao">Microrregião</Label>
+                <Label htmlFor="regiao">Região para Comparação</Label>
                 <Select value={selectedMicrorregiao} onValueChange={setSelectedMicrorregiao}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
+                    <SelectValue placeholder="Selecione uma região" />
                   </SelectTrigger>
                   <SelectContent>
                     {microrregioes.map((regiao) => (
@@ -184,15 +212,15 @@ export default function AnaliseAvancadaPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="eixo">Eixo de Análise</Label>
-                <Select value={selectedEixo} onValueChange={setSelectedEixo}>
+                <Label htmlFor="tipo">Tipo de Análise</Label>
+                <Select value={selectedTipoAnalise} onValueChange={setSelectedTipoAnalise}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
+                    <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    {eixos.map((eixo) => (
-                      <SelectItem key={eixo} value={eixo}>
-                        {eixo}
+                    {tiposAnalise.map((tipo) => (
+                      <SelectItem key={tipo.value} value={tipo.value}>
+                        {tipo.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -200,196 +228,206 @@ export default function AnaliseAvancadaPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="busca">Buscar</Label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    id="busca"
-                    placeholder="Digite para buscar..."
-                    className="pl-10"
-                  />
-                </div>
+                <Label>&nbsp;</Label>
+                <Button 
+                  variant="outline" 
+                  onClick={limparComparacao}
+                  className="w-full"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Limpar Comparação
+                </Button>
               </div>
-            </div>
-
-            <div className="flex gap-3 mt-6">
-              <Button className="flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                Aplicar Filtros
-              </Button>
-              <Button variant="outline" className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Exportar Dados
-              </Button>
             </div>
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="insights" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="insights" className="flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              Insights
-            </TabsTrigger>
-            <TabsTrigger value="dados" className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" />
-              Dados Detalhados
-            </TabsTrigger>
-            <TabsTrigger value="tendencias" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Tendências
-            </TabsTrigger>
-          </TabsList>
+        {/* Área de Resultados */}
+        {!selectedMicrorregiao ? (
+          /* Estado Inicial - Instruções */
+          <Card className="max-w-2xl mx-auto">
+            <CardContent className="p-12 text-center">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Target className="w-10 h-10 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Selecione uma Região para Comparação
+              </h3>
+              <p className="text-gray-600">
+                Escolha uma microrregião da lista acima para iniciar a análise comparativa detalhada.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          /* Resultados da Análise */
+          <div className="space-y-6">
+            <Tabs defaultValue="insights" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="insights" className="flex items-center gap-2">
+                  <Target className="w-4 h-4" />
+                  Insights
+                </TabsTrigger>
+                <TabsTrigger value="dados" className="flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4" />
+                  Dados Detalhados
+                </TabsTrigger>
+                <TabsTrigger value="tendencias" className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  Tendências
+                </TabsTrigger>
+              </TabsList>
 
-          <TabsContent value="insights" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {insights.map((insight) => (
-                <Card key={insight.id} className="overflow-hidden">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        {getInsightIcon(insight.tipo)}
-                        <Badge variant="outline">{insight.tipo}</Badge>
-                      </div>
-                      <Badge className={`${getImpactoColor(insight.impacto)} text-white`}>
-                        {insight.impacto}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-lg">{insight.titulo}</CardTitle>
-                    <CardDescription>{insight.descricao}</CardDescription>
+              <TabsContent value="insights" className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {insights.map((insight) => (
+                    <Card key={insight.id} className="overflow-hidden">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-2">
+                            {getInsightIcon(insight.tipo)}
+                            <Badge variant="outline">{insight.tipo}</Badge>
+                          </div>
+                          <Badge className={`${getImpactoColor(insight.impacto)} text-white`}>
+                            {insight.impacto}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-lg">{insight.titulo}</CardTitle>
+                        <CardDescription>{insight.descricao}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">Confiança:</span>
+                            <span className="font-semibold">{insight.confianca}%</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">Categoria:</span>
+                            <Badge variant="secondary">{insight.categoria}</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="dados" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Análise Comparativa por Região</CardTitle>
+                    <CardDescription>
+                      Comparação detalhada de indicadores por microrregião
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Confiança:</span>
-                        <span className="font-semibold">{insight.confianca}%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Categoria:</span>
-                        <Badge variant="secondary">{insight.categoria}</Badge>
-                      </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left p-3">Região</th>
+                            <th className="text-center p-3">Governança</th>
+                            <th className="text-center p-3">Infraestrutura</th>
+                            <th className="text-center p-3">Processos</th>
+                            <th className="text-center p-3">Pessoas</th>
+                            <th className="text-center p-3">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {dadosAvancados.map((dado, index) => (
+                            <tr key={index} className="border-b hover:bg-gray-50">
+                              <td className="p-3 font-medium">{dado.regiao}</td>
+                              <td className="p-3 text-center">
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="font-semibold">{dado.governanca}%</span>
+                                  <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-blue-500 rounded-full" 
+                                      style={{ width: `${dado.governanca}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-3 text-center">
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="font-semibold">{dado.infraestrutura}%</span>
+                                  <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-green-500 rounded-full" 
+                                      style={{ width: `${dado.infraestrutura}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-3 text-center">
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="font-semibold">{dado.processos}%</span>
+                                  <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-purple-500 rounded-full" 
+                                      style={{ width: `${dado.processos}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-3 text-center">
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="font-semibold">{dado.pessoas}%</span>
+                                  <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-orange-500 rounded-full" 
+                                      style={{ width: `${dado.pessoas}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-3 text-center">
+                                <Badge className="text-lg px-3 py-1">
+                                  {dado.total.toFixed(1)}%
+                                </Badge>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </TabsContent>
+              </TabsContent>
 
-          <TabsContent value="dados" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Análise Comparativa por Região</CardTitle>
-                <CardDescription>
-                  Comparação detalhada de indicadores por microrregião
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-3">Região</th>
-                        <th className="text-center p-3">Governança</th>
-                        <th className="text-center p-3">Infraestrutura</th>
-                        <th className="text-center p-3">Processos</th>
-                        <th className="text-center p-3">Pessoas</th>
-                        <th className="text-center p-3">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dadosAvancados.map((dado, index) => (
-                        <tr key={index} className="border-b hover:bg-gray-50">
-                          <td className="p-3 font-medium">{dado.regiao}</td>
-                          <td className="p-3 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="font-semibold">{dado.governanca}%</span>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-blue-500 rounded-full" 
-                                  style={{ width: `${dado.governanca}%` }}
-                                />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-3 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="font-semibold">{dado.infraestrutura}%</span>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-green-500 rounded-full" 
-                                  style={{ width: `${dado.infraestrutura}%` }}
-                                />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-3 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="font-semibold">{dado.processos}%</span>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-purple-500 rounded-full" 
-                                  style={{ width: `${dado.processos}%` }}
-                                />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-3 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="font-semibold">{dado.pessoas}%</span>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-orange-500 rounded-full" 
-                                  style={{ width: `${dado.pessoas}%` }}
-                                />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-3 text-center">
-                            <Badge className="text-lg px-3 py-1">
-                              {dado.total.toFixed(1)}%
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <TabsContent value="tendencias" className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5" />
+                        Evolução Temporal
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                        <p className="text-gray-500">Gráfico de evolução temporal</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <PieChart className="w-5 h-5" />
+                        Distribuição por Categoria
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                        <p className="text-gray-500">Gráfico de distribuição</p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="tendencias" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    Evolução Temporal
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">Gráfico de evolução temporal</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <PieChart className="w-5 h-5" />
-                    Distribuição por Categoria
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">Gráfico de distribuição</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+              </TabsContent>
+            </Tabs>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

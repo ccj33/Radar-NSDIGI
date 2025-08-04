@@ -112,10 +112,10 @@ export function ResponsiveFilters({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+        <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-[50vh]">
           <Command>
             <CommandInput placeholder="Buscar..." />
-            <CommandList>
+            <CommandList className="mobile-dropdown-scroll">
               <CommandEmpty>Nenhum resultado.</CommandEmpty>
               <CommandGroup>
                 <CommandItem onSelect={() => { onSelect(undefined); setIsOpen(false); }}>
@@ -336,7 +336,7 @@ export function ResponsiveFilters({
               <SelectTrigger className="touch-target">
                 <SelectValue placeholder="Selecione uma microrregião" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-[50vh]">
                 {filteredMicroregioes.map((item) => (
                   <SelectItem key={item.microrregiao} value={item.microrregiao}>
                     {item.microrregiao}

@@ -18,6 +18,7 @@ import { EstatisticasGerais } from "./EstatisticasGerais";
 import { DistribuicaoINMSD } from "./DistribuicaoINMSD";
 import { formatPopulation } from "@/lib/utils";
 import { EmptyState } from "@/components/ui/empty-state";
+import ScrollReveal from '@/components/ScrollReveal';
 
 interface StatsOverviewProps {
   data: MicroRegionData[];

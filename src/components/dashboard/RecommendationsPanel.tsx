@@ -35,13 +35,56 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { MicroRegionData } from "@/types/dashboard";
+import { useMediaQuery } from "@/hooks/use-mobile";
+import React from "react"; // Added missing import for React
 
 interface RecommendationsPanelProps {
   data?: MicroRegionData;
   initialEixoIndex?: number;
 }
 
+// Componente para formatação de texto otimizada para mobile
+const FormattedText = ({ text, className = "" }: { text: string; className?: string }) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
+  if (!text) return null;
+  
+  // Dividir o texto em parágrafos
+  const paragraphs = text.split('\n').filter(p => p.trim());
+  
+  if (isMobile) {
+    return (
+      <div className={`space-y-3 ${className}`}>
+        {paragraphs.map((paragraph, index) => (
+          <div key={index} className="text-sm leading-relaxed text-gray-700">
+            {paragraph.trim()}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  return (
+    <p className={`text-sm text-gray-700 leading-relaxed ${className}`}>
+      {text}
+    </p>
+  );
+};
+
+// Componente para tabs otimizadas para mobile
+const MobileTabs = ({ defaultValue, children }: { defaultValue: string; children: React.ReactNode }) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
+  return (
+    <Tabs defaultValue={defaultValue} className={isMobile ? "space-y-4" : ""}>
+      {children}
+    </Tabs>
+  );
+};
+
 const ToolCard = ({ ferramenta }: { ferramenta: { id: number; tipo: string; titulo: string; descricao: string } }) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
   const getFileIcon = (type: string) => {
     switch (type.toLowerCase()) {
       case 'pdf':
@@ -54,6 +97,26 @@ const ToolCard = ({ ferramenta }: { ferramenta: { id: number; tipo: string; titu
         return <FileText className="h-8 w-8 text-gray-500" />;
     }
   };
+
+  if (isMobile) {
+    return (
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            {getFileIcon(ferramenta.tipo)}
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm text-gray-800 mb-1">{ferramenta.titulo}</p>
+              <p className="text-xs text-gray-500 mb-3">{ferramenta.descricao}</p>
+              <Button size="sm" variant="outline" className="w-full">
+                <Download className="h-4 w-4 mr-2" />
+                Baixar
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -74,6 +137,39 @@ const ToolCard = ({ ferramenta }: { ferramenta: { id: number; tipo: string; titu
 
 const RecommendationStep = ({ recomendacao, index, isLast }: { recomendacao: { id: number; titulo: string; detalhes: string }, index: number, isLast: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
+  if (isMobile) {
+    return (
+      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0">
+            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-blue-500 text-white font-bold text-sm">
+              {index + 1}
+            </div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-gray-800 text-sm mb-2">{recomendacao.titulo}</p>
+            <Button 
+              variant="link" 
+              size="sm" 
+              className="px-0 text-xs h-auto p-0"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? "Ocultar detalhes" : "Ver detalhes"}
+              {isOpen ? <ChevronDown className="h-3 w-3 ml-1" /> : <ChevronRight className="h-3 w-3 ml-1" />}
+            </Button>
+            {isOpen && (
+              <div className="mt-3 p-3 bg-gray-50 rounded-md border">
+                <FormattedText text={recomendacao.detalhes} />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex">
       <div className="flex flex-col items-center mr-4">
@@ -101,8 +197,8 @@ const RecommendationStep = ({ recomendacao, index, isLast }: { recomendacao: { i
         </div>
       </Collapsible>
     </div>
-  )
-}
+  );
+};
 
 const getColorClasses = (color: string) => {
     const colorMap = {
@@ -121,6 +217,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
   const [currentEixoIndex, setCurrentEixoIndex] = useState(initialEixoIndex);
   const [viewMode, setViewMode] = useState<'list' | 'carousel'>('carousel');
   const { data: macrosData, loading: macrosLoading, error: macrosError } = useMacrosRecommendations();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   
   // Função para processar os dados dos eixos baseados nos dados reais
   const processEixosData = () => {
@@ -140,7 +237,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
     
     return eixosNames.map((nome, index) => {
       const eixoKey = `eixo_${index + 1}` as keyof MicroRegionData;
-      const pontuacao = parseFloat(String(data[eixoKey] || 0).replace(',', '.'));
+      const pontuacao = Math.round(parseFloat(String(data[eixoKey] || 0).replace(',', '.')) * 100) / 100;
       
       // Determinar classificação baseada na pontuação
       let classificacao = "Emergente";
@@ -328,26 +425,26 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                               Eixo {eixo.id} - {eixo.nome}
                             </CardTitle>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-sm text-gray-600">Pontuação: {eixo.pontuacao}</span>
+                              <span className="text-sm text-gray-600">Pontuação: {eixo.pontuacao.toFixed(2)}</span>
                               <Badge variant="secondary">{eixo.classificacao}</Badge>
                             </div>
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <Tabs defaultValue="diagnostico">
-                          <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="diagnostico">
-                              <AlertCircle className="h-4 w-4 mr-2"/>
+                        <MobileTabs defaultValue="diagnostico">
+                          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-1 gap-2' : 'grid-cols-3'}`}>
+                            <TabsTrigger value="diagnostico" className={isMobile ? 'flex-col py-3' : ''}>
+                              <AlertCircle className={`${isMobile ? 'h-5 w-5 mb-1' : 'h-4 w-4 mr-2'}`}/>
                               Diagnóstico
                             </TabsTrigger>
-                            <TabsTrigger value="plano">
-                              <ListChecks className="h-4 w-4 mr-2"/>
-                              Plano de Ação
+                            <TabsTrigger value="plano" className={isMobile ? 'flex-col py-3' : ''}>
+                              <ListChecks className={`${isMobile ? 'h-5 w-5 mb-1' : 'h-4 w-4 mr-2'}`}/>
+                              {isMobile ? 'Plano de Ação' : 'Plano de Ação'}
                             </TabsTrigger>
-                            <TabsTrigger value="ferramentas">
-                              <Wrench className="h-4 w-4 mr-2"/>
-                              Kit de Ferramentas
+                            <TabsTrigger value="ferramentas" className={isMobile ? 'flex-col py-3' : ''}>
+                              <Wrench className={`${isMobile ? 'h-5 w-5 mb-1' : 'h-4 w-4 mr-2'}`}/>
+                              {isMobile ? 'Ferramentas' : 'Kit de Ferramentas'}
                             </TabsTrigger>
                           </TabsList>
 
@@ -360,10 +457,13 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                                 </CardTitle>
                               </CardHeader>
                               <CardContent>
-                                <p className="text-sm text-gray-700 leading-relaxed">
-                                  {macrosLoading ? "Carregando situação atual..." : 
-                                   eixoRecommendations.situacao || eixo.situacaoAtual}
-                                </p>
+                                {macrosLoading ? (
+                                  <p className="text-sm text-gray-500">Carregando situação atual...</p>
+                                ) : (
+                                  <FormattedText 
+                                    text={eixoRecommendations.situacao || eixo.situacaoAtual} 
+                                  />
+                                )}
                               </CardContent>
                             </Card>
                           </TabsContent>
@@ -424,7 +524,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                               </CardContent>
                             </Card>
                           </TabsContent>
-                        </Tabs>
+                        </MobileTabs>
                       </CardContent>
                     </Card>
                   </CarouselItem>
@@ -462,26 +562,26 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                           Eixo {eixo.id} - {eixo.nome}
                         </CardTitle>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-sm text-gray-600">Pontuação: {eixo.pontuacao}</span>
+                          <span className="text-sm text-gray-600">Pontuação: {eixo.pontuacao.toFixed(2)}</span>
                           <Badge variant="secondary">{eixo.classificacao}</Badge>
                         </div>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <Tabs defaultValue="diagnostico">
-                      <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="diagnostico">
-                          <AlertCircle className="h-4 w-4 mr-2"/>
+                    <MobileTabs defaultValue="diagnostico">
+                      <TabsList className={`grid w-full ${isMobile ? 'grid-cols-1 gap-2' : 'grid-cols-3'}`}>
+                        <TabsTrigger value="diagnostico" className={isMobile ? 'flex-col py-3' : ''}>
+                          <AlertCircle className={`${isMobile ? 'h-5 w-5 mb-1' : 'h-4 w-4 mr-2'}`}/>
                           Diagnóstico
                         </TabsTrigger>
-                        <TabsTrigger value="plano">
-                          <ListChecks className="h-4 w-4 mr-2"/>
-                          Plano de Ação
+                        <TabsTrigger value="plano" className={isMobile ? 'flex-col py-3' : ''}>
+                          <ListChecks className={`${isMobile ? 'h-5 w-5 mb-1' : 'h-4 w-4 mr-2'}`}/>
+                          {isMobile ? 'Plano de Ação' : 'Plano de Ação'}
                         </TabsTrigger>
-                        <TabsTrigger value="ferramentas">
-                          <Wrench className="h-4 w-4 mr-2"/>
-                          Kit de Ferramentas
+                        <TabsTrigger value="ferramentas" className={isMobile ? 'flex-col py-3' : ''}>
+                          <Wrench className={`${isMobile ? 'h-5 w-5 mb-1' : 'h-4 w-4 mr-2'}`}/>
+                          {isMobile ? 'Ferramentas' : 'Kit de Ferramentas'}
                         </TabsTrigger>
                       </TabsList>
 
@@ -494,10 +594,13 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-sm text-gray-700 leading-relaxed">
-                              {macrosLoading ? "Carregando situação atual..." : 
-                               eixoRecommendations.situacao || eixo.situacaoAtual}
-                            </p>
+                            {macrosLoading ? (
+                              <p className="text-sm text-gray-500">Carregando situação atual...</p>
+                            ) : (
+                              <FormattedText 
+                                text={eixoRecommendations.situacao || eixo.situacaoAtual} 
+                              />
+                            )}
                           </CardContent>
                         </Card>
                       </TabsContent>
@@ -558,7 +661,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                           </CardContent>
                         </Card>
                       </TabsContent>
-                    </Tabs>
+                    </MobileTabs>
                   </CardContent>
                 </Card>
               );

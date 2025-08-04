@@ -23,6 +23,7 @@ const features = [
   { id: 'executivo', title: 'Dashboard Executivo', icon: Target, description: 'Obtenha uma visão estratégica com os principais indicadores.' },
   { id: 'tabela', title: 'Detalhamento', icon: Table, description: 'Veja os detalhamentos por eixo de maturidade.' },
   { id: 'recomendacoes', title: 'Recomendações', icon: BookOpen, description: 'Receba recomendações personalizadas para evoluir.' },
+  { id: 'detalhe', title: 'Detalhes da Microrregião', icon: Target, description: 'Veja o design Microsoft implementado em ação.' },
 ];
 
 const FeatureCard = ({ icon: Icon, title, description, onNavigate }) => (
@@ -86,14 +87,20 @@ const NewLandingPage = () => {
           {/* Banner Principal - ocupa 2 colunas */}
           <HeroCard onNavigate={() => handleNavigation('/dashboard')} />
           
-          {/* Cards menores - 6 cards organizados conforme especificação */}
-          {features.slice(0, 6).map((feature) => (
+          {/* Cards menores - 7 cards organizados conforme especificação */}
+          {features.map((feature) => (
             <FeatureCard 
               key={feature.id} 
               icon={feature.icon}
               title={feature.title} 
               description={feature.description}
-              onNavigate={() => handleNavigation(`/dashboard?section=${feature.id}`)}
+              onNavigate={() => {
+                if (feature.id === 'detalhe') {
+                  handleNavigation('/microrregiao-detalhe');
+                } else {
+                  handleNavigation(`/dashboard?section=${feature.id}`);
+                }
+              }}
             />
           ))}
         </div>

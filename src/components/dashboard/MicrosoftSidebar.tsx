@@ -42,7 +42,10 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
 }) => {
   // Extrair opções únicas
   const macrorregioes = [...new Set(data.map(item => item.macrorregiao))].sort();
+  
+  // Filtrar microrregiões baseado na macrorregião selecionada
   const microrregioes = data
+    .filter(item => !filters.macrorregiao || item.macrorregiao === filters.macrorregiao)
     .map(item => item.microrregiao)
     .sort();
   
@@ -103,10 +106,10 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
           value={filters.macrorregiao || 'Todas'}
           onValueChange={handleMacrorregiaoChange}
         >
-          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white">
+          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white touch-target select-mobile-safe">
             <SelectValue placeholder="Todas as macrorregiões" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-[50vh] mobile-dropdown-scroll">
             <SelectItem value="Todas">Todas as macrorregiões</SelectItem>
             {macrorregioes.map((macrorregiao) => (
               <SelectItem key={macrorregiao} value={macrorregiao}>
@@ -127,10 +130,10 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
           value={selectedMicroregiao || 'Nenhuma'}
           onValueChange={(value) => onMicroregiaoChange(value === 'Nenhuma' ? '' : value)}
         >
-          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white">
+          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white touch-target select-mobile-safe">
             <SelectValue placeholder="Selecione uma microrregião" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-[50vh] mobile-dropdown-scroll">
             <SelectItem value="Nenhuma">Selecione uma microrregião</SelectItem>
             {microrregioes.map((microrregiao) => (
               <SelectItem key={microrregiao} value={microrregiao}>
@@ -152,7 +155,7 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
             <button
               key={classificacao}
               onClick={() => handleClassificacaoChange(classificacao)}
-              className={`px-4 py-1.5 rounded-full text-sm transition-all ${
+              className={`px-4 py-1.5 rounded-full text-sm transition-all touch-target select-mobile-safe ${
                 filters.classificacao_inmsd === classificacao || (!filters.classificacao_inmsd && classificacao === 'Todas')
                   ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'

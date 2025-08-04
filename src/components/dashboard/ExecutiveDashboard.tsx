@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { EixosBarChart } from './EixosBarChart';
+import { DashboardRadarChart } from './RadarChart';
 
 
 interface ExecutiveDashboardProps {
@@ -44,7 +45,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
     // Calcular valores dos eixos
     const eixosValues = EIXOS_NAMES.map((_, index) => {
       const eixoKey = `eixo_${index + 1}` as keyof MicroRegionData;
-      return parseFloat(String(selectedData[eixoKey]).replace(',', '.'));
+      return Math.round(parseFloat(String(selectedData[eixoKey]).replace(',', '.')) * 100) / 100;
     });
 
     // Análise por níveis de maturidade
@@ -102,25 +103,23 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
   return (
     <div data-section="executivo">
       {/* Cabeçalho Executivo */}
-      <Card className="bg-gradient-to-r from-slate-50 to-gray-50 border-2 border-slate-200 mb-6">
+      <Card className="bg-gradient-to-r from-slate-50 to-gray-50 border-2 border-slate-200 mb-6 w-full">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-slate-600 rounded-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 flex-wrap w-full">
+            <div className="flex items-start gap-2 sm:gap-4 min-w-0 flex-1">
+              <div className="p-3 bg-slate-600 rounded-lg flex-shrink-0">
                 <Target className="h-8 w-8 text-white" />
               </div>
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-2xl text-slate-900">Dashboard Executivo</CardTitle>
-                <button className="ml-2 p-1 rounded hover:bg-muted transition-colors" onClick={() => setShowKPIs(v => !v)} aria-label={showKPIs ? 'Ocultar bloco' : 'Mostrar bloco'} type="button">
-                  {showKPIs ? <Eye className="h-5 w-5 text-primary" /> : <EyeOff className="h-5 w-5 text-primary" />}
-                </button>
+              <div className="flex flex-col min-w-0 flex-1">
+                <CardTitle className="text-2xl text-slate-900 truncate break-words max-w-full">Dashboard Executivo</CardTitle>
+                <p className="text-slate-600 text-sm truncate break-words max-w-full">Visão estratégica da maturidade digital</p>
               </div>
-              <p className="text-slate-600">Visão estratégica da maturidade digital</p>
+              <button className="ml-2 p-1 rounded hover:bg-muted transition-colors flex-shrink-0" onClick={() => setShowKPIs(v => !v)} aria-label={showKPIs ? 'Ocultar bloco' : 'Mostrar bloco'} type="button">
+                {showKPIs ? <Eye className="h-5 w-5 text-primary" /> : <EyeOff className="h-5 w-5 text-primary" />}
+              </button>
             </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-slate-900">
-                {selectedData.microrregiao}
-              </div>
+            <div className="text-right min-w-0 flex-shrink-0">
+              <div className="text-lg sm:text-3xl font-bold text-slate-900 truncate max-w-[120px] sm:max-w-none">{selectedData.microrregiao}</div>
               <Badge className={`${classification.bgColor} ${classification.textColor} text-white mt-2`}>
                 <ClassificationIcon className="h-3 w-3 mr-1" />
                 {stats.indiceGeral > 0.66 ? 'Avançado' : stats.indiceGeral > 0.33 ? 'Em Evolução' : 'Emergente'}
@@ -207,6 +206,26 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
         </CardHeader>
         <CardContent>
           <EixosBarChart eixosValues={stats.eixosValues} microrregiao={selectedData.microrregiao} />
+        </CardContent>
+      </Card>
+
+      {/* Gráfico de Radar */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5" />
+            Visualização Radar - Análise por Eixos
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Gráfico radar mostrando a comparação entre a microrregião selecionada e as medianas
+          </p>
+        </CardHeader>
+        <CardContent>
+          <DashboardRadarChart
+            data={selectedData}
+            allData={data}
+            medians={medians}
+          />
         </CardContent>
       </Card>
 

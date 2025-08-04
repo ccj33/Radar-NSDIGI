@@ -150,12 +150,12 @@ export const ModernMobileHeader: React.FC<ModernMobileHeaderProps> = ({
               <ZoomControlMobile />
             </div>
             
-            {/* Botão de Busca */}
+            {/* Botão de Busca - Oculto em mobile */}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleSearchToggle}
-              className="h-11 w-11 p-0 touch-target no-zoom"
+              className="h-11 w-11 p-0 touch-target no-zoom hidden md:flex"
               aria-label="Buscar"
             >
               <Search className="w-5 h-5" />
@@ -214,8 +214,8 @@ export const ModernMobileHeader: React.FC<ModernMobileHeaderProps> = ({
           </div>
         </div>
 
-        {/* Busca Expandida */}
-        {isSearchOpen && <ExpandedSearch />}
+        {/* Busca Expandida - Apenas em desktop */}
+        {isSearchOpen && !isMobile && <ExpandedSearch />}
 
         {/* Navegação Rápida - Apenas em mobile */}
         {isMobile && !isSearchOpen && (

@@ -33,6 +33,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { Menu, Filter } from 'lucide-react'; // Importar ícones
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'; // Importar Drawer com mais componentes
 import { VisaoGeralBanner } from '@/components/dashboard/VisaoGeralBanner';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const GUIDE_STORAGE_KEY = 'mrh-guide-dismissed';
 
@@ -415,7 +416,9 @@ const Index = () => {
   const handleMicroregiaoChange = (microrregiao: string) => {
     setSelectedMicroregiao(microrregiao);
     if (microrregiao) {
-      toast.success(`Microrregião selecionada: ${microrregiao}`);
+      toast.success(`Microrregião selecionada: ${microrregiao}`, {
+        duration: 2000, // 2 segundos em vez do padrão (4 segundos)
+      });
     }
   };
 
@@ -622,84 +625,116 @@ const Index = () => {
                           {/* Conteúdo do Dashboard */}
         <div className="flex-1 min-w-0">
 
-          {/* Plano de Ação - Posicionado antes das Outras Microrregiões */}
-          {activeSection === 'overview' && selectedData && (
-            <div className="mb-8">
-              <PlanoDeAcao />
-            </div>
-          )}
-
           {/* Cabeçalho detalhado da microrregião - só na aba Geral */}
           {activeSection === 'overview' && selectedData && (
-            <div className="mb-8">
-              <MicroRegionHeader data={selectedData} allData={data} />
-            </div>
+            <ScrollReveal>
+              <div className="mb-8">
+                <MicroRegionHeader data={selectedData} allData={data} />
+              </div>
+            </ScrollReveal>
+          )}
+
+          {/* Plano de Ação - Posicionado após as informações da microrregião */}
+          {activeSection === 'overview' && selectedData && (
+            <ScrollReveal delay={100}>
+              <div className="mb-8">
+                <PlanoDeAcao />
+              </div>
+            </ScrollReveal>
           )}
 
           {/* Seções do Dashboard */}
           {activeSection === 'overview' && (
             <div className="space-y-8">
 
-              <div data-tour="cards-overview">
-                <StatsOverview data={data} selectedData={selectedData} macroFiltro={filters.macrorregiao} />
-              </div>
+              <ScrollReveal delay={200}>
+                <div data-tour="cards-overview">
+                  <StatsOverview data={data} selectedData={selectedData} macroFiltro={filters.macrorregiao} />
+                </div>
+              </ScrollReveal>
 
-              <div data-tour="populacao">
-                <PopulationChartComponent
-                  data={filteredData}
-                  selectedMicroregiao={selectedMicroregiao}
-                />
-              </div>
+              <ScrollReveal delay={300}>
+                <div data-tour="populacao">
+                  <PopulationChartComponent
+                    data={filteredData}
+                    selectedMicroregiao={selectedMicroregiao}
+                  />
+                </div>
+              </ScrollReveal>
+              
               <div className="w-full h-0.5 bg-gray-200 my-6 rounded-full" />
-              <DistribuicaoINMSD
-                showDistribuicao={showDistribuicao}
-                macroAtiva={macroAtiva}
-                classificationCounts={classificationCounts}
-                filteredData={filteredData}
-                topPerformer={topPerformer}
-              />
-              <div className="mt-8" />
-              <div data-tour="barras">
-                <BarChartComponent
-                  data={filteredData}
-                  selectedMicroregiao={selectedMicroregiao}
-                  macroFiltro={filters.macrorregiao}
+              
+              <ScrollReveal delay={400}>
+                <DistribuicaoINMSD
+                  showDistribuicao={showDistribuicao}
+                  macroAtiva={macroAtiva}
+                  classificationCounts={classificationCounts}
+                  filteredData={filteredData}
+                  topPerformer={topPerformer}
                 />
-              </div>
+              </ScrollReveal>
+              
+              <div className="mt-8" />
+              
+              <ScrollReveal delay={500}>
+                <div data-tour="barras">
+                  <BarChartComponent
+                    data={filteredData}
+                    selectedMicroregiao={selectedMicroregiao}
+                    macroFiltro={filters.macrorregiao}
+                  />
+                </div>
+              </ScrollReveal>
+              
               <div className="mt-12" />
+              
               {selectedData ? (
                 <>
-                  <div data-tour="radar">
-                    <DashboardRadarChart
-                      data={selectedData}
-                      allData={data}
+                  <ScrollReveal delay={600}>
+                    <div data-tour="radar">
+                      <DashboardRadarChart
+                        data={selectedData}
+                        allData={data}
+                        medians={medians}
+                        onNavigateToRecommendations={handleNavigateToRecommendations}
+                      />
+                    </div>
+                  </ScrollReveal>
+                  
+                  <ScrollReveal delay={700}>
+                    <ExecutiveDashboard
+                      data={data}
+                      selectedMicroregiao={selectedMicroregiao}
                       medians={medians}
-                      onNavigateToRecommendations={handleNavigateToRecommendations}
                     />
-                  </div>
-                  <ExecutiveDashboard
-                    data={data}
-                    selectedMicroregiao={selectedMicroregiao}
-                    medians={medians}
-                  />
-                  <div data-tour="tabela-eixos">
-                    <EixosTable data={selectedData} medians={medians} />
-                  </div>
-                  <div data-tour="recomendacoes">
-                    <RecommendationsPanel data={selectedData} initialEixoIndex={selectedEixoIndex} />
-                  </div>
-                  <AdvancedAnalysis
-                    data={data}
-                    selectedMicroregiao={selectedMicroregiao}
-                    medians={medians}
-                  />
+                  </ScrollReveal>
+                  
+                  <ScrollReveal delay={800}>
+                    <div data-tour="tabela-eixos">
+                      <EixosTable data={selectedData} medians={medians} />
+                    </div>
+                  </ScrollReveal>
+                  
+                  <ScrollReveal delay={900}>
+                    <div data-tour="recomendacoes">
+                      <RecommendationsPanel data={selectedData} initialEixoIndex={selectedEixoIndex} />
+                    </div>
+                  </ScrollReveal>
+                  
+                  <ScrollReveal delay={1000}>
+                    <AdvancedAnalysis
+                      data={data}
+                      selectedMicroregiao={selectedMicroregiao}
+                      medians={medians}
+                    />
+                  </ScrollReveal>
                 </>
               ) : null}
             </div>
           )}
 
           {activeSection === 'radar' && (
-            <>
+            <ScrollReveal>
               {selectedData ? (
                 <div data-tour="radar">
                 <DashboardRadarChart
@@ -720,11 +755,11 @@ const Index = () => {
                   }}
                 />
               )}
-            </>
+            </ScrollReveal>
           )}
 
           {activeSection === 'barras' && (
-            <>
+            <ScrollReveal>
               <div data-tour="barras">
               <BarChartComponent
                 data={filteredData}
@@ -732,22 +767,22 @@ const Index = () => {
                 macroFiltro={filters.macrorregiao}
               />
             </div>
-            </>
+            </ScrollReveal>
           )}
 
           {activeSection === 'populacao' && (
-            <>
+            <ScrollReveal>
               <div data-tour="populacao">
               <PopulationChartComponent
                 data={filteredData}
                 selectedMicroregiao={selectedMicroregiao}
               />
             </div>
-            </>
+            </ScrollReveal>
           )}
 
           {activeSection === 'tabela' && (
-            <>
+            <ScrollReveal>
               {selectedData ? (
               <div data-tour="tabela-eixos">
                 <EixosTable data={selectedData} medians={medians} />
@@ -763,11 +798,11 @@ const Index = () => {
                 }}
               />
             )}
-            </>
+            </ScrollReveal>
           )}
 
           {activeSection === 'recomendacoes' && (
-            <>
+            <ScrollReveal>
               {selectedData ? (
               <div data-tour="recomendacoes">
                 <RecommendationsPanel data={selectedData} initialEixoIndex={selectedEixoIndex} />
@@ -783,11 +818,11 @@ const Index = () => {
                 }}
               />
             )}
-            </>
+            </ScrollReveal>
           )}
 
           {activeSection === 'executivo' && (
-            <>
+            <ScrollReveal>
               {selectedData ? (
               <ExecutiveDashboard
                 data={data}
@@ -805,11 +840,11 @@ const Index = () => {
                 }}
               />
             )}
-            </>
+            </ScrollReveal>
           )}
 
           {activeSection === 'analise-avancada' && (
-            <>
+            <ScrollReveal>
               {selectedData ? (
               <AdvancedAnalysis
                 data={data}
@@ -827,7 +862,7 @@ const Index = () => {
                 }}
               />
             )}
-            </>
+            </ScrollReveal>
           )}
         </div>
       </main>

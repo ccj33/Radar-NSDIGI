@@ -16,6 +16,8 @@ import DashboardExecutivoPage from "./pages/DashboardExecutivoPage";
 import DetalhamentoPage from "./pages/DetalhamentoPage";
 import RecomendacoesPage from "./pages/RecomendacoesPage";
 import AnaliseAvancadaPage from "./pages/AnaliseAvancadaPage";
+import MicroRegionDetailPage from "./pages/MicroRegionDetailPage";
+import TestScrollReveal from "./components/TestScrollReveal";
 
 const queryClient = new QueryClient();
 
@@ -36,8 +38,10 @@ const App = () => (
           <Route path="/dashboard/detalhamento" element={<DetalhamentoPage />} />
           <Route path="/dashboard/recomendacoes" element={<RecomendacoesPage />} />
           <Route path="/dashboard/avancada" element={<AnaliseAvancadaPage />} />
+          <Route path="/microrregiao-detalhe" element={<MicroRegionDetailPage />} />
           <Route path="/banner-test" element={<BannerTest />} />
           <Route path="/test-navigation" element={<TestNavigation />} />
+          <Route path="/test-scroll-reveal" element={<TestScrollReveal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

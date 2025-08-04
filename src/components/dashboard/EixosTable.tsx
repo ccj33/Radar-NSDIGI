@@ -8,15 +8,112 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BarChart3, Eye, EyeOff, List, GalleryHorizontal, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { useState } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { useMediaQuery } from '@/hooks/use-mobile';
 
 interface EixosTableProps {
   data: MicroRegionData;
   medians: Record<string, number>;
 }
 
+// Componente específico para visualização mobile
+const MobileEixosView = ({ tableData }: { tableData: any[] }) => {
+  const getStatusColor = (valor: number) => {
+    if (valor >= 0.66) return 'text-green-600 bg-green-50';
+    if (valor >= 0.33) return 'text-blue-600 bg-blue-50';
+    return 'text-orange-600 bg-orange-50';
+  };
+
+  const getStatusText = (valor: number) => {
+    if (valor >= 0.66) return 'Avançado';
+    if (valor >= 0.33) return 'Em Evolução';
+    return 'Emergente';
+  };
+
+  return (
+    <div className="space-y-4">
+      {tableData.map((row, index) => {
+        const statusColor = getStatusColor(row.valor);
+        const statusText = getStatusText(row.valor);
+        
+        return (
+          <div key={index} className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+            {/* Cabeçalho do Card */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-gray-700">{row.eixo}</span>
+                <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
+                  Eixo {index + 1}
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="text-xl font-bold text-primary">
+                  {(row.valor * 100).toFixed(0)}%
+                </span>
+                <div className={`text-xs font-medium ${statusColor.split(' ')[0]}`}>
+                  {statusText}
+                </div>
+              </div>
+            </div>
+
+            {/* Barra de Progresso */}
+            <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
+              <div 
+                className="h-3 rounded-full transition-all duration-500"
+                style={{ 
+                  width: `${row.valor * 100}%`, 
+                  backgroundColor: row.valor >= 0.66 ? '#22c55e' : row.valor >= 0.33 ? '#3b82f6' : '#f97316'
+                }}
+              ></div>
+            </div>
+
+            {/* Informações Comparativas */}
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="text-center">
+                <div className="text-xs text-gray-500 mb-1">Mediana Nacional</div>
+                <div className="font-semibold text-gray-700">
+                  {(row.mediana * 100).toFixed(0)}%
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs text-gray-500 mb-1">Diferença</div>
+                <div className={`font-semibold flex items-center justify-center gap-1 ${
+                  row.diferenca > 0 ? 'text-green-600' : row.diferenca < 0 ? 'text-orange-500' : 'text-gray-500'
+                }`}>
+                  {row.diferenca > 0 && <span>▲</span>}
+                  {row.diferenca < 0 && <span>▼</span>}
+                  {row.diferenca > 0 ? '+' : ''}{(row.diferenca * 100).toFixed(0)}%
+                </div>
+              </div>
+            </div>
+
+            {/* Status de Performance */}
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">Performance:</span>
+                <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                  row.performance === 'superior' ? 'bg-green-100 text-green-700' :
+                  row.performance === 'inferior' ? 'bg-orange-100 text-orange-700' :
+                  'bg-gray-100 text-gray-700'
+                }`}>
+                  {row.performance === 'superior' ? 'Acima da Mediana' :
+                   row.performance === 'inferior' ? 'Abaixo da Mediana' :
+                   'Na Mediana'}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export function EixosTable({ data, medians }: EixosTableProps) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  
   // Estados para controle da visualização
-  const [viewMode, setViewMode] = useState<'list' | 'carousel'>('carousel');
+  const [viewMode, setViewMode] = useState<'list' | 'carousel'>(isMobile ? 'carousel' : 'list');
   const [currentEixoIndex, setCurrentEixoIndex] = useState(0);
 
   // Funções de navegação do carrossel
@@ -30,7 +127,7 @@ export function EixosTable({ data, medians }: EixosTableProps) {
 
   const tableData = EIXOS_NAMES.map((nome, index) => {
     const eixoKey = `eixo_${index + 1}` as keyof MicroRegionData;
-    const valor = parseFloat(String(data[eixoKey]).replace(',', '.'));
+    const valor = Math.round(parseFloat(String(data[eixoKey]).replace(',', '.')) * 100) / 100;
     const mediana = medians[eixoKey] || 0;
     const diferenca = valor - mediana;
     
@@ -70,17 +167,17 @@ export function EixosTable({ data, medians }: EixosTableProps) {
     let tooltip = '';
     switch (performance) {
       case 'superior':
-        label = 'Acima da Mediana';
+        label = isMobile ? 'Acima' : 'Acima da Mediana';
         color = 'bg-green-600 text-white border-2 border-green-700';
         tooltip = 'Sua região está acima da mediana nacional neste eixo.';
         break;
       case 'inferior':
-        label = 'Abaixo da Mediana';
+        label = isMobile ? 'Abaixo' : 'Abaixo da Mediana';
         color = 'bg-orange-400 text-white border-2 border-orange-500';
         tooltip = 'Sua região está abaixo da mediana nacional neste eixo.';
         break;
       default:
-        label = 'Na Mediana';
+        label = isMobile ? 'Na Mediana' : 'Na Mediana';
         color = 'bg-gray-600 text-white border-2 border-gray-700';
         tooltip = 'Sua região está na mediana nacional neste eixo.';
     }
@@ -152,11 +249,13 @@ export function EixosTable({ data, medians }: EixosTableProps) {
           </div>
         </div>
         
-        {/* Informação adicional */}
-        <div className="text-xs text-gray-600">
-          <span className="font-medium">{progressText}</span>
-          <span className="ml-1">• {progressDescription}</span>
-        </div>
+        {/* Informação adicional - Ocultada em mobile para economizar espaço */}
+        {!isMobile && (
+          <div className="text-xs text-gray-600">
+            <span className="font-medium">{progressText}</span>
+            <span className="ml-1">• {progressDescription}</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -168,28 +267,33 @@ export function EixosTable({ data, medians }: EixosTableProps) {
     <TableRow key={index} className="hover:bg-muted/50">
       <TableCell className="font-medium">
         <div>
-          <div className="text-headline font-semibold">{row.eixo}</div>
+          <div className={`font-semibold ${isMobile ? 'text-sm' : 'text-headline'}`}>{row.eixo}</div>
           <div className="text-caption-small text-muted-foreground">Eixo {index + 1}</div>
         </div>
       </TableCell>
       <TableCell className="text-center">
-        <span className="text-mono text-lg font-bold text-primary">
-          {row.valor.toFixed(2)}
+        <span className={`text-mono font-bold text-primary ${isMobile ? 'text-base' : 'text-lg'}`}>
+          {(row.valor * 100).toFixed(0)}%
+        </span>
+        {isMobile && (
+          <div className="text-xs text-muted-foreground mt-1">
+            {row.valor < 0.33 ? 'Emergente' : row.valor < 0.66 ? 'Em Evolução' : 'Avançado'}
+          </div>
+        )}
+      </TableCell>
+      <TableCell className="text-center">
+        <span className={`text-mono text-muted-foreground ${isMobile ? 'text-xs' : 'text-sm'}`}>
+          {(row.mediana * 100).toFixed(0)}%
         </span>
       </TableCell>
       <TableCell className="text-center">
-        <span className="text-mono text-sm text-muted-foreground">
-          {row.mediana.toFixed(2)}
-        </span>
-      </TableCell>
-      <TableCell className="text-center">
-        <span className={`font-mono text-sm flex items-center justify-center gap-1 ${
+        <span className={`font-mono flex items-center justify-center gap-1 ${isMobile ? 'text-xs' : 'text-sm'} ${
           row.diferenca > 0 ? 'text-green-700' : 
           row.diferenca < 0 ? 'text-orange-500' : 'text-gray-500'
         }`}>
           {row.diferenca > 0 && <span aria-label="positivo" role="img">▲</span>}
           {row.diferenca < 0 && <span aria-label="negativo" role="img">▼</span>}
-          {row.diferenca > 0 ? '+' : ''}{row.diferenca.toFixed(2)}
+          {row.diferenca > 0 ? '+' : ''}{(row.diferenca * 100).toFixed(0)}%
         </span>
       </TableCell>
       <TableCell className="text-center">
@@ -205,49 +309,50 @@ export function EixosTable({ data, medians }: EixosTableProps) {
     <div data-section="tabela">
       <Card className="shadow-lg border-0 bg-gradient-to-r from-dashboard-header to-primary-light">
         <CardHeader className="pb-6">
-
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div className={`flex ${isMobile ? 'flex-col' : 'flex-col lg:flex-row'} items-center justify-between gap-4`}>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <CardTitle className={`font-semibold flex items-center gap-2 ${isMobile ? 'text-base' : 'text-lg'}`}>
                 <BarChart3 className="h-5 w-5 text-primary" />
-                Detalhamento por Eixos de Maturidade
+                {isMobile ? 'Análise por Eixos' : 'Detalhamento por Eixos de Maturidade'}
               </CardTitle>
               <button className="ml-2 p-1 rounded hover:bg-muted transition-colors" onClick={() => setShowEixos(v => !v)} aria-label={showEixos ? 'Ocultar bloco' : 'Mostrar bloco'} type="button">
                 {showEixos ? <Eye className="h-5 w-5 text-primary" /> : <EyeOff className="h-5 w-5 text-primary" />}
               </button>
             </div>
             
-            {/* Seletor de Visualização */}
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">Modo de Visualização</span>
-              <ToggleGroup 
-                type="single" 
-                value={viewMode} 
-                onValueChange={(value) => value && setViewMode(value as 'list' | 'carousel')}
-                className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-md border-2 border-primary/20"
-              >
-                <ToggleGroupItem 
-                  value="list" 
-                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-3 py-2 rounded-md transition-all duration-200"
-                  aria-label="Visualização em lista"
+            {/* Seletor de Visualização - Oculto em mobile, sempre carrossel */}
+            {!isMobile && (
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-xs font-medium text-muted-foreground">Modo de Visualização</span>
+                <ToggleGroup 
+                  type="single" 
+                  value={viewMode} 
+                  onValueChange={(value) => value && setViewMode(value as 'list' | 'carousel')}
+                  className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-md border-2 border-primary/20"
                 >
-                  <div className="flex items-center gap-2">
-                    <List className="h-4 w-4" />
-                    <span className="text-sm font-medium">Lista</span>
-                  </div>
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="carousel" 
-                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-3 py-2 rounded-md transition-all duration-200"
-                  aria-label="Visualização em carrossel"
-                >
-                  <div className="flex items-center gap-2">
-                    <GalleryHorizontal className="h-4 w-4" />
-                    <span className="text-sm font-medium">Carrossel</span>
-                  </div>
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
+                  <ToggleGroupItem 
+                    value="list" 
+                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-3 py-2 rounded-md transition-all duration-200"
+                    aria-label="Visualização em lista"
+                  >
+                    <div className="flex items-center gap-2">
+                      <List className="h-4 w-4" />
+                      <span className="text-sm font-medium">Lista</span>
+                    </div>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem 
+                    value="carousel" 
+                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-3 py-2 rounded-md transition-all duration-200"
+                    aria-label="Visualização em carrossel"
+                  >
+                    <div className="flex items-center gap-2">
+                      <GalleryHorizontal className="h-4 w-4" />
+                      <span className="text-sm font-medium">Carrossel</span>
+                    </div>
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+            )}
           </div>
         </CardHeader>
         {showEixos && (
@@ -256,17 +361,30 @@ export function EixosTable({ data, medians }: EixosTableProps) {
               <Info className="h-4 w-4" />
               <AlertTitle>Como Navegar</AlertTitle>
               <AlertDescription>
-                <p>
-                  Use as <strong className="font-semibold">setas</strong> para navegar entre os 7 eixos no modo <strong className="font-semibold">Carrossel</strong>,
-                  ou alterne para o modo <strong className="font-semibold">Lista</strong> para ver todos de uma vez.
-                </p>
-                <p className="mt-2">
-                  <strong>As porcentagens</strong> indicam o quanto sua região já avançou em cada eixo. Quanto mais próximo de 100%, mais perto está de atingir os objetivos propostos para aquele tema.
-                </p>
+                {isMobile ? (
+                  <p>
+                    Use as <strong className="font-semibold">setas</strong> para navegar entre os 7 eixos.
+                    <br />
+                    <strong>As porcentagens</strong> indicam o quanto sua região já avançou em cada eixo.
+                  </p>
+                ) : (
+                  <>
+                    <p>
+                      Use as <strong className="font-semibold">setas</strong> para navegar entre os 7 eixos no modo <strong className="font-semibold">Carrossel</strong>,
+                      ou alterne para o modo <strong className="font-semibold">Lista</strong> para ver todos de uma vez.
+                    </p>
+                    <p className="mt-2">
+                      <strong>As porcentagens</strong> indicam o quanto sua região já avançou em cada eixo. Quanto mais próximo de 100%, mais perto está de atingir os objetivos propostos para aquele tema.
+                    </p>
+                  </>
+                )}
               </AlertDescription>
             </Alert>
             {/* Renderização baseada no modo de visualização */}
-            {viewMode === 'list' ? (
+            {isMobile ? (
+              // Versão mobile otimizada
+              <MobileEixosView tableData={tableData} />
+            ) : viewMode === 'list' ? (
               <TooltipProvider>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
                 <div className="min-w-[800px] sm:min-w-0">
@@ -354,38 +472,38 @@ export function EixosTable({ data, medians }: EixosTableProps) {
                 {/* Contador */}
                 <div className="text-center mb-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
-                  <span className="text-sm font-semibold text-primary">
+                  <span className={`font-semibold text-primary ${isMobile ? 'text-sm' : 'text-sm'}`}>
                     Eixo <span className="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-bold inline-flex items-center justify-center">{currentEixoIndex + 1}</span> de {EIXOS_NAMES.length}
                   </span>
                 </div>
               </div>
               
-              {/* Badges de Performance */}
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Badge className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1">
+              {/* Badges de Performance - Responsivos */}
+              <div className={`flex ${isMobile ? 'flex-col' : 'items-center justify-center'} gap-3 mb-6`}>
+                <Badge className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1 justify-center">
                   <span>🌿</span>
-                  <span>6 acima da mediana</span>
+                  <span>{resumo.acima} acima da mediana</span>
                 </Badge>
-                <Badge className="bg-blue-100 text-blue-800 border-blue-200 flex items-center gap-1">
+                <Badge className="bg-blue-100 text-blue-800 border-blue-200 flex items-center gap-1 justify-center">
                   <span>🌱</span>
-                  <span>1 na mediana</span>
+                  <span>{resumo.mediana} na mediana</span>
                 </Badge>
-                <Badge className="bg-orange-100 text-orange-800 border-orange-200 flex items-center gap-1">
+                <Badge className="bg-orange-100 text-orange-800 border-orange-200 flex items-center gap-1 justify-center">
                   <span>🥀</span>
-                  <span>0 abaixo da mediana</span>
+                  <span>{resumo.abaixo} abaixo da mediana</span>
                 </Badge>
               </div>
                 
                 {/* Navegação */}
-                <div className="flex items-center gap-6">
+                <div className={`flex items-center ${isMobile ? 'flex-col gap-4' : 'gap-6'}`}>
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={handlePrevious}
-                    className="flex-shrink-0 h-12 w-12 shadow-md hover:shadow-lg transition-all duration-200 border-blue-500"
+                    className={`flex-shrink-0 shadow-md hover:shadow-lg transition-all duration-200 border-blue-500 ${isMobile ? 'h-10 w-10' : 'h-12 w-12'}`}
                     aria-label="Eixo anterior"
                   >
-                    <ChevronLeft className="h-6 w-6" />
+                    <ChevronLeft className={isMobile ? 'h-5 w-5' : 'h-6 w-6'} />
                   </Button>
                   
                   <div className="flex-1">
@@ -414,10 +532,10 @@ export function EixosTable({ data, medians }: EixosTableProps) {
                     variant="outline"
                     size="icon"
                     onClick={handleNext}
-                    className="flex-shrink-0 h-12 w-12 shadow-md hover:shadow-lg transition-all duration-200 border-blue-500"
+                    className={`flex-shrink-0 shadow-md hover:shadow-lg transition-all duration-200 border-blue-500 ${isMobile ? 'h-10 w-10' : 'h-12 w-12'}`}
                     aria-label="Próximo eixo"
                   >
-                    <ChevronRight className="h-6 w-6" />
+                    <ChevronRight className={isMobile ? 'h-5 w-5' : 'h-6 w-6'} />
                   </Button>
                 </div>
               </div>

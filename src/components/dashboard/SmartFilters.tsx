@@ -46,7 +46,7 @@ export const SmartFilters: React.FC<SmartFiltersProps> = ({
   const [selectedMacroRegion, setSelectedMacroRegion] = useState<string>('');
   const [selectedMicroRegion, setSelectedMicroRegion] = useState<string>('');
   const [selectedIndicators, setSelectedIndicators] = useState<string[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedSelector, setExpandedSelector] = useState<'macro' | 'micro' | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -115,19 +115,21 @@ export const SmartFilters: React.FC<SmartFiltersProps> = ({
     selectedValue, 
     onSelect, 
     placeholder, 
-    icon 
+    icon,
+    selectorType
   }: {
     options: FilterOption[];
     selectedValue: string;
     onSelect: (value: string) => void;
     placeholder: string;
     icon: React.ReactNode;
+    selectorType: 'macro' | 'micro';
   }) => (
     <div className="relative">
       <Button
         variant="outline"
         className="w-full justify-between h-12 text-left font-normal touch-target no-zoom"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => setExpandedSelector(expandedSelector === selectorType ? null : selectorType)}
       >
         <div className="flex items-center space-x-2">
           {icon}
@@ -135,20 +137,20 @@ export const SmartFilters: React.FC<SmartFiltersProps> = ({
             {selectedValue || placeholder}
           </span>
         </div>
-        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+        {expandedSelector === selectorType ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
       </Button>
       
-      {isExpanded && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+      {expandedSelector === selectorType && (
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background border rounded-lg shadow-lg mobile-dropdown-scroll">
           {options.map((option) => (
             <button
               key={option.value}
-              className={`w-full px-4 py-4 text-left hover:bg-muted/50 focus:bg-muted/50 focus:outline-none touch-target no-zoom ${
+              className={`w-full px-4 py-4 text-left hover:bg-muted/50 focus:bg-muted/50 focus:outline-none touch-target no-zoom select-mobile-safe ${
                 selectedValue === option.value ? 'bg-primary/10 text-primary' : ''
               }`}
               onClick={() => {
                 onSelect(option.value);
-                setIsExpanded(false);
+                setExpandedSelector(null);
               }}
             >
               <div className="flex items-center justify-between">
@@ -180,7 +182,7 @@ export const SmartFilters: React.FC<SmartFiltersProps> = ({
         />
       </div>
       
-      <div className="max-h-48 overflow-y-auto space-y-1">
+      <div className="mobile-dropdown-scroll space-y-1">
         {filteredIndicators.map((indicator) => (
           <button
             key={indicator.value}
@@ -247,6 +249,7 @@ export const SmartFilters: React.FC<SmartFiltersProps> = ({
             onSelect={setSelectedMacroRegion}
             placeholder="Selecionar macro-região"
             icon={<MapPin className="w-4 h-4" />}
+            selectorType="macro"
           />
         </div>
 
@@ -261,6 +264,7 @@ export const SmartFilters: React.FC<SmartFiltersProps> = ({
             onSelect={setSelectedMicroRegion}
             placeholder="Selecionar micro-região"
             icon={<MapPin className="w-4 h-4" />}
+            selectorType="micro"
           />
         </div>
       </div>
