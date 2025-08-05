@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { MicroRegionData, FilterOptions } from "@/types/dashboard";
-import { Filter, MapPin, Building, Target, Check, ChevronsUpDown, Search, Database, Smartphone, Monitor, X } from "lucide-react";
+import { Filter, MapPin, Building, Target, Check, ChevronsUpDown, Search, Database, Smartphone, Monitor, X, Info } from "lucide-react";
 import { DownloadPDF } from "./DownloadPDF";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,12 @@ import { useDataCache } from "@/hooks/useDataCache";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ResponsiveFiltersProps {
   data: MicroRegionData[];
@@ -52,11 +58,22 @@ export function ResponsiveFilters({
     cacheStats
   } = useDataCache(data, filters);
 
+  // Definir ordem das classificações
+  const classificacoesOrdenadas = ['Emergente', 'Em Evolução', 'Avançado'];
+  
+  // Obter classificações disponíveis nos dados
+  const classificacoesDisponiveis = [...new Set(data.map(item => item.classificacao_inmsd))];
+  
+  // Criar array final com todas as classificações na ordem correta
+  const classificacoes = classificacoesOrdenadas.filter(classification => 
+    classificacoesDisponiveis.includes(classification)
+  );
+
   const uniqueValues = useMemo(() => ({
     macrorregioes: Array.from(new Set(data.map(item => item.macrorregiao))).sort(),
     regionaisSaude: Array.from(new Set(data.map(item => item.regional_saude))).sort(),
-    classificacoes: Array.from(new Set(data.map(item => item.classificacao_inmsd))).sort()
-  }), [data]);
+    classificacoes: classificacoes
+  }), [data, classificacoes]);
 
   // Garante que, se nenhum filtro está aplicado, todas as microrregiões aparecem
   const filteredMicroregioes = (!filters.macrorregiao && !filters.classificacao_inmsd && !searchTerm)

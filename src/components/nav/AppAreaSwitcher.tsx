@@ -27,7 +27,29 @@ export function AppAreaSwitcher({ className }: AppAreaSwitcherProps) {
 
   const handleSelect = (item: NavItem) => {
     try {
-      navigate(item.path);
+      // Mapear as chaves dos itens para as seções correspondentes
+      const sectionMapping: { [key: string]: string } = {
+        'pop': 'populacao',
+        'ranking': 'barras',
+        'axes': 'radar',
+        'exec': 'executivo',
+        'detail': 'tabela',
+        'recom': 'recomendacoes',
+        'advanced': 'analise-avancada',
+        'home': 'overview',
+        'overview': 'overview'
+      };
+
+      const section = sectionMapping[item.key];
+      
+      if (section) {
+        // Usar a mesma lógica da página inicial
+        navigate('/dashboard', { state: { activeSection: section } });
+      } else {
+        // Fallback para navegação direta
+        navigate(item.path);
+      }
+      
       setOpen(false);
       setSearchValue('');
     } catch (error) {

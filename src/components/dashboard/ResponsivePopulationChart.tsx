@@ -5,6 +5,7 @@ import { Suspense, lazy, useState, useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useMediaQuery } from '@/hooks/use-mobile';
+import { formatPopulation } from '@/lib/utils';
 
 // Lazy load do componente de gráfico
 const LazyPopulationChartComponent = lazy(() => import('./PopulationChartComponent').then(module => ({ default: module.PopulationChartComponent })));
@@ -44,10 +45,9 @@ export function ResponsivePopulationChart({ data, selectedMicroregiao }: Respons
       const populacao = parseInt(String(item.populacao).replace(/\D/g, '')) || 0;
       
       let category = '';
-      if (populacao < 50000) category = 'Pequena';
-      else if (populacao < 200000) category = 'Média';
-      else if (populacao < 500000) category = 'Grande';
-      else category = 'Metropolitana';
+      if (populacao < 25000) category = 'Pequeno Porte';
+      else if (populacao < 100000) category = 'Médio Porte';
+      else category = 'Grande Porte';
       
       const existing = acc.find(cat => cat.name === category);
       if (existing) {
@@ -70,20 +70,18 @@ export function ResponsivePopulationChart({ data, selectedMicroregiao }: Respons
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'Pequena': return 'hsl(var(--chart-primary))';
-      case 'Média': return 'hsl(var(--chart-secondary))';
-      case 'Grande': return 'hsl(var(--chart-tertiary))';
-      case 'Metropolitana': return 'hsl(var(--chart-quaternary))';
+      case 'Pequeno Porte': return 'hsl(var(--chart-primary))';
+      case 'Médio Porte': return 'hsl(var(--chart-secondary))';
+      case 'Grande Porte': return 'hsl(var(--chart-tertiary))';
       default: return 'hsl(var(--chart-primary))';
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'Pequena': return '🏘️';
-      case 'Média': return '🏙️';
-      case 'Grande': return '🌆';
-      case 'Metropolitana': return '🏢';
+      case 'Pequeno Porte': return '🏘️';
+      case 'Médio Porte': return '🏙️';
+      case 'Grande Porte': return '🌆';
       default: return '🏘️';
     }
   };
@@ -110,7 +108,7 @@ export function ResponsivePopulationChart({ data, selectedMicroregiao }: Respons
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">População Total:</span>
               <span className="text-sm font-medium text-foreground">
-                {data.populacao.toLocaleString('pt-BR')}
+                {formatPopulation(data.populacao)}
               </span>
             </div>
             
@@ -168,7 +166,7 @@ export function ResponsivePopulationChart({ data, selectedMicroregiao }: Respons
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-primary" />
           <h3 className="text-fluid-base font-semibold">
-            Distribuição por Faixa Populacional
+            Distribuição Populacional por Estratificação
           </h3>
           {isMobile && (
             <Badge variant="outline" className="text-xs">
@@ -178,7 +176,7 @@ export function ResponsivePopulationChart({ data, selectedMicroregiao }: Respons
           )}
         </div>
         <p className="text-fluid-sm text-muted-foreground">
-          Categorização das microrregiões por tamanho populacional
+          Estratificação das microrregiões em 3 grupos por população
         </p>
       </div>
       

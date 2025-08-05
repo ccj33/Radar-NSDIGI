@@ -207,6 +207,42 @@ export default function RecomendacoesPage() {
   const concluidas = recomendacoes.filter(r => r.status === "Concluído").length;
   const pendentes = recomendacoes.filter(r => r.status === "Pendente").length;
 
+  // Componente para exibir recomendações hierárquicas
+  function ListaHierarquicaRecomendacoes({ recomendacoes }) {
+    return (
+      <ol className="space-y-6 list-decimal pl-6">
+        {recomendacoes.map((rec, idx) => (
+          <li key={rec.id}>
+            <div>
+              <strong>{rec.titulo}</strong>
+              <div className="mt-1 mb-2">
+                <span className="font-semibold">Recomendação:</span> {rec.descricao}
+              </div>
+              <div>
+                <span className="font-semibold">Como implementar a recomendação:</span>
+                <ul className="list-disc pl-5 mt-1 space-y-1">
+                  {rec.acoes && rec.acoes.map((acao, i) => (
+                    <li key={i}>{acao}</li>
+                  ))}
+                </ul>
+              </div>
+              {rec.beneficios && rec.beneficios.length > 0 && (
+                <div className="mt-2">
+                  <span className="font-semibold">Benefícios Esperados:</span>
+                  <ul className="list-disc pl-5 mt-1 space-y-1">
+                    {rec.beneficios.map((beneficio, i) => (
+                      <li key={i}>{beneficio}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    );
+  }
+
   return (
     <DashboardLayout activeSection="recomendacoes">
       <div className="container mx-auto px-4 py-6">
@@ -316,112 +352,7 @@ export default function RecomendacoesPage() {
         </div>
 
         {/* Lista de Recomendações */}
-        <div className="space-y-6">
-          {filteredRecomendacoes.map((recomendacao) => (
-            <Card key={recomendacao.id} className="overflow-hidden">
-              <CardHeader className="bg-gray-50">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Lightbulb className="w-5 h-5 text-yellow-600" />
-                      <CardTitle className="text-xl">{recomendacao.titulo}</CardTitle>
-                    </div>
-                    <CardDescription className="text-base">{recomendacao.descricao}</CardDescription>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge className={getCategoriaColor(recomendacao.categoria)}>
-                        {recomendacao.categoria}
-                      </Badge>
-                      <Badge variant="outline">{recomendacao.eixo}</Badge>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className={`${getPrioridadeColor(recomendacao.prioridade)} text-white`}>
-                      {recomendacao.prioridade}
-                    </Badge>
-                    <Badge className={`${getStatusColor(recomendacao.status)} text-white`}>
-                      {recomendacao.status}
-                    </Badge>
-                  </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="p-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  {/* Informações Básicas */}
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
-                      <Settings className="w-5 h-5" />
-                      Detalhes do Projeto
-                    </h3>
-                    
-                    <div className="grid gap-3">
-                      <div className="flex items-center gap-3">
-                        <Calendar className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">Prazo: <strong>{recomendacao.prazo}</strong></span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <DollarSign className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">Custo: <strong>{recomendacao.custo}</strong></span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <TrendingUp className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">Impacto: <strong>{recomendacao.impacto}</strong></span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Users className="w-4 h-4 text-gray-500" />
-                        <span className="text-sm text-gray-600">Categoria: <strong>{recomendacao.categoria}</strong></span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Ações e Benefícios */}
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5" />
-                      Ações Principais
-                    </h3>
-                    
-                    <ul className="space-y-2">
-                      {recomendacao.acoes.map((acao, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm">
-                          <ArrowRight className="w-3 h-3 mt-1 text-blue-500 flex-shrink-0" />
-                          <span>{acao}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Separator />
-
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
-                      <Star className="w-5 h-5" />
-                      Benefícios Esperados
-                    </h3>
-                    
-                    <ul className="space-y-2">
-                      {recomendacao.beneficios.map((beneficio, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm">
-                          <CheckCircle className="w-3 h-3 mt-1 text-green-500 flex-shrink-0" />
-                          <span>{beneficio}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex gap-3">
-                  <Button className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    Acompanhar Progresso
-                  </Button>
-                  <Button variant="outline" className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4" />
-                    Reportar Problema
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <ListaHierarquicaRecomendacoes recomendacoes={filteredRecomendacoes} />
       </div>
     </DashboardLayout>
   );

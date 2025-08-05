@@ -167,7 +167,7 @@ export function ResponsiveDashboardExample() {
                         {selectedData.microrregiao}
                       </p>
                       <p className="text-fluid-sm text-muted-foreground">
-                        Índice: {selectedData.indice_geral}
+                        Índice: {parseFloat(String(selectedData.indice_geral).replace(',', '.')).toFixed(2)}
                       </p>
                     </div>
                   )}

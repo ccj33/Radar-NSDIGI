@@ -12,6 +12,7 @@ import {
   User,
   Building
 } from 'lucide-react';
+import { formatPopulation } from '@/lib/utils';
 
 interface MicroRegionDetailCardProps {
   data: {
@@ -99,7 +100,7 @@ export const MicroRegionDetailCard: React.FC<MicroRegionDetailCardProps> = ({ da
                   <Users className="w-5 h-5 text-green-600" />
                   <div>
                     <p className="text-sm text-gray-500 font-medium">População</p>
-                    <p className="text-gray-900 font-semibold">{data.populacao.toLocaleString()}</p>
+                                         <p className="text-gray-900 font-semibold">{formatPopulation(data.populacao)}</p>
                   </div>
                 </div>
                 
@@ -124,7 +125,7 @@ export const MicroRegionDetailCard: React.FC<MicroRegionDetailCardProps> = ({ da
                   <div>
                     <p className="text-sm text-gray-500 font-medium">IDH</p>
                     <p className={`font-semibold ${getIDHColor(data.classificacaoIDH)}`}>
-                      {data.idh.toFixed(3)} - {data.classificacaoIDH}
+                      {data.idh.toFixed(2)} - {data.classificacaoIDH}
                     </p>
                   </div>
                 </div>

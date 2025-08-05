@@ -150,7 +150,7 @@ export default function PopulationChartPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Distribuição Populacional</h1>
-          <p className="text-gray-600">Análise da população por faixas demográficas das microrregiões</p>
+          <p className="text-gray-600">Análise da população por estratificação em 3 grupos das microrregiões</p>
         </div>
 
         {/* Botão de Filtros para Mobile */}

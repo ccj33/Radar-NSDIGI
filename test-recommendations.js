@@ -56,7 +56,7 @@ function generateRecommendationsSection(selectedData) {
     <div style="margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); background-color: #ffffff;">
       <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 10px; font-weight: bold; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>Eixo ${index + 1} – ${eixo.nome}</span>
-          <span style="background-color: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-size: 10px;">${parseFloat(String(eixo.valor).replace(',', '.')).toFixed(3)}</span>
+          <span style="background-color: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-size: 10px;">${parseFloat(String(eixo.valor).replace(',', '.')).toFixed(2)}</span>
       </div>
       <div style="padding: 12px; font-size: 10px;">
         

@@ -393,6 +393,20 @@ const Index = () => {
     }
   }, [location.search, activeSection]);
 
+  // Atualizar seção ativa quando o location.state mudar
+  useEffect(() => {
+    if (location.state?.activeSection && location.state.activeSection !== activeSection) {
+      setActiveSection(location.state.activeSection);
+      // Scroll para a seção após um pequeno delay para garantir que foi renderizada
+      setTimeout(() => {
+        const element = document.querySelector(`[data-section="${location.state.activeSection}"]`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location.state, activeSection]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

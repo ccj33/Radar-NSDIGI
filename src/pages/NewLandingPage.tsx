@@ -98,7 +98,8 @@ const NewLandingPage = () => {
                 if (feature.id === 'detalhe') {
                   handleNavigation('/microrregiao-detalhe');
                 } else {
-                  handleNavigation(`/dashboard?section=${feature.id}`);
+                  // Usar a mesma lógica da página inicial
+                  navigate('/dashboard', { state: { activeSection: feature.id } });
                 }
               }}
             />

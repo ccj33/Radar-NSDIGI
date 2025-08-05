@@ -15,10 +15,9 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
 
   // Ícones para cada categoria
   const CATEGORY_ICONS: Record<string, JSX.Element> = {
-    'Pequena (< 50 mil)': <span className="inline-block text-gray-400">👶</span>,
-    'Média (50 mil a 200 mil)': <span className="inline-block text-sky-400">🧒</span>,
-    'Grande (200 mil a 1 milhão)': <span className="inline-block text-purple-400">🧑‍🎓</span>,
-    'Muito Grande (> 1 milhão)': <span className="inline-block text-blue-600">🧑‍🎓</span>,
+    'Pequeno Porte (< 25 mil)': <span className="inline-block text-gray-400">👶</span>,
+    'Médio Porte (25 a 100 mil)': <span className="inline-block text-sky-400">🧒</span>,
+    'Grande Porte (> 100 mil)': <span className="inline-block text-purple-400">🧑‍🎓</span>,
   };
 
   useEffect(() => {
@@ -30,12 +29,11 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
     return () => clearTimeout(timer);
   }, [onLoad]);
 
-  // Categorizar por faixas de população (IBGE Censo 2022)
+  // Categorizar por faixas de população (Estratificação em 3 grupos)
   const categorizePopulation = (pop: number) => {
-    if (pop < 50000) return 'Pequena (< 50 mil)';
-    if (pop < 200000) return 'Média (50 mil a 200 mil)';
-    if (pop < 1000000) return 'Grande (200 mil a 1 milhão)';
-    return 'Muito Grande (> 1 milhão)';
+    if (pop < 25000) return 'Pequeno Porte (< 25 mil)';
+    if (pop < 100000) return 'Médio Porte (25 a 100 mil)';
+    return 'Grande Porte (> 100 mil)';
   };
 
   const chartData = data.reduce((acc, item) => {
@@ -92,12 +90,11 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
     return null;
   };
 
-  // Ordem fixa das categorias (IBGE Censo 2022)
+  // Ordem fixa das categorias (Estratificação em 3 grupos)
   const POPULATION_ORDER = [
-    'Pequena (< 50 mil)',
-    'Média (50 mil a 200 mil)',
-    'Grande (200 mil a 1 milhão)',
-    'Muito Grande (> 1 milhão)'
+    'Pequeno Porte (< 25 mil)',
+    'Médio Porte (25 a 100 mil)',
+    'Grande Porte (> 100 mil)'
   ];
 
   // Preparar dados para o gráfico de pirâmide, já ordenados
@@ -124,7 +121,7 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="text-xl font-bold text-slate-800 tracking-normal">Distribuição Populacional</h3>
-          <p className="text-sm text-slate-500">Microrregiões por faixa de população</p>
+          <p className="text-sm text-slate-500">Microrregiões por estratificação populacional</p>
         </div>
                 {selectedMicroregiao && selectedData && (
           <div className="text-right flex-shrink-0 ml-4">

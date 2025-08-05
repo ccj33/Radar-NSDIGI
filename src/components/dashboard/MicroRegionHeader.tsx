@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { MicroRegionData } from '@/types/dashboard';
 import { getStatusAppearance } from '@/lib/statusUtils';
 import { MapPin, TrendingUp, Target, Mail, User, Building, Users, BarChart3 } from 'lucide-react';
+import { formatPopulation } from '@/lib/utils';
 
 interface MicroRegionHeaderProps {
   data: MicroRegionData;
@@ -59,7 +60,7 @@ export function MicroRegionHeader({ data, allData }: MicroRegionHeaderProps) {
               </div>
               <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg backdrop-blur-sm">
                 <Users className="w-5 h-5 text-green-600" />
-                <span><strong>População:</strong> {data.populacao}</span>
+                <span><strong>População:</strong> {formatPopulation(data.populacao)}</span>
               </div>
               <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg backdrop-blur-sm">
                 <TrendingUp className="w-5 h-5 text-purple-600" />
@@ -83,7 +84,7 @@ export function MicroRegionHeader({ data, allData }: MicroRegionHeaderProps) {
               <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <CardContent className="p-6 text-center relative z-10">
                 <div className="text-4xl font-bold mb-2 group-hover:scale-110 transition-transform duration-300">
-                  {data.indice_geral}
+                  {parseFloat(String(data.indice_geral).replace(',', '.')).toFixed(2)}
                 </div>
                 <div className="text-blue-100 font-medium">
                   Índice Geral de Maturidade Digital

@@ -38,10 +38,10 @@ export function PopulationChart({ data, selectedMicroregiao }: PopulationChartPr
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <Users className="h-5 w-5 text-primary" />
-          Distribuição por Faixa Populacional
+          Distribuição Populacional por Estratificação
         </h3>
         <p className="text-sm text-muted-foreground">
-          Categorização das microrregiões por tamanho populacional
+          Estratificação das microrregiões em 3 grupos por população
         </p>
       </div>
       

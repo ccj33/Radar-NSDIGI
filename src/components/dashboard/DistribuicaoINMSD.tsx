@@ -87,7 +87,7 @@ export function DistribuicaoINMSD({
               <div>
                 <span className="text-primary font-bold">{topPerformer.microrregiao}</span>
                 <span className="ml-2 text-sm text-muted-foreground">
-                  (Índice: {parseFloat(String(topPerformer.indice_geral).replace(',', '.')).toFixed(3)})
+                  (Índice: {parseFloat(String(topPerformer.indice_geral).replace(',', '.')).toFixed(2)})
                 </span>
                 <p className="text-xs text-muted-foreground mt-1">
                   Macrorregião: {topPerformer.macrorregiao || 'N/A'}

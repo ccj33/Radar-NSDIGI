@@ -122,8 +122,27 @@ export const MobileAppAreaSwitcher: React.FC<MobileAppAreaSwitcherProps> = ({
   const handleAreaSelect = (areaId: string) => {
     const area = appAreas.find(a => a.id === areaId);
     if (area) {
-      // Navegar para a rota correspondente
-      navigate(area.path);
+      // Mapear os IDs das áreas para as seções correspondentes
+      const sectionMapping: { [key: string]: string } = {
+        'dashboard': 'overview',
+        'populacao': 'populacao',
+        'barras': 'barras',
+        'radar': 'radar',
+        'executivo': 'executivo',
+        'detalhamento': 'tabela',
+        'recomendacoes': 'recomendacoes',
+        'avancada': 'analise-avancada'
+      };
+
+      const section = sectionMapping[areaId];
+      
+      if (section) {
+        // Usar a mesma lógica da página inicial
+        navigate('/dashboard', { state: { activeSection: section } });
+      } else {
+        // Fallback para navegação direta
+        navigate(area.path);
+      }
     } else {
       // Fallback para navegação interna
       onAreaChange?.(areaId);

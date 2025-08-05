@@ -90,7 +90,7 @@ export function ResponsiveBarChart({ data, selectedMicroregiao, macroFiltro }: R
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Índice de Maturidade:</span>
               <span className="text-lg font-bold text-primary">
-                {payload[0].value.toFixed(3)}
+                {payload[0].value.toFixed(2)}
               </span>
             </div>
             
@@ -195,7 +195,7 @@ export function ResponsiveBarChart({ data, selectedMicroregiao, macroFiltro }: R
             <p className="font-medium mb-2">Dados da Microrregião Selecionada:</p>
             {adaptedData.find(item => item.isSelected) ? (
               <div className="space-y-1">
-                <p><strong>Índice:</strong> {adaptedData.find(item => item.isSelected)?.indice.toFixed(3)}</p>
+                <p><strong>Índice:</strong> {adaptedData.find(item => item.isSelected)?.indice.toFixed(2)}</p>
                 <p><strong>Classificação:</strong> {getClassificationLevel(adaptedData.find(item => item.isSelected)?.indice || 0)}</p>
                 <p><strong>Percentual:</strong> {((adaptedData.find(item => item.isSelected)?.indice || 0) * 100).toFixed(1)}%</p>
               </div>

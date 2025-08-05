@@ -5,12 +5,18 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { MicroRegionData, FilterOptions } from "@/types/dashboard";
-import { Filter, MapPin, Building, Target, Check, ChevronsUpDown, Search, Database } from "lucide-react";
+import { Filter, MapPin, Building, Target, Check, ChevronsUpDown, Search, Database, Info } from "lucide-react";
 import { DownloadPDF } from "./DownloadPDF";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useDataCache } from "@/hooks/useDataCache";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface FiltersProps {
   data: MicroRegionData[];
@@ -44,10 +50,21 @@ export function Filters({
     cacheStats
   } = useDataCache(data, filters);
 
+  // Definir ordem das classificações
+  const classificacoesOrdenadas = ['Emergente', 'Em Evolução', 'Avançado'];
+  
+  // Obter classificações disponíveis nos dados
+  const classificacoesDisponiveis = [...new Set(data.map(item => item.classificacao_inmsd))];
+  
+  // Criar array final com todas as classificações na ordem correta
+  const classificacoes = classificacoesOrdenadas.filter(classification => 
+    classificacoesDisponiveis.includes(classification)
+  );
+
   const uniqueValues = {
     macrorregioes: Array.from(new Set(data.map(item => item.macrorregiao))).sort(),
     regionaisSaude: Array.from(new Set(data.map(item => item.regional_saude))).sort(),
-    classificacoes: Array.from(new Set(data.map(item => item.classificacao_inmsd))).sort()
+    classificacoes: classificacoes
   };
 
   // Garante que, se nenhum filtro está aplicado, todas as microrregiões aparecem
@@ -164,21 +181,51 @@ export function Filters({
             Classificação INMSD
           </label>
           <div className="flex flex-col gap-2">
+            {/* Botão "Todas" */}
             <Button
               variant={!filters.classificacao_inmsd ? 'default' : 'outline'}
               onClick={() => onFiltersChange({ ...filters, classificacao_inmsd: undefined })}
             >
               Todas
             </Button>
-            {uniqueValues.classificacoes.map(classificacao => (
-              <Button
-                key={classificacao}
-                variant={filters.classificacao_inmsd === classificacao ? 'default' : 'outline'}
-                onClick={() => onFiltersChange({ ...filters, classificacao_inmsd: classificacao })}
-              >
-                {classificacao}
-              </Button>
-            ))}
+            
+            {/* Botões das classificações em ordem */}
+            {classificacoesOrdenadas.map((classificacao) => {
+              const isAvailable = classificacoesDisponiveis.includes(classificacao);
+              const isSelected = filters.classificacao_inmsd === classificacao;
+              
+              const buttonContent = (
+                <Button
+                  key={classificacao}
+                  variant={isSelected ? 'default' : 'outline'}
+                  onClick={() => isAvailable ? onFiltersChange({ ...filters, classificacao_inmsd: classificacao }) : null}
+                  disabled={!isAvailable}
+                  className={!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}
+                >
+                  {classificacao}
+                </Button>
+              );
+              
+              if (!isAvailable) {
+                return (
+                  <TooltipProvider key={classificacao}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        {buttonContent}
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-xs">
+                        <div className="flex items-center gap-2">
+                          <Info className="w-4 h-4 text-blue-500" />
+                          <span>Nenhuma microrregião com classificação "{classificacao}" encontrada nos dados atuais.</span>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                );
+              }
+              
+              return buttonContent;
+            })}
           </div>
         </div>
 

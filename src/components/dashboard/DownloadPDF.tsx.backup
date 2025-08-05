@@ -219,7 +219,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
           <strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}
         </p>
         <p style="color: #6b7280; font-size: 18px; margin-bottom: 15px;">
-          <strong>Índice Geral:</strong> ${parseFloat(String(selectedData.indice_geral).replace(',', '.')).toFixed(3)}
+          <strong>Índice Geral:</strong> ${parseFloat(String(selectedData.indice_geral).replace(',', '.')).toFixed(2)}
         </p>
         <p style="color: #6b7280; font-size: 18px;">
           <strong>Status:</strong> ${getStatusText(selectedData.indice_geral)}
@@ -250,7 +250,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
           ${selectedData.email_analista ? `<br/><small>${selectedData.email_analista}</small>` : ''}
         </div>
         <div style="background-color: #f9fafb; padding: 8px; border-radius: 4px;">
-          <strong>População:</strong> ${selectedData.populacao} habitantes
+          <strong>População:</strong> ${formatPopulation(selectedData.populacao)} habitantes
         </div>
         <div style="background-color: #f9fafb; padding: 8px; border-radius: 4px;">
           <strong>IDH:</strong> ${selectedData.idh_completo}
@@ -280,7 +280,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
       <!-- Índice Geral de Maturidade Digital -->
       <div style="margin-top: 10px; background-color: #eff6ff; padding: 15px; border-radius: 4px; text-align: center; border: 2px solid #1e40af;">
         <strong style="color: #1e40af; font-size: 18px;">
-          Índice Geral de Maturidade Digital: ${parseFloat(String(selectedData.indice_geral).replace(',', '.')).toFixed(3)}
+          Índice Geral de Maturidade Digital: ${parseFloat(String(selectedData.indice_geral).replace(',', '.')).toFixed(2)}
         </strong>
       </div>
 
@@ -307,11 +307,11 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
           <div style="font-size: 10px; color: #6b7280;">Total de Microrregiões</div>
         </div>
         <div style="background-color: #f0f9ff; padding: 10px; border-radius: 4px; text-align: center; border-left: 4px solid #1e40af;">
-          <div style="font-size: 18px; font-weight: bold; color: #1e40af;">${data.reduce((sum, item) => sum + parseInt(String(item.populacao).replace(/\./g, '')), 0).toLocaleString('pt-BR')}</div>
+          <div style="font-size: 18px; font-weight: bold; color: #1e40af;">${formatPopulation(data.reduce((sum, item) => sum + parseInt(String(item.populacao).replace(/\./g, '')), 0))}</div>
           <div style="font-size: 10px; color: #6b7280;">População Total</div>
         </div>
         <div style="background-color: #f0f9ff; padding: 10px; border-radius: 4px; text-align: center; border-left: 4px solid #1e40af;">
-          <div style="font-size: 18px; font-weight: bold; color: #1e40af;">${(data.reduce((sum, item) => sum + parseFloat(String(item.indice_geral).replace(',', '.')), 0) / data.length).toFixed(3)}</div>
+          <div style="font-size: 18px; font-weight: bold; color: #1e40af;">${(data.reduce((sum, item) => sum + parseFloat(String(item.indice_geral).replace(',', '.')), 0) / data.length).toFixed(2)}</div>
           <div style="font-size: 10px; color: #6b7280;">Maturidade Média</div>
         </div>
         <div style="background-color: #f0f9ff; padding: 10px; border-radius: 4px; text-align: center; border-left: 4px solid #1e40af;">
@@ -469,7 +469,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
               .slice(0, 10)
               .map((item, index) => `
                 <div style="padding: 4px; ${item.microrregiao === selectedData.microrregiao ? 'background-color: #dbeafe; border-left: 3px solid #1e40af;' : ''}">
-                  <strong>${index + 1}º</strong> ${item.microrregiao}: ${parseFloat(String(item.indice_geral).replace(',', '.')).toFixed(3)}
+                  <strong>${index + 1}º</strong> ${item.microrregiao}: ${parseFloat(String(item.indice_geral).replace(',', '.')).toFixed(2)}
                 </div>
               `).join('')}
           </div>
@@ -582,7 +582,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
         <div style="background-color: #f9fafb; padding: 15px; border-radius: 4px; font-size: 11px;">
           <p style="margin: 0 0 10px 0; font-weight: bold;">População da microrregião ${selectedData.microrregiao}:</p>
           <div style="font-size: 16px; font-weight: bold; color: #1e40af; text-align: center; padding: 10px; background-color: #eff6ff; border-radius: 4px;">
-            ${selectedData.populacao} habitantes
+            ${formatPopulation(selectedData.populacao)} habitantes
           </div>
           <p style="margin: 10px 0 0 0; font-size: 10px; color: #6b7280;">
             Representa ${((parseInt(String(selectedData.populacao).replace(/\./g, '')) / data.reduce((sum, item) => sum + parseInt(String(item.populacao).replace(/\./g, '')), 0)) * 100).toFixed(1)}% da população total analisada
@@ -617,7 +617,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
           <div style="margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); background-color: #ffffff;">
             <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 10px; font-weight: bold; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
                 <span>Eixo ${index + 1} – ${eixo.nome}</span>
-                <span style="background-color: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-size: 10px;">${parseFloat(String(eixo.valor).replace(',', '.')).toFixed(3)}</span>
+                <span style="background-color: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-size: 10px;">${parseFloat(String(eixo.valor).replace(',', '.')).toFixed(2)}</span>
             </div>
             <div style="padding: 12px; font-size: 10px;">
               
@@ -877,7 +877,7 @@ export function DownloadPDF({ selectedData, data, selectedMicroregiao }: Downloa
           <div style="background-color: #f8fafc; padding: 25px; border-radius: 8px;">
             <h3 style="color: #1e40af; font-size: 18px; margin-bottom: 15px;">Contexto Demográfico:</h3>
             <div style="font-size: 14px; line-height: 1.8; color: #374151; text-align: left;">
-              <p><strong>👥 População Total:</strong> ${selectedData.populacao} habitantes</p>
+              <p><strong>👥 População Total:</strong> ${formatPopulation(selectedData.populacao)} habitantes</p>
               <p><strong>🏙️ Municípios:</strong> ${selectedData.municipios} cidades</p>
               <p><strong>📊 Densidade:</strong> Média populacional por município</p>
               <p><strong>🎯 Relevância:</strong> O tamanho da população influencia a complexidade da gestão digital</p>

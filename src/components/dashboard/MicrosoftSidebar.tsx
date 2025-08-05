@@ -12,9 +12,11 @@ import {
   Check,
   Globe,
   Building,
-  TrendingUp
+  TrendingUp,
+  Info
 } from 'lucide-react';
 import { MicroRegionData, FilterOptions } from '@/types/dashboard';
+import { formatPopulation } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -22,6 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface MicrosoftSidebarProps {
   data: MicroRegionData[];
@@ -49,7 +57,16 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
     .map(item => item.microrregiao)
     .sort();
   
-  const classificacoes = [...new Set(data.map(item => item.classificacao_inmsd))].sort();
+  // Definir ordem das classificações
+  const classificacoesOrdenadas = ['Emergente', 'Em Evolução', 'Avançado'];
+  
+  // Obter classificações disponíveis nos dados
+  const classificacoesDisponiveis = [...new Set(data.map(item => item.classificacao_inmsd))];
+  
+  // Criar array final com todas as classificações na ordem correta
+  const classificacoes = classificacoesOrdenadas.filter(classification => 
+    classificacoesDisponiveis.includes(classification)
+  );
 
   const handleMacrorregiaoChange = (value: string) => {
     const newFilters = { ...filters, macrorregiao: value === 'Todas' ? undefined : value };
@@ -151,19 +168,60 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
           Classificação INMSD
         </label>
         <div className="flex flex-wrap gap-2">
-          {['Todas', ...classificacoes].map((classificacao) => (
-            <button
-              key={classificacao}
-              onClick={() => handleClassificacaoChange(classificacao)}
-              className={`px-4 py-1.5 rounded-full text-sm transition-all touch-target select-mobile-safe ${
-                filters.classificacao_inmsd === classificacao || (!filters.classificacao_inmsd && classificacao === 'Todas')
-                  ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {classificacao}
-            </button>
-          ))}
+          {/* Botão "Todas" */}
+          <button
+            onClick={() => handleClassificacaoChange('Todas')}
+            className={`px-4 py-1.5 rounded-full text-sm transition-all touch-target select-mobile-safe ${
+              !filters.classificacao_inmsd
+                ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Todas
+          </button>
+          
+          {/* Botões das classificações em ordem */}
+          {classificacoesOrdenadas.map((classificacao) => {
+            const isAvailable = classificacoesDisponiveis.includes(classificacao);
+            const isSelected = filters.classificacao_inmsd === classificacao;
+            
+            const buttonContent = (
+              <button
+                key={classificacao}
+                onClick={() => isAvailable ? handleClassificacaoChange(classificacao) : null}
+                disabled={!isAvailable}
+                className={`px-4 py-1.5 rounded-full text-sm transition-all touch-target select-mobile-safe ${
+                  isSelected
+                    ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200'
+                    : isAvailable
+                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
+                }`}
+              >
+                {classificacao}
+              </button>
+            );
+            
+            if (!isAvailable) {
+              return (
+                <TooltipProvider key={classificacao}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      {buttonContent}
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <div className="flex items-center gap-2">
+                        <Info className="w-4 h-4 text-blue-500" />
+                        <span>Nenhuma microrregião com classificação "{classificacao}" encontrada nos dados atuais.</span>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              );
+            }
+            
+            return buttonContent;
+          })}
         </div>
       </div>
 
@@ -210,9 +268,9 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
                 <span className="font-medium text-gray-900">{selectedData.microrregiao}</span>
               </div>
               <div className="text-xs text-gray-600 space-y-1">
-                <div>Índice: {selectedData.indice_geral}</div>
+                <div>Índice: {parseFloat(String(selectedData.indice_geral).replace(',', '.')).toFixed(2)}</div>
                 <div>Classificação: {selectedData.classificacao_inmsd}</div>
-                <div>População: {selectedData.populacao}</div>
+                <div>População: {formatPopulation(selectedData.populacao)}</div>
               </div>
             </div>
           </div>

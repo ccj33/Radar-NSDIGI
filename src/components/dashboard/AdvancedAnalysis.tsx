@@ -195,7 +195,7 @@ export function AdvancedAnalysis({ data, selectedMicroregiao, medians }: Advance
                   {availableRegions.map((region) => (
                     <SelectItem key={region.value} value={region.value}>
                       <div className="flex items-center justify-between w-full">
-                        <span>{region.label} — INMSD: {region.indice.toFixed(3)}</span>
+                        <span>{region.label} — INMSD: {region.indice.toFixed(2)}</span>
                       </div>
                     </SelectItem>
                   ))}

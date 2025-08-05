@@ -12,10 +12,6 @@ import {
   Target,
   Menu,
   X,
-  Search,
-  Bell,
-  Settings,
-  User,
   ChevronDown,
   Grid
 } from 'lucide-react';
@@ -48,20 +44,13 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Determinar seção ativa baseada na rota atual
-  const getCurrentSection = () => {
-    const currentPath = location.pathname;
-    const section = sections.find(s => s.path === currentPath);
-    return section ? section.id : activeSection;
-  };
-
-  const currentActiveSection = getCurrentSection();
+  const currentActiveSection = activeSection;
 
   const handleNavigate = (sectionId: string) => {
     const section = sections.find(s => s.id === sectionId);
     if (section) {
-      // Navegar para a rota correspondente
-      navigate(section.path);
+      // Usar a mesma lógica da página inicial
+      navigate('/dashboard', { state: { activeSection: sectionId } });
     } else {
       // Fallback para navegação interna
       onNavigate(sectionId);
@@ -94,48 +83,59 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
              {/* Linha Vertical */}
              <div className="w-px h-6 bg-gray-300 mx-4 flex-shrink-0 hidden sm:block"></div>
 
-                           {/* Navegação Principal - Menu Dropdown "Áreas" */}
-              <div className="flex-1 min-w-0 mx-4">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100 hover:border-blue-400 px-4 py-2 font-medium"
-                    >
-                      <Grid className="w-4 h-4 mr-2" />
-                      Áreas
-                      <ChevronDown className="w-4 h-4 ml-2" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-64 p-2">
-                    <div className="grid grid-cols-1 gap-1">
-                      {sections.map((section) => {
-                        const Icon = section.icon;
-                        const isActive = currentActiveSection === section.id;
-                        
-                        return (
-                          <DropdownMenuItem
-                            key={section.id}
-                            onClick={() => handleNavigate(section.id)}
-                            className={`flex items-center px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ${
-                              isActive 
-                                ? 'bg-blue-100 text-blue-700 font-medium' 
-                                : 'text-gray-700 hover:bg-gray-100'
-                            }`}
-                          >
-                            <Icon className="w-4 h-4 mr-3" />
-                            <div className="flex flex-col">
-                              <span className="text-sm font-medium">{section.label}</span>
-                              <span className="text-xs text-gray-500">{section.description}</span>
-                            </div>
-                          </DropdownMenuItem>
-                        );
-                      })}
-                    </div>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+             {/* Botão Início - Lado esquerdo das Áreas */}
+             <Button
+               variant="outline"
+               size="sm"
+               onClick={() => navigate('/')}
+               className="text-gray-700 border-gray-300 hover:bg-gray-50 px-3 py-2 text-sm mr-3"
+             >
+               <Home className="w-4 h-4 mr-2" />
+               Início
+             </Button>
+
+             {/* Navegação Principal - Menu Dropdown "Áreas" */}
+             <div className="flex-1 min-w-0">
+               <DropdownMenu>
+                 <DropdownMenuTrigger asChild>
+                   <Button
+                     variant="outline"
+                     size="sm"
+                     className="bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100 hover:border-blue-400 px-4 py-2 font-medium"
+                   >
+                     <Grid className="w-4 h-4 mr-2" />
+                     Áreas
+                     <ChevronDown className="w-4 h-4 ml-2" />
+                   </Button>
+                 </DropdownMenuTrigger>
+                 <DropdownMenuContent align="start" className="w-64 p-2">
+                   <div className="grid grid-cols-1 gap-1">
+                     {sections.map((section) => {
+                       const Icon = section.icon;
+                       const isActive = currentActiveSection === section.id;
+                       
+                       return (
+                         <DropdownMenuItem
+                           key={section.id}
+                           onClick={() => handleNavigate(section.id)}
+                           className={`flex items-center px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ${
+                             isActive 
+                               ? 'bg-blue-100 text-blue-700 font-medium' 
+                               : 'text-gray-700 hover:bg-gray-100'
+                           }`}
+                         >
+                           <Icon className="w-4 h-4 mr-3" />
+                           <div className="flex flex-col">
+                             <span className="text-sm font-medium">{section.label}</span>
+                             <span className="text-xs text-gray-500">{section.description}</span>
+                           </div>
+                         </DropdownMenuItem>
+                       );
+                     })}
+                   </div>
+                 </DropdownMenuContent>
+               </DropdownMenu>
+             </div>
 
              {/* Direita: Botões de Ação (Sempre visíveis) */}
              <div className="flex items-center gap-2 flex-shrink-0">
@@ -144,40 +144,9 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
                  <ZoomControl />
                </div>
                
-               {/* Ícones de Ação */}
-               <div className="flex items-center gap-1">
-                 <Button variant="ghost" size="icon" className="text-gray-600 hover:text-blue-600 w-8 h-8">
-                   <Search className="w-4 h-4" />
-                 </Button>
-                 <DropdownMenu>
-                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" size="icon" className="text-gray-600 hover:text-blue-600 w-8 h-8">
-                       <User className="w-4 h-4" />
-                     </Button>
-                   </DropdownMenuTrigger>
-                   <DropdownMenuContent align="end" className="w-48">
-                     <DropdownMenuItem>
-                       <User className="w-4 h-4 mr-2" />
-                       Perfil
-                     </DropdownMenuItem>
-                     <DropdownMenuItem>
-                       <Settings className="w-4 h-4 mr-2" />
-                       Configurações
-                     </DropdownMenuItem>
-                   </DropdownMenuContent>
-                 </DropdownMenu>
-               </div>
+
                
-               {/* Botão Início */}
-               <Button
-                 variant="outline"
-                 size="sm"
-                 onClick={() => navigate('/')}
-                 className="text-gray-700 border-gray-300 hover:bg-gray-50 px-3 py-2 text-sm"
-               >
-                 <Home className="w-4 h-4 mr-2" />
-                 Início
-               </Button>
+
                
                {/* Menu Mobile - Apenas para telas muito pequenas */}
                <Button

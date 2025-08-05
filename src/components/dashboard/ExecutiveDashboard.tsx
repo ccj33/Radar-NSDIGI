@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { EixosBarChart } from './EixosBarChart';
-import { DashboardRadarChart } from './RadarChart';
 
 
 interface ExecutiveDashboardProps {
@@ -209,25 +208,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
         </CardContent>
       </Card>
 
-      {/* Gráfico de Radar */}
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5" />
-            Visualização Radar - Análise por Eixos
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Gráfico radar mostrando a comparação entre a microrregião selecionada e as medianas
-          </p>
-        </CardHeader>
-        <CardContent>
-          <DashboardRadarChart
-            data={selectedData}
-            allData={data}
-            medians={medians}
-          />
-        </CardContent>
-      </Card>
+
 
       {/* Resumo Executivo */}
       <Card className="bg-white border-gray-200 shadow-sm" data-tour="resumo-executivo">

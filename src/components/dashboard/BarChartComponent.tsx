@@ -78,7 +78,7 @@ export function BarChartComponent({ data, selectedMicroregiao, macroFiltro, onLo
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Índice de Maturidade:</span>
               <span className="text-lg font-bold text-primary">
-                {payload[0].value.toFixed(3)}
+                {payload[0].value.toFixed(2)}
               </span>
             </div>
             
