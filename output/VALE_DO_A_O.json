@@ -1,0 +1,185 @@
+{
+  "macrorregiao": "VALE DO AÇO",
+  "objetivos": [
+    {
+      "tema": "Infraestrutura para Saúde Digital",
+      "descricao": "Modernização de unidades de saúde públicas e filantrópicas com recursos para infraestrutura digital, fortalecendo o atendimento presencial e a telessaúde, com foco em regiões remotas. Inclui implementação e manutenção para garantir a sustentabilidade dos serviços.",
+      "acoes": [
+        {
+          "titulo": "Modernização de unidades de saúde públicas e filantrópicas com recursos para infraestrutura digital, fortalecendo o atendimento presencial e a telessaúde, com foco em regiões remotas. Inclui implementação e manutenção para garantir a sustentabilidade dos serviços.",
+          "meta": "Equipar 480 estabelecimentos com pacote de kits básicos de infraestrutura para cada CNES público e filantrópico do estado e município até junho de 2030.",
+          "origem": "Linha 206",
+          "tipo": "meta específica"
+        }
+      ]
+    },
+    {
+      "tema": "Redes Dados em Saúde",
+      "descricao": "Implementação de tecnologia blockchain para viabilizar a interoperabilidade entre sistemas de saúde em Minas Gerais, integrando dados dos três níveis de atenção e permitindo acesso facilitado às informações por Estados e Municípios.",
+      "acoes": [
+        {
+          "titulo": "Implementação de tecnologia blockchain para viabilizar a interoperabilidade entre sistemas de saúde em Minas Gerais, integrando dados dos três níveis de atenção e permitindo acesso facilitado às informações por Estados e Municípios.",
+          "meta": "Interoperar 1.992 atendimentos mensais com a RNDS até junho de 2030.",
+          "origem": "Linha 207",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Capacitações em Saúde Digital",
+      "descricao": "Oferta contínua de cursos online e assíncronos para capacitação de profissionais em saúde digital, sistemas e práticas de telessaúde, visando reduzir a rotatividade de pessoal e difundir conhecimentos na área.",
+      "acoes": [
+        {
+          "titulo": "Oferta contínua de cursos online e assíncronos para capacitação de profissionais em saúde digital, sistemas e práticas de telessaúde, visando reduzir a rotatividade de pessoal e difundir conhecimentos na área.",
+          "meta": "Capacitar 5.971 profissionais em ao menos um curso online até dezembro de 2027.",
+          "origem": "Linha 208",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Formação de Multiplicadores em Saúde Digital",
+      "descricao": "Formação voltada a profissionais da saúde dos municípios mineiros, capacitando-os como referências técnicas em saúde digital, com foco na alfabetização em dados e no uso de sistemas oficiais, para fortalecer uma cultura de dados no Estado.",
+      "acoes": [
+        {
+          "titulo": "Formação voltada a profissionais da saúde dos municípios mineiros, capacitando-os como referências técnicas em saúde digital, com foco na alfabetização em dados e no uso de sistemas oficiais, para fortalecer uma cultura de dados no Estado.",
+          "meta": "Ter ao menos um profissional que concluiu a formação em 100% dos municípios até dezembro de 2026.",
+          "origem": "Linha 209",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Ferramenta Estadual de Regulação Assistencial",
+      "descricao": "Desenvolvimento de um sistema único de regulação em saúde digital para o SUS em Minas Gerais, integrando os níveis de atenção com módulos de Urgência e Emergência, Ambulatorial, Telessaúde, Eletivas e Transporte Sanitário.",
+      "acoes": [
+        {
+          "titulo": "Desenvolvimento de um sistema único de regulação em saúde digital para o SUS em Minas Gerais, integrando os níveis de atenção com módulos de Urgência e Emergência, Ambulatorial, Telessaúde, Eletivas e Transporte Sanitário.",
+          "meta": "Regular 1.780.000 internações de U/E na nova ferramenta até o mês de junho de 2029.",
+          "origem": "Linha 210",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Sistema para Solicitação Digital de Medicamentos do CEAF",
+      "descricao": "Implantação de sistema com inteligência artificial para abertura e triagem de processos de medicamentos do CEAF, agilizando a análise, eliminando documentos físicos e garantindo início rápido do tratamento.",
+      "acoes": [
+        {
+          "titulo": "Implantação de sistema com inteligência artificial para abertura e triagem de processos de medicamentos do CEAF, agilizando a análise, eliminando documentos físicos e garantindo início rápido do tratamento.",
+          "meta": "Garantir resposta ao cidadão no prazo máximo de 30 dias.",
+          "origem": "Linha 211",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Ações de Controle do Aedes aegypti",
+      "descricao": "Desenvolvimento de software com georreferenciamento e inteligência artificial para identificar focos da dengue, otimizar ações de campo e apoiar decisões no combate às arboviroses.",
+      "acoes": [
+        {
+          "titulo": "Desenvolvimento de software com georreferenciamento e inteligência artificial para identificar focos da dengue, otimizar ações de campo e apoiar decisões no combate às arboviroses.",
+          "meta": "Mapear 30% das áreas urbanas com IA e georreferenciamento até junho de 2027.",
+          "origem": "Linha 212",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "VISA Digital",
+      "descricao": "Digitalização da carta de serviços da Vigilância Sanitária com novos módulos no VISA Digital e uso de IA para triagem automática de projetos arquitetônicos, agilizando a análise e identificação de requisitos.",
+      "acoes": [
+        {
+          "titulo": "Digitalização da carta de serviços da Vigilância Sanitária com novos módulos no VISA Digital e uso de IA para triagem automática de projetos arquitetônicos, agilizando a análise e identificação de requisitos.",
+          "meta": "Disponibilizar 10 serviços da Visa no sistema até junho de 2028.",
+          "origem": "Linha 213",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Vacina Mais Minas - Sistema de Vacinação",
+      "descricao": "Implantação de sistema de informação para registro de vacinas, gestão de estoque e monitoramento da cobertura vacinal em Minas Gerais, com serviços ao cidadão e interoperabilidade com a RNDS.",
+      "acoes": [
+        {
+          "titulo": "Implantação de sistema de informação para registro de vacinas, gestão de estoque e monitoramento da cobertura vacinal em Minas Gerais, com serviços ao cidadão e interoperabilidade com a RNDS.",
+          "meta": "Ter 853 municípios aderentes ao sistema até dezembro de 2029.",
+          "origem": "Linha 214",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Teleconsultoria clínica para a integração da Atenção Primária à Saúde (APS) com a Atenção Especializada (AE)",
+      "descricao": "Implantação de teleconsultorias por médicos especialistas para a Atenção Primária, visando aumentar a resolubilidade e reduzir encaminhamentos desnecessários, com foco em linhas de cuidado prioritárias, arboviroses e vírus respiratórios, medicina fetal e otorrinolaringologia.",
+      "acoes": [
+        {
+          "titulo": "Implantação de teleconsultorias por médicos especialistas para a Atenção Primária, visando aumentar a resolubilidade e reduzir encaminhamentos desnecessários, com foco em linhas de cuidado prioritárias, arboviroses e vírus respiratórios, medicina fetal e otorrinolaringologia.",
+          "meta": "Realizar 11.620 teleconsultorias até junho de 2029.",
+          "origem": "Linha 215",
+          "tipo": "meta específica"
+        }
+      ]
+    },
+    {
+      "tema": "Implementação da Telecardiologia para a rede de urgência e emergência",
+      "descricao": "Aquisição de eletrocardiógrafos e implantação de telecardiologia 24h no SAMU/MG, com laudos rápidos e orientações clínicas para as USBs, visando diagnóstico em até 10 minutos.",
+      "acoes": [
+        {
+          "titulo": "Aquisição de eletrocardiógrafos e implantação de telecardiologia 24h no SAMU/MG, com laudos rápidos e orientações clínicas para as USBs, visando diagnóstico em até 10 minutos.",
+          "meta": "Emitir e laudar 10.220 eletrocardiogramas até junho de 2029.",
+          "origem": "Linha 216",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "TeleAVC",
+      "descricao": "Implantação de teleconsultoria e telediagnóstico 24h para apoio a diagnósticos de AVC, com análise de tomografias por neurologistas, visando decisões rápidas e intervenções em tempo oportuno.",
+      "acoes": [
+        {
+          "titulo": "Implantação de teleconsultoria e telediagnóstico 24h para apoio a diagnósticos de AVC, com análise de tomografias por neurologistas, visando decisões rápidas e intervenções em tempo oportuno.",
+          "meta": "Emitir e laudar 635 laudos de tomógrafo até junho de 2029.",
+          "origem": "Linha 217",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Teleconsultoria para estomatologia",
+      "descricao": "Oferecer serviços de Teleconsultoria para cirurgiões dentistas da APS para apoio no diagnóstico das Lesões Bucais e acompanhamento dos usuários, no estado de Minas Gerais.",
+      "acoes": [
+        {
+          "titulo": "Oferecer serviços de Teleconsultoria para cirurgiões dentistas da APS para apoio no diagnóstico das Lesões Bucais e acompanhamento dos usuários, no estado de Minas Gerais.",
+          "meta": "Realizar 46 teleconsultorias até junho de 2029.",
+          "origem": "Linha 218",
+          "tipo": "meta padrão"
+        }
+      ]
+    },
+    {
+      "tema": "Divulgação e sensibilização dos usuários para aceitação dos serviços de telessaude.",
+      "descricao": "Promover o entendimento e facilitar os serviços de telessaúde por parte dos usuários do SUS, com uma abordagem multicanal, incluindo uma etapa de  capacitação para profissionais de saúde e líderes comunitários, para que possam atuar como agentes de divulgação da iniciativa.",
+      "acoes": [
+        {
+          "titulo": "Promover o entendimento e facilitar os serviços de telessaúde por parte dos usuários do SUS, com uma abordagem multicanal, incluindo uma etapa de  capacitação para profissionais de saúde e líderes comunitários, para que possam atuar como agentes de divulgação da iniciativa.",
+          "meta": "Aumentar em 20% o número de usuários que utilizam os serviços de telessaúde na macrorregião até o final do período da campanha até janeiro de 2026.",
+          "origem": "Linha 219",
+          "tipo": "meta específica"
+        }
+      ]
+    },
+    {
+      "tema": "Consultas Especializadas por Telemedicina",
+      "descricao": "Implementação de teleconsulta especializada no SUS Digital para ampliar acesso remoto a consultas, reduzir esperas e garantir atendimento seguro e de qualidade, com registro conforme a legislação.",
+      "acoes": [
+        {
+          "titulo": "Implementação de teleconsulta especializada no SUS Digital para ampliar acesso remoto a consultas, reduzir esperas e garantir atendimento seguro e de qualidade, com registro conforme a legislação.",
+          "meta": "1 mil teleconsultas especializadas por ano até janeiro de 2026.",
+          "origem": "Linha 220",
+          "tipo": "meta específica"
+        }
+      ]
+    }
+  ]
+}

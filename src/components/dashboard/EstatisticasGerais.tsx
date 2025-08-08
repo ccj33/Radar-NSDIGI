@@ -28,7 +28,7 @@ export function EstatisticasGerais({
         <>
           {/* Total de Microrregiões */}
           <ScrollReveal delay={100}>
-            <Card className="shadow-lg border border-gray-200 bg-white">
+            <Card className="shadow-lg border border-gray-200 bg-white h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total de Microrregiões
@@ -47,7 +47,7 @@ export function EstatisticasGerais({
 
           {/* População Total */}
           <ScrollReveal delay={200}>
-            <Card className="shadow-lg border border-gray-200 bg-white">
+            <Card className="shadow-lg border border-gray-200 bg-white h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   População Total
@@ -68,7 +68,7 @@ export function EstatisticasGerais({
 
           {/* Maturidade Mediana */}
           <ScrollReveal delay={300}>
-            <Card className="shadow-lg border border-gray-200 bg-white">
+            <Card className="shadow-lg border border-gray-200 bg-white h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Maturidade Mediana Geral
@@ -108,7 +108,7 @@ export function EstatisticasGerais({
 
           {/* Ranking da Região */}
           <ScrollReveal delay={400}>
-            <Card className="shadow-lg border border-gray-200 bg-white">
+            <Card className="shadow-lg border border-gray-200 bg-white h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Posição no Ranking

@@ -7,6 +7,7 @@ import { MicroRegionData, FilterOptions, EIXOS_NAMES } from '@/types/dashboard';
 import { MicrosoftHeader } from '@/components/dashboard/MicrosoftHeader';
 // import { NavigationMenu } from '@/components/dashboard/NavigationMenu';
 import MicrosoftSidebar from '@/components/dashboard/MicrosoftSidebar';
+import MobileBottomFilters from '@/components/dashboard/MobileBottomFilters';
 import { StatsOverview } from '@/components/dashboard/StatsOverview';
 import { DashboardRadarChart } from '@/components/dashboard/RadarChart';
 import { BarChartComponent } from '@/components/dashboard/BarChartComponent';
@@ -34,6 +35,9 @@ import { Menu, Filter } from 'lucide-react'; // Importar ícones
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'; // Importar Drawer com mais componentes
 import { VisaoGeralBanner } from '@/components/dashboard/VisaoGeralBanner';
 import ScrollReveal from '@/components/ScrollReveal';
+import RegionPicker from '@/components/dashboard/RegionPicker';
+import type { Region } from '@/types/region';
+import { Separator } from '@/components/ui/separator';
 
 const GUIDE_STORAGE_KEY = 'mrh-guide-dismissed';
 
@@ -351,6 +355,9 @@ const Index = () => {
   const location = useLocation();
   const [selectedMicroregiao, setSelectedMicroregiao] = useState('');
   const [filters, setFilters] = useState<FilterOptions>({});
+  // Estados locais para rótulos do bottom sheet (persistentes)
+  const [macroRegion, setMacroRegion] = useState<Region | null>(null);
+  const [microRegion, setMicroRegion] = useState<Region | null>(null);
   
   // Ler parâmetro section da URL
   const urlParams = new URLSearchParams(location.search);
@@ -442,6 +449,44 @@ const Index = () => {
     if (selectedMicroregiao && !filteredData.find(item => item.microrregiao === selectedMicroregiao)) {
       setSelectedMicroregiao('');
     }
+  };
+
+  // Persistir escolhas do bottom sheet
+  React.useEffect(() => {
+    const raw = localStorage.getItem('regionSelection');
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as { macro: Region | null; micro: Region | null };
+        setMacroRegion(parsed.macro ?? null);
+        setMicroRegion(parsed.micro ?? null);
+      } catch {}
+    }
+  }, []);
+  React.useEffect(() => {
+    localStorage.setItem('regionSelection', JSON.stringify({ macro: macroRegion, micro: microRegion }));
+  }, [macroRegion, microRegion]);
+
+  // Listas derivadas dos dados carregados
+  const MACROS: Region[] = useMemo(() => {
+    const items = Array.from(new Set(data.map((d) => d.macrorregiao))).filter(Boolean) as string[];
+    return items.map((name, idx) => ({ id: String(idx + 1), name, slug: name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '') }));
+  }, [data]);
+  const MICROS: Region[] = useMemo(() => {
+    const base = data
+      .filter((d) => !filters.macrorregiao || d.macrorregiao === filters.macrorregiao)
+      .map((d) => d.microrregiao)
+      .filter(Boolean) as string[];
+    const items = Array.from(new Set(base));
+    return items.map((name, idx) => ({ id: `m${idx + 1}`, name, slug: name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '') }));
+  }, [data, filters.macrorregiao]);
+
+  // Navegar ao alterar macro/micro (mantém query atual)
+  const updateUrlWithRegions = (nextMacro: Region | null, nextMicro: Region | null) => {
+    const params = new URLSearchParams(window.location.search);
+    if (nextMacro) params.set('macro', nextMacro.slug); else params.delete('macro');
+    if (nextMicro) params.set('micro', nextMicro.slug); else params.delete('micro');
+    const next = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, '', next);
   };
 
   const handleFiltersOpenChange = (open: boolean) => {
@@ -582,8 +627,8 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Botão de Filtros para Mobile */}
-      <div className="lg:hidden fixed top-4 right-4 z-50">
+      {/* Botão de Filtros para Mobile (oculto, substituído pela barra inferior) */}
+      <div className="hidden sm:hidden md:hidden lg:hidden fixed top-4 right-4 z-50">
         <Drawer open={isFiltersOpen} onOpenChange={handleFiltersOpenChange}>
           <DrawerTrigger asChild>
             <Button size="icon" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg">
@@ -621,7 +666,7 @@ const Index = () => {
 
 
       {/* Conteúdo Principal */}
-      <main className="container mx-auto px-4 py-8 flex gap-8 relative">
+      <main className="container mx-auto px-4 py-8 pb-28 md:pb-8 flex gap-8 relative">
         {/* Microsoft Style Sidebar - Visível apenas em telas grandes */}
         <aside className="hidden lg:block w-1/4 xl:w-1/5 sticky top-20 self-start">
           <div data-tour="filtros">
@@ -648,11 +693,15 @@ const Index = () => {
             </ScrollReveal>
           )}
 
-          {/* Plano de Ação - Posicionado após as informações da microrregião */}
-          {activeSection === 'overview' && selectedData && (
+          {/* Plano de Ação - Disponível quando há microrregião selecionada OU apenas macrorregião */}
+          {activeSection === 'overview' && (filters.macrorregiao || selectedData) && (
             <ScrollReveal delay={100}>
               <div className="mb-8">
-                <PlanoDeAcao />
+                <PlanoDeAcao 
+                  selectedMacroRegiao={filters.macrorregiao}
+                  selectedMicroregiao={selectedMicroregiao}
+                  data={data}
+                />
               </div>
             </ScrollReveal>
           )}
@@ -882,7 +931,7 @@ const Index = () => {
       </main>
 
       {/* Menu de Ações Flutuantes (FAB) */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+      <div className="fixed bottom-24 md:bottom-6 right-6 z-50 flex flex-col items-center gap-3">
         {/* Botões secundários que aparecem quando o menu está aberto */}
         {isFabMenuOpen && (
           <>
@@ -908,6 +957,40 @@ const Index = () => {
         >
           <Settings className={`w-7 h-7 transition-transform duration-300 ${isFabMenuOpen ? 'rotate-90' : ''}`} />
         </Button>
+      </div>
+
+      {/* Barra inferior de filtros para mobile */}
+      <div className="md:hidden">
+        <MobileBottomFilters
+          leftContent={
+            <RegionPicker
+              mode="macro"
+              items={MACROS}
+              value={macroRegion}
+              onChange={(region) => {
+                setMacroRegion(region);
+                handleFiltersChange({ ...filters, macrorregiao: region.name });
+                setMicroRegion(null);
+                handleMicroregiaoChange('');
+                updateUrlWithRegions(region, null);
+              }}
+              buttonClassName="h-14 sm:h-16 w-full text-sm font-semibold bg-[#FFA500] text-[#111] hover:opacity-90"
+            />
+          }
+          rightContent={
+            <RegionPicker
+              mode="micro"
+              items={MICROS}
+              value={microRegion}
+              onChange={(region) => {
+                setMicroRegion(region);
+                handleMicroregiaoChange(region.name);
+                updateUrlWithRegions(macroRegion, region);
+              }}
+              buttonClassName="h-14 sm:h-16 w-full text-sm font-semibold bg-[#FFEB3B] text-[#111] hover:opacity-90"
+            />
+          }
+        />
       </div>
     </div>
   );

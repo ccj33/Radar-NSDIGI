@@ -129,7 +129,6 @@ export const MobileAppAreaSwitcher: React.FC<MobileAppAreaSwitcherProps> = ({
         'barras': 'barras',
         'radar': 'radar',
         'executivo': 'executivo',
-        'detalhamento': 'tabela',
         'recomendacoes': 'recomendacoes',
         'avancada': 'analise-avancada'
       };
@@ -140,7 +139,7 @@ export const MobileAppAreaSwitcher: React.FC<MobileAppAreaSwitcherProps> = ({
         // Usar a mesma lógica da página inicial
         navigate('/dashboard', { state: { activeSection: section } });
       } else {
-        // Fallback para navegação direta
+        // Para detalhamento e outras páginas específicas, navegar diretamente
         navigate(area.path);
       }
     } else {

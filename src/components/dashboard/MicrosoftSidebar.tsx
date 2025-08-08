@@ -123,7 +123,7 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
           value={filters.macrorregiao || 'Todas'}
           onValueChange={handleMacrorregiaoChange}
         >
-          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white touch-target select-mobile-safe">
+          <SelectTrigger id="macro-select-trigger" className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white touch-target select-mobile-safe">
             <SelectValue placeholder="Todas as macrorregiões" />
           </SelectTrigger>
           <SelectContent className="max-h-[50vh] mobile-dropdown-scroll">
@@ -147,7 +147,7 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
           value={selectedMicroregiao || 'Nenhuma'}
           onValueChange={(value) => onMicroregiaoChange(value === 'Nenhuma' ? '' : value)}
         >
-          <SelectTrigger className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white touch-target select-mobile-safe">
+          <SelectTrigger id="micro-select-trigger" className="w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 px-3 py-2 text-sm transition-all bg-white touch-target select-mobile-safe">
             <SelectValue placeholder="Selecione uma microrregião" />
           </SelectTrigger>
           <SelectContent className="max-h-[50vh] mobile-dropdown-scroll">

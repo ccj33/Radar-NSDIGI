@@ -1,0 +1,103 @@
+{
+  "processamento": {
+    "timestamp": "2025-01-03T17:00:00.000Z",
+    "totalMacrorregioes": 16,
+    "totalTemas": 25,
+    "totalMetas": 219,
+    "metasPadrao": 152,
+    "metasEspecificas": 67
+  },
+  "exemploEstrutura": {
+    "macrorregiao": "CENTRO",
+    "objetivos": [
+      {
+        "tema": "Infraestrutura para Saúde Digital",
+        "descricao": "Modernização de unidades de saúde públicas e filantrópicas com recursos para infraestrutura digital, fortalecendo o atendimento presencial e a telessaúde, com foco em regiões remotas. Inclui implementação e manutenção para garantir a sustentabilidade dos serviços.",
+        "acoes": [
+          {
+            "titulo": "Modernização de unidades de saúde públicas e filantrópicas com recursos para infraestrutura digital",
+            "meta": "Equipar 2494 estabelecimentos com pacote de kits básicos de infraestrutura para cada CNES público e filantrópico do estado e município até junho de 2030.",
+            "origem": "Objetivo 1, Ação Infraestrutura para Saúde Digital",
+            "tipo": "meta específica"
+          }
+        ]
+      },
+      {
+        "tema": "Redes Dados em Saúde",
+        "descricao": "Implementação de tecnologia blockchain para viabilizar a interoperabilidade entre sistemas de saúde em Minas Gerais, integrando dados dos três níveis de atenção e permitindo acesso facilitado às informações por Estados e Municípios.",
+        "acoes": [
+          {
+            "titulo": "Implementação de tecnologia blockchain para viabilizar a interoperabilidade entre sistemas de saúde",
+            "meta": "Interoperar 1.992 atendimentos mensais com a RNDS até junho de 2030.",
+            "origem": "Objetivo 1, Ação Redes Dados em Saúde",
+            "tipo": "meta padrão"
+          }
+        ]
+      }
+    ]
+  },
+  "temasIdentificados": [
+    "Infraestrutura para Saúde Digital",
+    "Redes Dados em Saúde", 
+    "Capacitações em Saúde Digital",
+    "Formação de Multiplicadores em Saúde Digital",
+    "Ferramenta Estadual de Regulação Assistencial",
+    "Sistema para Solicitação Digital de Medicamentos do CEAF",
+    "Ações de Controle do Aedes aegypti",
+    "VISA Digital",
+    "Vacina Mais Minas - Sistema de Vacinação",
+    "Teleconsultoria clínica para a integração da Atenção Primária à Saúde (APS) com a Atenção Especializada (AE)",
+    "Implementação da Telecardiologia para a rede de urgência e emergência",
+    "TeleAVC",
+    "Teleconsultoria para estomatologia",
+    "Suporte fixo do profissional TI na eSF do município de Rio Acima",
+    "Implantação do PEC em todas as unidades de saúde",
+    "Tele-Eletro na APS e Pronto Atendimento",
+    "Aquisição de programa de Telecardiologia para telediagnóstico",
+    "Prestação de serviços de telemedicina",
+    "Teleconsulta em AVC",
+    "Incentivo de implantação do serviço de Teleconsulta Especializada",
+    "Telediagnóstico de Radiografia",
+    "Teleducação em Saúde",
+    "Teleconsultoria Síncrona",
+    "Divulgação e sensibilização dos usuários para aceitação dos serviços de telessaude",
+    "Consultas Especializadas por Telemedicina"
+  ],
+  "analiseGeral": {
+    "temasComuns": {
+      "descricao": "Temas que aparecem em todas ou quase todas as macrorregiões",
+      "lista": [
+        "Infraestrutura para Saúde Digital",
+        "Redes Dados em Saúde",
+        "Capacitações em Saúde Digital", 
+        "Formação de Multiplicadores em Saúde Digital",
+        "Ferramenta Estadual de Regulação Assistencial",
+        "Sistema para Solicitação Digital de Medicamentos do CEAF",
+        "Ações de Controle do Aedes aegypti",
+        "VISA Digital",
+        "Vacina Mais Minas - Sistema de Vacinação",
+        "Teleconsultoria clínica para a integração da APS com a AE",
+        "Implementação da Telecardiologia para a rede de urgência e emergência",
+        "TeleAVC",
+        "Teleconsultoria para estomatologia"
+      ]
+    },
+    "temasEspecificos": {
+      "descricao": "Temas que aparecem apenas em algumas macrorregiões",
+      "exemplos": [
+        {
+          "tema": "Suporte fixo do profissional TI na eSF do município de Rio Acima",
+          "macrorregioes": ["CENTRO"]
+        },
+        {
+          "tema": "Teleconsulta em AVC",
+          "macrorregioes": ["SUDOESTE"]
+        },
+        {
+          "tema": "Teleducação em Saúde",
+          "macrorregioes": ["TRIÂNGULO DO SUL"]
+        }
+      ]
+    }
+  }
+}

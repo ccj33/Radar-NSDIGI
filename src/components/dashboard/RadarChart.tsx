@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/accordion"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { calculateMedians, calculateMediansByMacroregion } from '@/data/mockData';
 
 const LegendItem = ({ color, textColor, label, value }: { color: string, textColor: string, label: string, value: string }) => (
@@ -159,15 +160,27 @@ export function DashboardRadarChart({ data, allData, medians, onNavigateToRecomm
 
       {/* Botão de exportar e visibilidade */}
       <div className="flex items-center justify-between gap-2 mb-4">
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="compare-mode"
-            checked={compareWithMacroregion}
-            onCheckedChange={setCompareWithMacroregion}
-          />
-          <Label htmlFor="compare-mode" className="text-sm font-medium">
-            Comparar com {compareWithMacroregion ? 'macrorregião' : 'todas as regiões'}
+        <div className="flex items-center gap-2">
+          <Label htmlFor="compare-segment" className="text-sm font-medium whitespace-nowrap">
+            Comparar com
           </Label>
+          <ToggleGroup
+            id="compare-segment"
+            type="single"
+            value={compareWithMacroregion ? "macro" : "geral"}
+            onValueChange={(value) => {
+              if (value) setCompareWithMacroregion(value === "macro");
+            }}
+            className="bg-muted/40 p-1 rounded-full"
+            size="sm"
+          >
+            <ToggleGroupItem value="geral" aria-label="Comparar com todas as regiões">
+              Geral
+            </ToggleGroupItem>
+            <ToggleGroupItem value="macro" aria-label="Comparar com macrorregião">
+              Macrorregião
+            </ToggleGroupItem>
+          </ToggleGroup>
           <div className="text-xs text-muted-foreground ml-2">
             {compareWithMacroregion 
               ? `Mediana da ${data.macrorregiao}` 

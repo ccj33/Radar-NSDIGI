@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/accordion"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { calculateMedians, calculateMediansByMacroregion } from '@/data/mockData';
 import { useMediaQuery } from '@/hooks/use-mobile';
 
@@ -180,15 +181,27 @@ export function ResponsiveRadarChart({ data, allData, medians, onNavigateToRecom
           )}
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="compare-mode"
-              checked={compareWithMacroregion}
-              onCheckedChange={setCompareWithMacroregion}
-            />
-            <Label htmlFor="compare-mode" className="text-fluid-sm">
-              Comparar com {compareWithMacroregion ? "Macrorregião" : "Geral"}
+          <div className="flex items-center gap-2">
+            <Label htmlFor="compare-segment" className="text-fluid-sm whitespace-nowrap">
+              Comparar com
             </Label>
+            <ToggleGroup
+              id="compare-segment"
+              type="single"
+              value={compareWithMacroregion ? "macro" : "geral"}
+              onValueChange={(value) => {
+                if (value) setCompareWithMacroregion(value === "macro");
+              }}
+              className="bg-muted/40 p-1 rounded-full"
+              size={isMobile ? "sm" : "default"}
+            >
+              <ToggleGroupItem value="geral" aria-label="Comparar com geral">
+                Geral
+              </ToggleGroupItem>
+              <ToggleGroupItem value="macro" aria-label="Comparar com macrorregião">
+                Macrorregião
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
           <Button
             variant="outline"

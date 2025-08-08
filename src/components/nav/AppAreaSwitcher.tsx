@@ -27,13 +27,14 @@ export function AppAreaSwitcher({ className }: AppAreaSwitcherProps) {
 
   const handleSelect = (item: NavItem) => {
     try {
+      console.log('Navegando para:', item.key, item.path); // Debug
+      
       // Mapear as chaves dos itens para as seções correspondentes
       const sectionMapping: { [key: string]: string } = {
         'pop': 'populacao',
         'ranking': 'barras',
         'axes': 'radar',
         'exec': 'executivo',
-        'detail': 'tabela',
         'recom': 'recomendacoes',
         'advanced': 'analise-avancada',
         'home': 'overview',
@@ -43,10 +44,12 @@ export function AppAreaSwitcher({ className }: AppAreaSwitcherProps) {
       const section = sectionMapping[item.key];
       
       if (section) {
+        console.log('Navegando para dashboard com seção:', section); // Debug
         // Usar a mesma lógica da página inicial
         navigate('/dashboard', { state: { activeSection: section } });
       } else {
-        // Fallback para navegação direta
+        console.log('Navegando diretamente para:', item.path); // Debug
+        // Para detalhamento e outras páginas específicas, navegar diretamente
         navigate(item.path);
       }
       
