@@ -118,7 +118,7 @@ export function ExecutiveDashboard({ data, selectedMicroregiao, medians }: Execu
               </button>
             </div>
             <div className="text-right min-w-0 flex-shrink-0">
-              <div className="text-lg sm:text-3xl font-bold text-slate-900 truncate max-w-[120px] sm:max-w-none">{selectedData.microrregiao}</div>
+              <div className="text-base sm:text-3xl font-bold text-slate-900 max-w-none sm:truncate">{selectedData.microrregiao}</div>
               <Badge className={`${classification.bgColor} ${classification.textColor} text-white mt-2`}>
                 <ClassificationIcon className="h-3 w-3 mr-1" />
                 {stats.indiceGeral > 0.66 ? 'Avançado' : stats.indiceGeral > 0.33 ? 'Em Evolução' : 'Emergente'}

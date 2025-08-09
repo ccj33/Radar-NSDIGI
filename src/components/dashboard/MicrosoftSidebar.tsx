@@ -48,14 +48,25 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
   onFiltersChange,
   selectedData
 }) => {
-  // Extrair opções únicas
-  const macrorregioes = [...new Set(data.map(item => item.macrorregiao))].sort();
+  // Extrair opções únicas e ordenar alfabeticamente, normalizando espaços
+  const macrorregioes = [...new Set(
+    data.map(item => (item.macrorregiao ?? '').toString().trim())
+  )]
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b, 'pt', { sensitivity: 'base' }));
   
   // Filtrar microrregiões baseado na macrorregião selecionada
-  const microrregioes = data
-    .filter(item => !filters.macrorregiao || item.macrorregiao === filters.macrorregiao)
-    .map(item => item.microrregiao)
-    .sort();
+  const microrregioes = Array.from(new Set(
+    data
+      .filter(item => {
+        if (!filters.macrorregiao) return true;
+        const im = (item.macrorregiao ?? '').toString().trim();
+        const fm = (filters.macrorregiao ?? '').toString().trim();
+        return im === fm;
+      })
+      .map(item => item.microrregiao)
+      .filter(Boolean)
+  )).sort((a, b) => a.localeCompare(b, 'pt', { sensitivity: 'base' }));
   
   // Definir ordem das classificações
   const classificacoesOrdenadas = ['Emergente', 'Em Evolução', 'Avançado'];
@@ -69,7 +80,8 @@ export const MicrosoftSidebar: React.FC<MicrosoftSidebarProps> = ({
   );
 
   const handleMacrorregiaoChange = (value: string) => {
-    const newFilters = { ...filters, macrorregiao: value === 'Todas' ? undefined : value };
+    const normalized = value.trim();
+    const newFilters = { ...filters, macrorregiao: normalized === 'Todas' ? undefined : normalized };
     onFiltersChange(newFilters);
     // Limpar microrregião selecionada se não estiver nos dados filtrados
     if (selectedMicroregiao && !data.filter(item => 

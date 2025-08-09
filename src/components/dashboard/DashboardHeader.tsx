@@ -18,7 +18,7 @@ export function DashboardHeader({ activeSection = 'overview', onNavigate }: Dash
   };
 
   return (
-    <div className="sticky top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div className="bg-white">
       {/* Navigation Menu */}
       <MicrosoftHeader 
         activeSection={currentSection} 

@@ -40,7 +40,7 @@ const MobileEixosView = ({ tableData }: { tableData: any[] }) => {
             {/* Cabeçalho do Card */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-700">{row.eixo}</span>
+                <span className="text-sm font-semibold text-gray-700 break-words">{row.eixo}</span>
                 <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
                   Eixo {index + 1}
                 </span>
@@ -386,7 +386,7 @@ export function EixosTable({ data, medians }: EixosTableProps) {
               <MobileEixosView tableData={tableData} />
             ) : viewMode === 'list' ? (
               <TooltipProvider>
-              <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="overflow-x-auto mx-0">
                 <div className="min-w-[800px] sm:min-w-0">
                   <Table>
                     <TableHeader>
@@ -507,7 +507,7 @@ export function EixosTable({ data, medians }: EixosTableProps) {
                   </Button>
                   
                   <div className="flex-1">
-                    <div className="overflow-x-auto -mx-4 sm:mx-0">
+                    <div className="overflow-x-auto mx-0">
                       <div className="min-w-[800px] sm:min-w-0">
                         <Table>
                           <TableHeader>

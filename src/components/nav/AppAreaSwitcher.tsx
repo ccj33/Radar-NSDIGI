@@ -80,7 +80,7 @@ export function AppAreaSwitcher({ className }: AppAreaSwitcherProps) {
   const commandContent = (
     <div className="w-full">
       <div className="p-3 border-b">
-        <div className="relative">
+        <div className="relative min-w-0">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
@@ -92,7 +92,7 @@ export function AppAreaSwitcher({ className }: AppAreaSwitcherProps) {
           />
         </div>
       </div>
-      <div className="max-h-[300px] overflow-y-auto">
+      <div className="max-h-[60vh] sm:max-h-[300px] overflow-y-auto">
         {filteredItems.length === 0 ? (
           <div className="p-3 text-center text-sm text-muted-foreground">
             Nenhuma área encontrada.
@@ -176,7 +176,7 @@ export function AppAreaSwitcher({ className }: AppAreaSwitcherProps) {
         {triggerButton}
       </PopoverTrigger>
       <PopoverContent 
-        className="w-[400px] p-0" 
+        className="w-[min(92vw,400px)] p-0" 
         align="start"
         sideOffset={8}
       >

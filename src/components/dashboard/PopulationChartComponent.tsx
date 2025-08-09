@@ -69,7 +69,7 @@ export function PopulationChartComponent({ data, selectedMicroregiao, onLoad }: 
       const data = payload[0].payload;
       const isSelected = data.isSelected;
       return (
-        <div className="bg-white border-2 border-blue-400 rounded-xl p-4 shadow-2xl min-w-[220px]">
+        <div className="bg-white border-2 border-blue-400 rounded-xl p-4 shadow-2xl min-w-0 max-w-[92vw] sm:min-w-[220px]">
           <div className="flex items-center gap-2 mb-1">
             {isSelected && <MapPin className="w-5 h-5 text-blue-500" />}
             <span className="font-bold text-blue-900 text-base">{data.category}</span>

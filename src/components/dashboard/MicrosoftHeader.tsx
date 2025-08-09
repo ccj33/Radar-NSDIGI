@@ -45,6 +45,7 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
   const location = useLocation();
 
   const currentActiveSection = activeSection;
+  const activeLabel = (sections.find(s => s.id === currentActiveSection)?.label) || 'Visão Geral';
 
   const handleNavigate = (sectionId: string) => {
     const section = sections.find(s => s.id === sectionId);
@@ -61,139 +62,88 @@ export const MicrosoftHeader: React.FC<MicrosoftHeaderProps> = ({ activeSection,
   return (
     <>
              {/* Microsoft Style Header */}
-       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm backdrop-blur-sm">
-         <div className="w-full px-6">
-           <div className="flex items-center h-16">
+        <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm backdrop-blur-sm [padding-top:env(safe-area-inset-top)] [padding-left:env(safe-area-inset-left)] [padding-right:env(safe-area-inset-right)]">
+          <div className="w-full px-4 sm:px-6">
+            <div className="flex items-center justify-between h-14 sm:h-16 min-w-0 gap-3 sm:gap-4 flex-wrap">
              
-             {/* Esquerda: Logo + Nome (Sempre visível) */}
-             <div className="flex items-center gap-3 flex-shrink-0">
-               <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-sm">
-                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                   <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
-                   <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                 </svg>
+             {/* Esquerda: Logo + Nome (agora atua como botão Início) */}
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                aria-label="Ir para a página inicial"
+                className="flex items-center gap-3 flex-shrink-0 min-h-[44px] hover:opacity-90 focus-visible:outline-none"
+              >
+               <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm ring-1 ring-blue-200/60 shrink-0">
+                  <Target className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div className="hidden sm:block">
+                  <h1 className="text-lg font-semibold text-gray-900 sm:whitespace-nowrap">RADAR NSDIGI</h1>
+                  <p className="text-xs text-gray-500 sm:whitespace-nowrap">Sistema de Transformação Digital</p>
                </div>
-               <div className="hidden sm:block">
-                 <h1 className="text-lg font-semibold text-gray-900 whitespace-nowrap">RADAR NSDIGI</h1>
-                 <p className="text-xs text-gray-500 whitespace-nowrap">Sistema de Transformação Digital</p>
-               </div>
-             </div>
+             </button>
 
              {/* Linha Vertical */}
-             <div className="w-px h-6 bg-gray-300 mx-4 flex-shrink-0 hidden sm:block"></div>
+              <div className="w-px h-6 bg-gray-300 mx-3 sm:mx-4 flex-shrink-0 hidden sm:block"></div>
 
-             {/* Botão Início - Lado esquerdo das Áreas */}
-             <Button
-               variant="outline"
-               size="sm"
-               onClick={() => navigate('/')}
-               className="text-gray-700 border-gray-300 hover:bg-gray-50 px-3 py-2 text-sm mr-3"
-             >
-               <Home className="w-4 h-4 mr-2" />
-               Início
-             </Button>
+             {/* Removido o botão "Início"; a logo agora cumpre essa função */}
 
-             {/* Navegação Principal - Menu Dropdown "Áreas" */}
-             <div className="flex-1 min-w-0">
-               <DropdownMenu>
-                 <DropdownMenuTrigger asChild>
-                   <Button
-                     variant="outline"
-                     size="sm"
-                     className="bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100 hover:border-blue-400 px-4 py-2 font-medium"
-                   >
-                     <Grid className="w-4 h-4 mr-2" />
-                     Áreas
-                     <ChevronDown className="w-4 h-4 ml-2" />
-                   </Button>
-                 </DropdownMenuTrigger>
-                 <DropdownMenuContent align="start" className="w-64 p-2">
-                   <div className="grid grid-cols-1 gap-1">
-                     {sections.map((section) => {
-                       const Icon = section.icon;
-                       const isActive = currentActiveSection === section.id;
-                       
-                       return (
-                         <DropdownMenuItem
-                           key={section.id}
-                           onClick={() => handleNavigate(section.id)}
-                           className={`flex items-center px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ${
-                             isActive 
-                               ? 'bg-blue-100 text-blue-700 font-medium' 
-                               : 'text-gray-700 hover:bg-gray-100'
-                           }`}
-                         >
-                           <Icon className="w-4 h-4 mr-3" />
-                           <div className="flex flex-col">
-                             <span className="text-sm font-medium">{section.label}</span>
-                             <span className="text-xs text-gray-500">{section.description}</span>
-                           </div>
-                         </DropdownMenuItem>
-                       );
-                     })}
-                   </div>
-                 </DropdownMenuContent>
-               </DropdownMenu>
-             </div>
+             {/* Navegação Principal - Menu Dropdown "Áreas" + indicador da área atual */}
+              <div className="flex-1 min-w-0 overflow-hidden">
+                <div className="flex items-center gap-2 min-w-0">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="inline-flex items-center gap-2 rounded-full bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300 px-3 sm:px-4 py-2 font-medium min-h-[40px] sm:min-h-[44px] max-w-full shadow-sm"
+                      >
+                        <Grid className="w-4 h-4" aria-hidden="true" />
+                        Áreas
+                        <ChevronDown className="w-4 h-4" aria-hidden="true" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-[min(92vw,16rem)] p-2 max-h-[60dvh] overflow-y-auto">
+                      <div className="grid grid-cols-1 gap-1">
+                        {sections.map((section) => {
+                          const Icon = section.icon;
+                          const isActive = currentActiveSection === section.id;
+                          return (
+                            <DropdownMenuItem
+                              key={section.id}
+                              onClick={() => handleNavigate(section.id)}
+                              className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 min-h-[44px] ${
+                                isActive
+                                  ? 'bg-blue-100 text-blue-700 font-medium'
+                                  : 'text-gray-700 hover:bg-gray-100'
+                              }`}
+                            >
+                              <Icon className="w-4 h-4" aria-hidden="true" />
+                              <div className="flex flex-col">
+                                <span className="text-sm font-medium">{section.label}</span>
+                                <span className="text-xs text-gray-500">{section.description}</span>
+                              </div>
+                            </DropdownMenuItem>
+                          );
+                        })}
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-50 text-slate-700 border border-slate-200 text-xs sm:text-sm font-medium whitespace-nowrap max-w-[50vw] truncate shadow-sm">
+                    {activeLabel}
+                  </span>
+                </div>
+              </div>
 
-             {/* Direita: Botões de Ação (Sempre visíveis) */}
-             <div className="flex items-center gap-2 flex-shrink-0">
-               {/* Zoom Control - Visível em desktop */}
+             {/* Direita: Ações (apenas o controle de zoom) */}
+              <div className="flex items-center gap-2 flex-shrink-0">
                <div className="hidden md:block">
                  <ZoomControl />
                </div>
-               
-
-               
-
-               
-               {/* Menu Mobile - Apenas para telas muito pequenas */}
-               <Button
-                 variant="ghost"
-                 size="icon"
-                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                 className="lg:hidden text-gray-600 hover:text-blue-600 w-8 h-8"
-               >
-                 {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-               </Button>
              </div>
            </div>
          </div>
 
-        {/* Menu de Navegação Mobile */}
-        {showMobileMenu && (
-          <div className="lg:hidden border-t border-gray-200 bg-white shadow-md">
-            <div className="px-4 py-4">
-              <nav className="flex flex-col gap-2">
-                {sections.map((section) => {
-                  const Icon = section.icon;
-                  const isActive = currentActiveSection === section.id;
-                  
-                  return (
-                    <Button
-                      key={section.id}
-                      variant={isActive ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => {
-                        handleNavigate(section.id);
-                        setShowMobileMenu(false);
-                      }}
-                      className={`justify-start px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                        isActive 
-                          ? 'bg-blue-600 text-white shadow-sm' 
-                          : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4 mr-3" />
-                      {section.label}
-                    </Button>
-                  );
-                })}
-              </nav>
-            </div>
-          </div>
-        )}
+        {/* Navegação mobile removida */}
       </header>
     </>
   );

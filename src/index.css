@@ -277,6 +277,11 @@ All colors MUST be HSL.
   /* Melhorias de scroll */
   html {
     scroll-behavior: smooth;
+    box-sizing: border-box;
+  }
+
+  *, *::before, *::after {
+    box-sizing: inherit;
   }
 
   /* Melhorias de foco */
@@ -362,6 +367,7 @@ All colors MUST be HSL.
     overflow-x: hidden;
     font-size: clamp(14px, 2.5vw, 16px);
     line-height: 1.5;
+    scroll-padding-top: 64px;
   }
   
   /* Prevenção de zoom em inputs no mobile - Melhorado */
@@ -409,7 +415,7 @@ All colors MUST be HSL.
 
   #root {
     width: 100%;
-    min-height: 100vh;
+    min-height: 100dvh;
     position: relative;
   }
 }

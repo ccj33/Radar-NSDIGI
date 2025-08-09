@@ -501,8 +501,8 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
         </div>
       </div>
 
-      {/* Container do Carrossel com overflow hidden */}
-      <div className="relative overflow-hidden px-8 sm:px-12">
+      {/* Container do Carrossel com overflow controlado */}
+      <div className="relative overflow-hidden px-4 sm:px-8">
         {viewMode === 'carousel' ? (
           <Carousel
             opts={{
@@ -555,7 +555,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                       </div>
                       <CardContent className="p-6">
                         <MobileTabs defaultValue="diagnostico">
-                          <TabsList className={`grid w-full bg-gray-100 p-1 rounded-xl ${isMobile ? 'grid-cols-1 gap-2' : 'grid-cols-3'}`}>
+                          <TabsList className={`grid w-full bg-gray-100 p-1 rounded-xl relative z-10 ${isMobile ? 'grid-cols-1 gap-2' : 'grid-cols-3'}`}>
                             <TabsTrigger 
                               value="diagnostico" 
                               className={`${isMobile ? 'flex-col py-4' : 'py-3'} data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-600 rounded-lg transition-all duration-200`}
@@ -851,9 +851,9 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
               })}
             </CarouselContent>
             
-            {/* Botões de navegação posicionados fora do container de overflow */}
-            <CarouselPrevious className="absolute -left-4 top-24 -translate-y-1/2 h-12 w-12 bg-white/80 backdrop-blur-sm border-2 border-white shadow-lg hover:bg-white transition-all z-20" />
-            <CarouselNext className="absolute -right-4 top-24 -translate-y-1/2 h-12 w-12 bg-white/80 backdrop-blur-sm border-2 border-white shadow-lg hover:bg-white transition-all z-20" />
+            {/* Botões de navegação estilo Microsoft, posicionados próximo ao cabeçalho da seção (mobile) e centralizados (sm+) */}
+            <CarouselPrevious className="absolute top-36 sm:top-1/2 sm:-translate-y-1/2 left-2 sm:left-4 h-11 w-11 rounded-full bg-white/90 text-blue-700 backdrop-blur-md border border-gray-200 shadow-md hover:bg-blue-50 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 z-30" />
+            <CarouselNext className="absolute top-36 sm:top-1/2 sm:-translate-y-1/2 right-2 sm:right-4 h-11 w-11 rounded-full bg-white/90 text-blue-700 backdrop-blur-md border border-gray-200 shadow-md hover:bg-blue-50 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 z-30" />
 
           </Carousel>
         ) : (
@@ -896,7 +896,7 @@ export function RecommendationsPanel({ data, initialEixoIndex = 0 }: Recommendat
                   </div>
                   <CardContent className="p-6">
                     <MobileTabs defaultValue="diagnostico">
-                      <TabsList className={`grid w-full bg-gray-100 p-1 rounded-xl ${isMobile ? 'grid-cols-1 gap-2' : 'grid-cols-3'}`}>
+                      <TabsList className={`grid w-full bg-gray-100 p-1 rounded-xl relative z-10 ${isMobile ? 'grid-cols-1 gap-2' : 'grid-cols-3'}`}>
                         <TabsTrigger 
                           value="diagnostico" 
                           className={`${isMobile ? 'flex-col py-4' : 'py-3'} data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-600 rounded-lg transition-all duration-200`}

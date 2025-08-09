@@ -144,13 +144,13 @@ export function DashboardRadarChart({ data, allData, medians, onNavigateToRecomm
             <div>
               <h3 className="text-base sm:text-lg font-semibold">Análise por Eixos</h3>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Comparativo da microrregião e medianas
+                Comparativo da microrregião e das medianas
               </p>
             </div>
           </div>
         </div>
         <div className="text-left sm:text-right">
-          <div className="text-lg sm:text-xl font-bold text-primary">
+          <div className="text-lg sm:text-xl font-bold text-primary leading-snug break-words">
             {data.microrregiao}
           </div>
         </div>
@@ -160,7 +160,7 @@ export function DashboardRadarChart({ data, allData, medians, onNavigateToRecomm
 
       {/* Botão de exportar e visibilidade */}
       <div className="flex items-center justify-between gap-2 mb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <Label htmlFor="compare-segment" className="text-sm font-medium whitespace-nowrap">
             Comparar com
           </Label>
@@ -181,10 +181,10 @@ export function DashboardRadarChart({ data, allData, medians, onNavigateToRecomm
               Macrorregião
             </ToggleGroupItem>
           </ToggleGroup>
-          <div className="text-xs text-muted-foreground ml-2">
+          <div className="text-xs text-muted-foreground block ml-0 sm:ml-2 mt-1 sm:mt-0 break-words">
             {compareWithMacroregion 
-              ? `Mediana da ${data.macrorregiao}` 
-              : 'Mediana geral (89 microrregiões)'
+              ? `Mediana: ${data.macrorregiao}` 
+              : 'Mediana: Geral'
             }
           </div>
         </div>
@@ -196,14 +196,6 @@ export function DashboardRadarChart({ data, allData, medians, onNavigateToRecomm
             aria-label={showRadar ? 'Ocultar gráfico' : 'Mostrar gráfico'}
           >
             {showRadar ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </Button>
-          <Button 
-            onClick={exportChartAsImage}
-            className="export-button bg-blue-600 hover:bg-blue-700 text-white"
-            size="sm"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Exportar
           </Button>
         </div>
       </div>

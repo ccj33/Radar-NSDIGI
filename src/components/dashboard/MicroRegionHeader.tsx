@@ -32,8 +32,8 @@ export function MicroRegionHeader({ data, allData }: MicroRegionHeaderProps) {
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 opacity-80" />
       
       {/* Elementos decorativos de fundo */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-100/30 to-purple-100/30 rounded-full -translate-y-32 translate-x-32 blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-100/30 to-blue-100/30 rounded-full translate-y-24 -translate-x-24 blur-3xl" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-100/30 to-purple-100/30 rounded-full -translate-y-32 translate-x-32 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-100/30 to-blue-100/30 rounded-full translate-y-24 -translate-x-24 blur-3xl pointer-events-none" />
       
       {/* Conteúdo principal */}
       <div className="relative z-10 p-8 space-y-8">
@@ -42,8 +42,8 @@ export function MicroRegionHeader({ data, allData }: MicroRegionHeaderProps) {
           {/* Coluna Esquerda - Informações Gerais */}
           <div className="flex-1 space-y-6">
             {/* Título e Status */}
-            <div className="flex items-center gap-4">
-              <h1 className="text-4xl font-bold text-gray-900">{data.microrregiao}</h1>
+        <div className="flex items-center gap-4 min-w-0">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 break-words">{data.microrregiao}</h1>
               <Badge 
                 variant={statusAppearance.variant as any}
                 className={`${statusAppearance.className} text-sm font-semibold px-4 py-2 shadow-lg`}

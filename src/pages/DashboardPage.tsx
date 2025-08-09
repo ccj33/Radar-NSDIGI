@@ -429,8 +429,11 @@ const Index = () => {
   // Filtrar dados baseado nos filtros ativos
   const filteredData = useMemo(() => {
     return data.filter(item => {
-      return (!filters.macrorregiao || item.macrorregiao === filters.macrorregiao) &&
-             (!filters.classificacao_inmsd || item.classificacao_inmsd === filters.classificacao_inmsd);
+      const itemMacro = (item.macrorregiao ?? '').toString().trim();
+      const filterMacro = (filters.macrorregiao ?? '').toString().trim();
+      const macroOk = !filters.macrorregiao || itemMacro === filterMacro;
+      const classOk = !filters.classificacao_inmsd || item.classificacao_inmsd === filters.classificacao_inmsd;
+      return macroOk && classOk;
     });
   }, [data, filters]);
 
@@ -468,16 +471,45 @@ const Index = () => {
 
   // Listas derivadas dos dados carregados
   const MACROS: Region[] = useMemo(() => {
-    const items = Array.from(new Set(data.map((d) => d.macrorregiao))).filter(Boolean) as string[];
-    return items.map((name, idx) => ({ id: String(idx + 1), name, slug: name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '') }));
+    const normalized = data
+      .map((d) => (d.macrorregiao ?? '').toString().trim())
+      .filter(Boolean) as string[];
+    const unique = Array.from(new Set(normalized));
+    const sorted = [...unique].sort((a, b) => a.localeCompare(b, 'pt', { sensitivity: 'base' }));
+    const items = ["Todas", ...sorted];
+    return items.map((name, idx) => ({
+      id: String(idx + 1),
+      name,
+      slug: name
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+    }));
   }, [data]);
   const MICROS: Region[] = useMemo(() => {
     const base = data
-      .filter((d) => !filters.macrorregiao || d.macrorregiao === filters.macrorregiao)
+      .filter((d) => {
+        if (!filters.macrorregiao) return true;
+        const dm = (d.macrorregiao ?? '').toString().trim();
+        const fm = (filters.macrorregiao ?? '').toString().trim();
+        return dm === fm;
+      })
       .map((d) => d.microrregiao)
       .filter(Boolean) as string[];
-    const items = Array.from(new Set(base));
-    return items.map((name, idx) => ({ id: `m${idx + 1}`, name, slug: name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '') }));
+    const uniqueSorted = Array.from(new Set(base)).sort((a, b) =>
+      a.localeCompare(b, 'pt', { sensitivity: 'base' })
+    );
+    const items = ["Todas", ...uniqueSorted];
+    return items.map((name, idx) => ({
+      id: `m${idx}`,
+      name,
+      slug: name
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+    }));
   }, [data, filters.macrorregiao]);
 
   // Navegar ao alterar macro/micro (mantém query atual)
@@ -531,6 +563,44 @@ const Index = () => {
         }, 500);
       }
     }, 200); // Aumentado de 100ms para 200ms
+  };
+
+  // Navegação por gesto (swipe) entre áreas
+  const sectionsOrder = [
+    'overview',
+    'populacao',
+    'barras',
+    'radar',
+    'executivo',
+    'tabela',
+    'recomendacoes',
+    'analise-avancada',
+  ] as const;
+
+  const goToAdjacentSection = (direction: 'prev' | 'next') => {
+    const idx = sectionsOrder.indexOf(activeSection as typeof sectionsOrder[number]);
+    if (idx === -1) return;
+    const nextIndex = direction === 'next' ? Math.min(idx + 1, sectionsOrder.length - 1) : Math.max(idx - 1, 0);
+    const next = sectionsOrder[nextIndex];
+    if (next !== activeSection) handleNavigate(next);
+  };
+
+  const touchStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const t = e.changedTouches[0];
+    touchStartRef.current = { x: t.clientX, y: t.clientY };
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) > 60 && Math.abs(dy) < 50) {
+      if (dx < 0) goToAdjacentSection('next');
+      else goToAdjacentSection('prev');
+    }
+    touchStartRef.current = null;
   };
 
   const handleJoyrideCallback = (data: CallBackProps) => {
@@ -594,7 +664,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <Joyride
         steps={joyrideSteps}
         run={runTour}
@@ -930,8 +1000,8 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Menu de Ações Flutuantes (FAB) */}
-      <div className="fixed bottom-24 md:bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+      {/* Menu de Ações Flutuantes (FAB) — removido do app (oculto) */}
+      <div className="hidden">
         {/* Botões secundários que aparecem quando o menu está aberto */}
         {isFabMenuOpen && (
           <>
@@ -969,12 +1039,19 @@ const Index = () => {
               value={macroRegion}
               onChange={(region) => {
                 setMacroRegion(region);
-                handleFiltersChange({ ...filters, macrorregiao: region.name });
-                setMicroRegion(null);
-                handleMicroregiaoChange('');
-                updateUrlWithRegions(region, null);
+                if (region.name === 'Todas') {
+                  handleFiltersChange({ ...filters, macrorregiao: undefined });
+                  setMicroRegion(null);
+                  handleMicroregiaoChange('');
+                  updateUrlWithRegions(null, null);
+                } else {
+                  handleFiltersChange({ ...filters, macrorregiao: region.name });
+                  setMicroRegion(null);
+                  handleMicroregiaoChange('');
+                  updateUrlWithRegions(region, null);
+                }
               }}
-              buttonClassName="h-14 sm:h-16 w-full text-sm font-semibold bg-[#FFA500] text-[#111] hover:opacity-90"
+              buttonClassName="h-[52px] sm:h-[56px] w-full min-w-0 font-semibold rounded-full text-white bg-gradient-to-r from-blue-600 to-sky-500 ring-1 ring-white/40 hover:ring-white/60 transition-shadow shadow-none active:opacity-95 focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
             />
           }
           rightContent={
@@ -983,11 +1060,17 @@ const Index = () => {
               items={MICROS}
               value={microRegion}
               onChange={(region) => {
-                setMicroRegion(region);
-                handleMicroregiaoChange(region.name);
-                updateUrlWithRegions(macroRegion, region);
+                if (region.name === 'Todas') {
+                  setMicroRegion(null);
+                  handleMicroregiaoChange('');
+                  updateUrlWithRegions(macroRegion, null);
+                } else {
+                  setMicroRegion(region);
+                  handleMicroregiaoChange(region.name);
+                  updateUrlWithRegions(macroRegion, region);
+                }
               }}
-              buttonClassName="h-14 sm:h-16 w-full text-sm font-semibold bg-[#FFEB3B] text-[#111] hover:opacity-90"
+              buttonClassName="h-[52px] sm:h-[56px] w-full min-w-0 font-semibold rounded-full text-white bg-gradient-to-r from-violet-600 to-fuchsia-500 ring-1 ring-white/40 hover:ring-white/60 transition-shadow shadow-none active:opacity-95 focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
             />
           }
         />

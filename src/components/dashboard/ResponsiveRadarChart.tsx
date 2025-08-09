@@ -181,7 +181,7 @@ export function ResponsiveRadarChart({ data, allData, medians, onNavigateToRecom
           )}
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <Label htmlFor="compare-segment" className="text-fluid-sm whitespace-nowrap">
               Comparar com
             </Label>

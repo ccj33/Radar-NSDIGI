@@ -61,34 +61,33 @@ export const MobileBottomFilters: React.FC<MobileBottomFiltersProps> = ({
       aria-label="Filtros de região"
       className={`md:hidden fixed left-0 right-0 bottom-0 z-[60] ${
         hidden ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"
-      } transition-transform duration-200 ease-in-out bg-transparent pointer-events-none ${className}`}
+      } transition-transform duration-200 ease-in-out pointer-events-none ${className}`}
       style={{
-        // espaço para a safe-area do iOS/Android e leve elevação visual
         paddingBottom: "max(12px, env(safe-area-inset-bottom))",
       }}
     >
-      <div className="mx-4 mb-2 pointer-events-auto shadow-lg rounded-xl overflow-hidden" style={{ boxShadow: "0 6px 20px rgba(0,0,0,0.18)" }}>
-        <div className="grid grid-cols-2">
+      <div className="mx-4 mb-3 pointer-events-auto rounded-2xl overflow-visible backdrop-blur-md bg-white/60 border border-white/40 shadow-[0_8px_24px_rgba(2,6,23,0.15)]">
+        <div className="grid grid-cols-2 gap-0">
           {leftContent ? (
-            <div className="w-full">{leftContent}</div>
+            <div className="w-full min-w-0">{leftContent}</div>
           ) : (
             <button
               type="button"
               aria-label="Selecionar Macroregião"
               onClick={onOpenMacro}
-              className="h-14 sm:h-16 w-full text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-black/70 active:opacity-90 bg-[#FFA500] text-[#111111]"
+              className="h-[52px] sm:h-[56px] w-full font-semibold focus:outline-none active:opacity-95 text-white bg-gradient-to-r from-blue-600 to-sky-500 rounded-full ring-1 ring-white/40 hover:ring-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
             >
               Selecionar Macro
             </button>
           )}
           {rightContent ? (
-            <div className="w-full border-l border-black/10">{rightContent}</div>
+            <div className="w-full min-w-0 border-l border-white/20">{rightContent}</div>
           ) : (
             <button
               type="button"
               aria-label="Selecionar Microrregião"
               onClick={onOpenMicro}
-              className="h-14 sm:h-16 w-full text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-black/70 active:opacity-90 bg-[#FFEB3B] text-[#111111] border-l border-black/10"
+              className="h-[52px] sm:h-[56px] w-full font-semibold focus:outline-none active:opacity-95 text-white bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-full ring-1 ring-white/40 hover:ring-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
             >
               Selecionar Micro
             </button>

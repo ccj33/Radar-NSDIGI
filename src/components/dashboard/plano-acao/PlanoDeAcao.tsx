@@ -229,8 +229,8 @@ const PlanoDeAcao: React.FC<PlanoDeAcaoProps> = ({
               key={objective.id} 
               className="border-0"
             >
-              <Card className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
-                  <AccordionTrigger className={`px-6 py-4 text-left hover:no-underline group border-l-4 ${objective.borderColor}`}>
+                <Card className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
+                    <AccordionTrigger className={`px-6 py-4 text-left hover:no-underline group border-l-4 ${objective.borderColor} [&>svg]:hidden`}>
                   <div className="flex items-center gap-5 w-full">
                       {/* Number */}
                       <div className={`flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 group-hover:bg-gray-200/80 transition-colors flex-shrink-0`}>
@@ -246,14 +246,12 @@ const PlanoDeAcao: React.FC<PlanoDeAcaoProps> = ({
                               <Badge variant="secondary" className="border">
                               Objetivo Estratégico
                               </Badge>
+                              <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-transform duration-300 group-data-[state=open]:rotate-180" />
                           </div>
                           <h3 className="text-base md:text-lg font-semibold text-gray-800 leading-tight">
                               {objective.title}
                           </h3>
                       </div>
-                      
-                      {/* Expansion Icon */}
-                      <ChevronDown className="h-6 w-6 text-gray-400 group-hover:text-gray-600 transition-transform duration-300 group-data-[state=open]:rotate-180 flex-shrink-0 mx-2" />
                   </div>
                   </AccordionTrigger>
                   

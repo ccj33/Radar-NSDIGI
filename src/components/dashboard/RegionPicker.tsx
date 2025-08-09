@@ -30,6 +30,7 @@ export const RegionPicker: React.FC<RegionPickerProps> = ({
   const title = mode === "macro" ? "Selecione uma Macrorregião" : "Selecione uma Microrregião";
   const defaultLabel = mode === "macro" ? "Selecionar Macro" : "Selecionar Micro";
   const label = value?.name ?? defaultLabel;
+  const prefix = mode === "macro" ? "Macrorregião" : "Microrregião";
 
   const filtered = useMemo(() => {
     if (!query) return items;
@@ -39,8 +40,11 @@ export const RegionPicker: React.FC<RegionPickerProps> = ({
 
   useEffect(() => {
     if (open) {
-      // Focar input ao abrir
-      setTimeout(() => inputRef.current?.focus(), 50);
+      // Em telas desktop, foca o input; em mobile, evita abrir o teclado cobrindo a lista
+      const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 640 && window.matchMedia('(pointer: fine)').matches;
+      if (isDesktop) {
+        setTimeout(() => inputRef.current?.focus(), 50);
+      }
     } else {
       // Devolver foco ao botão
       triggerRef.current?.focus();
@@ -52,14 +56,21 @@ export const RegionPicker: React.FC<RegionPickerProps> = ({
       <SheetTrigger asChild>
         <Button
           ref={triggerRef}
-          className={buttonClassName}
+          className={`${buttonClassName} flex flex-col items-center justify-center leading-tight py-1 w-full min-w-0 px-3`}
           aria-haspopup="dialog"
           aria-expanded={open}
         >
-          {label}
+          {value ? (
+            <>
+              <span className="text-[10px] font-medium opacity-80">{prefix}</span>
+              <span className="text-sm font-bold truncate max-w-full">{value.name}</span>
+            </>
+          ) : (
+            <span className="text-sm font-bold truncate max-w-full">{label}</span>
+          )}
         </Button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="h-[85vh] p-0">
+       <SheetContent side="bottom" className="h-[85vh] p-0 overscroll-contain">
         <SheetHeader className="px-4 pt-4 pb-2">
           <SheetTitle>{title}</SheetTitle>
           <div className="relative mt-2">
@@ -104,5 +115,6 @@ export const RegionPicker: React.FC<RegionPickerProps> = ({
 };
 
 export default RegionPicker;
+
 
 
