@@ -582,25 +582,74 @@ const Index = () => {
     if (idx === -1) return;
     const nextIndex = direction === 'next' ? Math.min(idx + 1, sectionsOrder.length - 1) : Math.max(idx - 1, 0);
     const next = sectionsOrder[nextIndex];
-    if (next !== activeSection) handleNavigate(next);
+    if (next !== activeSection) {
+      handleNavigate(next);
+    }
   };
 
   const touchStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const isSwipingRef = React.useRef(false);
+  const lastSwipeAtRef = React.useRef<number>(0);
+  const [swipeNotice, setSwipeNotice] = useState<string | null>(null);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     const t = e.changedTouches[0];
     touchStartRef.current = { x: t.clientX, y: t.clientY };
+    isSwipingRef.current = false;
   };
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: React.TouchEvent) => {
     const start = touchStartRef.current;
     if (!start) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
-    if (Math.abs(dx) > 60 && Math.abs(dy) < 50) {
+    if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+      isSwipingRef.current = true;
+      e.preventDefault();
+    }
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    if (!start) return;
+    const now = Date.now();
+    if (now - lastSwipeAtRef.current < 600) {
+      touchStartRef.current = null;
+      isSwipingRef.current = false;
+      return;
+    }
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    // Evitar acionar swipe se o alvo estiver dentro de carrosséis/arrastáveis
+    const targetEl = e.target as HTMLElement;
+    const isInsideCarousel = targetEl.closest('[data-prevent-global-swipe]') || targetEl.closest('[aria-roledescription="carousel"]');
+    if (isInsideCarousel) {
+      touchStartRef.current = null;
+      isSwipingRef.current = false;
+      return;
+    }
+    if (Math.abs(dx) > 60 && Math.abs(dy) < 50 && isSwipingRef.current) {
       if (dx < 0) goToAdjacentSection('next');
       else goToAdjacentSection('prev');
+      lastSwipeAtRef.current = now;
+      // feedback visual
+      const idx = sectionsOrder.indexOf(activeSection as typeof sectionsOrder[number]);
+      const nextIndex = dx < 0 ? Math.min(idx + 1, sectionsOrder.length - 1) : Math.max(idx - 1, 0);
+      const mapLabels: Record<string, string> = {
+        'overview': 'Visão Geral',
+        'populacao': 'População',
+        'barras': 'Ranking',
+        'radar': 'Análise por Eixos',
+        'executivo': 'Executivo',
+        'tabela': 'Tabela de Eixos',
+        'recomendacoes': 'Recomendações',
+        'analise-avancada': 'Análise Avançada',
+      };
+      setSwipeNotice(`Mudando para: ${mapLabels[sectionsOrder[nextIndex]]}`);
+      window.setTimeout(() => setSwipeNotice(null), 900);
     }
     touchStartRef.current = null;
+    isSwipingRef.current = false;
   };
 
   const handleJoyrideCallback = (data: CallBackProps) => {
@@ -664,7 +713,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <Joyride
         steps={joyrideSteps}
         run={runTour}
@@ -734,6 +783,15 @@ const Index = () => {
       </div>
 
 
+
+      {/* Aviso de swipe */}
+      {swipeNotice && (
+        <div className="fixed inset-0 z-[70] flex items-start justify-center pointer-events-none">
+          <div className="mt-24 px-4 py-2 rounded-full bg-black/70 text-white text-sm shadow-lg backdrop-blur-sm">
+            {swipeNotice}
+          </div>
+        </div>
+      )}
 
       {/* Conteúdo Principal */}
       <main className="container mx-auto px-4 py-8 pb-28 md:pb-8 flex gap-8 relative">
